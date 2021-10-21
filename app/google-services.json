@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "279395121854",
+    "firebase_url": "https://mywork-e32c4-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "mywork-e32c4",
+    "storage_bucket": "mywork-e32c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279395121854:android:20a2ab1298e2f8d6e87cef",
+        "android_client_info": {
+          "package_name": "com.example.runningpal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279395121854-ejaf11cuef2mqllqfeopq99u7tdtioti.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.runningpal",
+            "certificate_hash": "9de8556453f65cef0416f72678137280379ac85d"
+          }
+        },
+        {
+          "client_id": "279395121854-q6ot85s96evunpfsf3l71fj01f40hhvg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_k2avd5mbLnJ2munbvL6MVk-4MPlLPig"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279395121854-q6ot85s96evunpfsf3l71fj01f40hhvg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
