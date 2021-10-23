@@ -4,6 +4,7 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.chat_message_receive.view.*
@@ -21,21 +22,22 @@ class MessageAdapter(
     }
 
     inner class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
     inner class ReceiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        if(viewType.equals(SEND_MESSAGE)) {
+        if(viewType.equals(RECEIVE_MESSAGE)) {
             val view =
-                LayoutInflater.from(parent.context).inflate(R.layout.chat_message_send, parent, false)
-            return SentViewHolder(view)
+                LayoutInflater.from(parent.context).inflate(R.layout.chat_message_receive, parent, false)
+            return ReceiveViewHolder(view)
         }
         else{
 
             val view =
-                LayoutInflater.from(parent.context).inflate(R.layout.chat_message_receive, parent, false)
-            return ReceiveViewHolder(view)
+                LayoutInflater.from(parent.context).inflate(R.layout.chat_message_send, parent, false)
+            return SentViewHolder(view)
         }
     }
 
@@ -43,34 +45,29 @@ class MessageAdapter(
 
         val currentMessage = messages[position].message
 
-        if(holder.javaClass == SentViewHolder::javaClass) {
-            holder.itemView.apply {
 
+        holder.itemView.apply {
+
+            if(holder.javaClass == SentViewHolder::class.java)
                 tvChatCellSend.text = currentMessage
-            }
 
-        }
-        else{
-
-            holder.itemView.apply {
-
+            if(holder.javaClass == ReceiveViewHolder::class.java)
                 tvChatCellReceive.text = currentMessage
+
+
+
             }
 
 
-
-
-        }
     }
 
     override fun getItemViewType(position: Int): Int {
         val currentMessage = messages[position]
 
         if(FirebaseAuth.getInstance().currentUser?.uid.equals(currentMessage.senderID))
-        return SEND_MESSAGE
-
+        return RECEIVE_MESSAGE
         else
-            return RECEIVE_MESSAGE
+            return SEND_MESSAGE
     }
 
     override fun getItemCount(): Int {

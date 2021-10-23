@@ -23,7 +23,5 @@
             android:padding="10dp"
             android:textColor="@color/white"/>
 
-
-
     </RelativeLayout>
 </RelativeLayout>

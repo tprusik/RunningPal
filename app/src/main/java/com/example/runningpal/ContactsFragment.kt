@@ -1,5 +1,6 @@
 package com.example.runningpal
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,12 +33,16 @@ class ContactsFragment : Fragment() {
 
         var contacts =  mutableListOf<User>()
 
-
-
-
         val adapter = ContactsAdapter(contacts)
         rvContacts.adapter = adapter
         rvContacts.layoutManager = LinearLayoutManager(context)
+
+        btnContactsFindNew.setOnClickListener{
+
+            val intent  = Intent(context,FindContactActivity::class.java)
+            startActivity(intent)
+
+        }
 
 
         myRef.addValueEventListener(object : ValueEventListener {
@@ -47,7 +52,7 @@ class ContactsFragment : Fragment() {
              for(postSnapshot in snapshot.children)
              {
 
-                val user  = postSnapshot.getValue(User::class.java)
+                 val user  = postSnapshot.getValue(User::class.java)
                  contacts.add(user!!)
 
 
@@ -59,10 +64,6 @@ class ContactsFragment : Fragment() {
 
             }
         })
-
-
-
-
 
     }
 
