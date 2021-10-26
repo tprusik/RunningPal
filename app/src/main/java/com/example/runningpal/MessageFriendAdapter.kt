@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.contact_cell.view.*
+import com.example.runningpal.db.MessageContact
 import kotlinx.android.synthetic.main.contact_message_row.view.*
 
 class MessageFriendAdapter  (

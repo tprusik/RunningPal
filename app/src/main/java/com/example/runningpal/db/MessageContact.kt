@@ -1,4 +1,4 @@
-package com.example.runningpal
+package com.example.runningpal.db
 
  data class MessageContact (
          val name : String,
