@@ -27,6 +27,7 @@ import java.net.URI
 class CameraActivity : AppCompatActivity() {
 
     companion object{
+
         private lateinit var SelectedImageFileUri : Uri
         private const val CAMERA_PERMISSION_CODE = 1
         private const val CAMERA_REQUEST_CODE = 2
@@ -39,7 +40,7 @@ class CameraActivity : AppCompatActivity() {
         setContentView(R.layout.activity_camera)
 
 
-        btn_CameraShoot.setOnClickListener{
+      btn_CameraShoot.setOnClickListener{
             if(ContextCompat.checkSelfPermission(
                             this,
                             Manifest.permission.CAMERA

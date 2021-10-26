@@ -33,9 +33,9 @@ class MessageFragment : Fragment() {
 
         val chatMates =  getMessages()
 
-        val adapter = ContactsAdapter()
-        rvMessageFragment.adapter = adapter
-        rvMessageFragment.layoutManager = LinearLayoutManager(context)
+      //  val adapter = ContactsAdapter()
+       // rvMessageFragment.adapter = adapter
+       // rvMessageFragment.layoutManager = LinearLayoutManager(context)
 
 
     }

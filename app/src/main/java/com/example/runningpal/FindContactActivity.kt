@@ -3,12 +3,12 @@ package com.example.runningpal
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.runningpal.db.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_find_contact.*
-import kotlinx.android.synthetic.main.fragment_contacts.*
 
 class FindContactActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,11 +1,10 @@
 package com.example.runningpal
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.runningpal.db.Message
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.chat_message_receive.view.*
 import kotlinx.android.synthetic.main.chat_message_send.view.*
