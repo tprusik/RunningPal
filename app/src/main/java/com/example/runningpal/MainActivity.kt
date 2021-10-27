@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        
         //przkierowanie usera w przypadku gdy jet on zalogowany lub nie
         mAuth = FirebaseAuth.getInstance()
 

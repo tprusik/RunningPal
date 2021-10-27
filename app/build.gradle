@@ -8,9 +8,6 @@ plugins {
     id("kotlin-kapt")
     id("androidx.navigation.safeargs")
 
-    id  'dagger.hilt.android.plugin'
-
-
 }
 
 
@@ -104,35 +101,20 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.1'
 
-    // Dagger Core
-    implementation "com.google.dagger:dagger:2.39.1"
-    kapt "com.google.dagger:dagger-compiler:2.25.2"
 
-
-    // Dagger Android
-    api 'com.google.dagger:dagger-android:2.35.1'
-    api 'com.google.dagger:dagger-android-support:2.28.1'
-    kapt 'com.google.dagger:dagger-android-processor:2.23.2'
 
     //ViewModels delegation extentensions for activity
     implementation 'androidx.activity:activity-ktx:1.3.1'
 
 
+    // Koin for Kotlin apps
+    implementation "io.insert-koin:koin-core:3.0.1"
+    // Testing
+    testImplementation "io.insert-koin:koin-test:3.0.1"
 
-    //
+    implementation "io.insert-koin:koin-android:3.0.1"
 
-    implementation 'com.google.dagger:hilt-android:2.39.1'
-    kapt 'com.google.dagger:hilt-compiler:2.39.1'
-
-    // For instrumentation tests
-    androidTestImplementation  'com.google.dagger:hilt-android-testing:2.39.1'
-    kaptAndroidTest 'com.google.dagger:hilt-compiler:2.39.1'
-
-    // For local unit tests
-    testImplementation 'com.google.dagger:hilt-android-testing:2.39.1'
-    kaptTest 'com.google.dagger:hilt-compiler:2.39.1'
-    //
-
+   //
 
     // Easy Permissions
     implementation 'pub.devrel:easypermissions:3.0.0'
@@ -142,6 +124,6 @@ dependencies {
 
     implementation 'android.arch.lifecycle:extensions:1.1.1'
 
-
+    implementation 'com.jakewharton.timber:timber:5.0.1'
 
 }

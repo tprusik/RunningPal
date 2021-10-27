@@ -8,16 +8,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.runningpal.db.User
+import com.google.firebase.auth.FirebaseAuth
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_contacts.*
+import org.koin.android.ext.android.get
+import org.koin.java.KoinJavaComponent.get
+import org.koin.java.KoinJavaComponent.inject
+import timber.log.Timber
 
 
 class ContactsFragment : Fragment() {
-
 
 
 
@@ -31,9 +35,13 @@ class ContactsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+        val usera  : FirebaseAuth = get()
+
+        Timber.tag("TagNameThatIsReallyReallyReallyLong").d(usera.currentUser?.email);
 
         val database = FirebaseDatabase.getInstance("https://mywork-e32c4-default-rtdb.europe-west1.firebasedatabase.app/")
         val myRef = database.getReference().child("UserData")
+
 
         var contacts =  mutableListOf<User>()
 
@@ -47,7 +55,6 @@ class ContactsFragment : Fragment() {
             startActivity(intent)
 
         }
-
 
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
