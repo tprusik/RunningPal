@@ -41,6 +41,10 @@ android {
     }
 }
 
+configurations {
+    runtime.exclude group: "org.slf4j", module: "slf4j-log4j12"
+}
+
 dependencies {
 
 
@@ -111,8 +115,10 @@ dependencies {
     implementation "io.insert-koin:koin-core:3.0.1"
     // Testing
     testImplementation "io.insert-koin:koin-test:3.0.1"
-
     implementation "io.insert-koin:koin-android:3.0.1"
+    //ViewModel
+    //implementation "io.insert-koin:koin-android-viewmodel:2.2.3"
+
 
    //
 
