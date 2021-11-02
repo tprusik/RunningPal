@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    tools:context=".ContactsFragment">
+    tools:context=".fragments.ContactsFragment">
 
     <TextView
         android:id="@+id/tvContacts"

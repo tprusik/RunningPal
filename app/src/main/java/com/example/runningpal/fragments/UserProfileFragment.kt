@@ -1,11 +1,11 @@
-package com.example.runningpal
+package com.example.runningpal.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.maps.SupportMapFragment
+import com.example.runningpal.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 

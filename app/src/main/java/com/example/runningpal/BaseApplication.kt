@@ -32,7 +32,6 @@ class BaseApplication : Application() {
             }
 
             startKoin {
-
                 modules(appModule)
             }
         }

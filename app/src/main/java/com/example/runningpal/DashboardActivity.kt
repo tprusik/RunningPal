@@ -7,11 +7,8 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
+import com.example.runningpal.fragments.*
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : AppCompatActivity() {
@@ -57,7 +54,7 @@ class DashboardActivity : AppCompatActivity() {
 
 
         val calendarFragment = CalendarFragment()
-        val mapFragment = MapsFragment()
+        val mapFragment = RunFragment()
         val userProfileFragment = UserProfileFragment()
         val messageFragment = MessageFragment()
         val contactsFragment = ContactsFragment()
