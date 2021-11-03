@@ -41,7 +41,7 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             EasyPermissions.requestPermissions(
                     this,
-                    "You need to accept location permissions to use this app.",
+                    "Papaapa",
                     REQUEST_CODE_LOCATION_PERMISSION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -49,7 +49,7 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
         } else {
             EasyPermissions.requestPermissions(
                     this,
-                    "You need to accept location permissions to use this app.",
+                    "Papapass",
                     REQUEST_CODE_LOCATION_PERMISSION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -64,7 +64,7 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
         if(EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            // ?
+            // ? dodaj sprawdzenie czy to działa , pokazuje w przypadku pemamently fuck up
             AppSettingsDialog.Builder(this).build().show()
         } else {
             requestPermissions()

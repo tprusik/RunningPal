@@ -54,7 +54,7 @@ class DashboardActivity : AppCompatActivity() {
 
 
         val calendarFragment = CalendarFragment()
-        val mapFragment = RunFragment()
+        val mapFragment = TrackingFragment()
         val userProfileFragment = UserProfileFragment()
         val messageFragment = MessageFragment()
         val contactsFragment = ContactsFragment()
