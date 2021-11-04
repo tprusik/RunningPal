@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
 import com.example.runningpal.fragments.*
+import com.example.runningpal.others.Constants
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
@@ -23,6 +24,7 @@ class DashboardActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         // niekonieczne to co poniżej
 
+        navigateToTrackingFragmentIfNeeded(intent)
 
         // change striung resources
         toggle = ActionBarDrawerToggle(this,drawerLayout,R.string.common_open_on_phone,R.string.appbar_scrolling_view_behavior)
@@ -66,7 +68,6 @@ class DashboardActivity : AppCompatActivity() {
             when(it.itemId) {
 
                 R.id.mi_friends -> {
-
                     supportFragmentManager.beginTransaction().apply {
                         replace(R.id.fConainer, contactsFragment)
                         commit()
@@ -111,6 +112,24 @@ class DashboardActivity : AppCompatActivity() {
 
 
     }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        navigateToTrackingFragmentIfNeeded(intent)
+
+    }
+
+    private fun navigateToTrackingFragmentIfNeeded(intent: Intent?) {
+        if(intent?.action == Constants.ACTION_SHOW_TRACKING_FRAGMENT) {
+
+            val trackingFragment = TrackingFragment()
+
+            setCurrentFragment(trackingFragment)
+
+        }
+    }
+
 
     private fun setCurrentFragment(fragment:Fragment) =
             supportFragmentManager.beginTransaction().apply {

@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import com.example.runningpal.fragments.TrackingFragment
+import com.example.runningpal.others.Constants.ACTION_SHOW_TRACKING_FRAGMENT
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
@@ -34,4 +36,6 @@ class MainActivity : AppCompatActivity() {
         },2000)
 
     }
+
+
 }
