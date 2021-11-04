@@ -7,6 +7,8 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.runningpal.fragments.*
 import com.example.runningpal.others.Constants
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +19,7 @@ class DashboardActivity : AppCompatActivity() {
     private  lateinit var mAuth : FirebaseAuth
     private  lateinit var toggle: ActionBarDrawerToggle
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -24,7 +27,6 @@ class DashboardActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         // niekonieczne to co poniżej
 
-        navigateToTrackingFragmentIfNeeded(intent)
 
         // change striung resources
         toggle = ActionBarDrawerToggle(this,drawerLayout,R.string.common_open_on_phone,R.string.appbar_scrolling_view_behavior)
@@ -46,8 +48,6 @@ class DashboardActivity : AppCompatActivity() {
                     startActivity(intent)
                   finish()
 
-
-
                 }
 
             }
@@ -68,48 +68,28 @@ class DashboardActivity : AppCompatActivity() {
             when(it.itemId) {
 
                 R.id.mi_friends -> {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.fConainer, contactsFragment)
-                        commit()
-                    }
-
+                    setCurrentFragment(contactsFragment)
                 }
-
                 R.id.mi_calendar -> {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.fConainer, calendarFragment)
-                        commit()
-                    }
+                    setCurrentFragment(calendarFragment)
                 }
-
 
                 R.id.mi_sportsActivity -> {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.fConainer, mapFragment)
-                        commit()
-                    }
+                    setCurrentFragment(mapFragment)
                 }
-
 
                 R.id.mi_profile -> {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.fConainer, userProfileFragment)
-                        commit()
-                    }
+                    setCurrentFragment(userProfileFragment)
                 }
 
-
                 R.id.mi_messages -> {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.fConainer, messageFragment)
-                        commit()
-                    }
-
+                   setCurrentFragment(messageFragment)
                 }
             }
             true
         }
 
+        navigateToTrackingFragmentIfNeeded(intent)
 
     }
 
@@ -117,7 +97,6 @@ class DashboardActivity : AppCompatActivity() {
         super.onNewIntent(intent)
 
         navigateToTrackingFragmentIfNeeded(intent)
-
     }
 
     private fun navigateToTrackingFragmentIfNeeded(intent: Intent?) {
