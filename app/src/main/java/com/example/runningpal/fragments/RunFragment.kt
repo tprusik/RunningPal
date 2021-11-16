@@ -20,7 +20,6 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
 
         }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -32,7 +31,6 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
         super.onViewCreated(view, savedInstanceState)
         requestPermissions()
     }
-
 
     private fun requestPermissions() {
         if(TrackingUtility.hasLocationPermissions(requireContext())) {
@@ -47,6 +45,7 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
                     Manifest.permission.ACCESS_FINE_LOCATION
             )
         } else {
+
             EasyPermissions.requestPermissions(
                     this,
                     "Papapass",
@@ -77,6 +76,5 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
         EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults)
 
     }
-
 
 }

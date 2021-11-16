@@ -27,7 +27,8 @@ class DashboardActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         // niekonieczne to co poniżej
 
-
+       
+        
         // change striung resources
         toggle = ActionBarDrawerToggle(this,drawerLayout,R.string.common_open_on_phone,R.string.appbar_scrolling_view_behavior)
         drawerLayout.addDrawerListener(toggle)
@@ -92,6 +93,8 @@ class DashboardActivity : AppCompatActivity() {
         navigateToTrackingFragmentIfNeeded(intent)
 
     }
+
+
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
