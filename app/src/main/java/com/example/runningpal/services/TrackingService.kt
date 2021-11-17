@@ -46,6 +46,7 @@ typealias Polylines = MutableList<Polyline>
 class TrackingService : LifecycleService() {
 
     var isFirstRun = true
+    var serviceKilled = false
 
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -81,6 +82,15 @@ class TrackingService : LifecycleService() {
     }
 
 
+    private fun killService() {
+        serviceKilled = true
+        isFirstRun = true
+        pauseService()
+        postInitialValues()
+        stopForeground(true)
+        stopSelf()
+    }
+
     private fun updateNotificationTrackingState(isTracking: Boolean) {
 
         val notificationActionText = if(isTracking) "Pause" else "Resume"
@@ -102,9 +112,12 @@ class TrackingService : LifecycleService() {
             isAccessible = true
             set(curNotificationBuilder, ArrayList<NotificationCompat.Action>())
         }
+
+        if(!serviceKilled){
         curNotificationBuilder = baseNotificationBuilder
                 .addAction(R.drawable.ic_bottom_nav_bar_message, notificationActionText, pendingIntent)
         notificationManager.notify(NOTIFICATION_ID, curNotificationBuilder.build())
+        }
     }
 
 
@@ -126,6 +139,7 @@ class TrackingService : LifecycleService() {
                 }
                 ACTION_STOP_SERVICE -> {
                     Timber.d("Stopped service")
+                    killService()
                 }
             }
         }
@@ -236,9 +250,11 @@ class TrackingService : LifecycleService() {
         startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
 
         timeRunInSeconds.observe(this, Observer {
-            val notification = curNotificationBuilder
-                    .setContentText(TrackingUtility.getFormattedStopWatchTime(it * 1000L))
-            notificationManager.notify(NOTIFICATION_ID, notification.build())
+            if(!serviceKilled) {
+                val notification = curNotificationBuilder
+                        .setContentText(TrackingUtility.getFormattedStopWatchTime(it * 1000L))
+                notificationManager.notify(NOTIFICATION_ID, notification.build())
+            }
         })
 
         curNotificationBuilder = baseNotificationBuilder
