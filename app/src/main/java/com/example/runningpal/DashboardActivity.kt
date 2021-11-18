@@ -61,6 +61,7 @@ class DashboardActivity : AppCompatActivity() {
         val userProfileFragment = UserProfileFragment()
         val messageFragment = MessageFragment()
         val contactsFragment = ContactsFragment()
+        val runFragment = RunFragment()
 
         setCurrentFragment(calendarFragment)
 
@@ -69,7 +70,7 @@ class DashboardActivity : AppCompatActivity() {
             when(it.itemId) {
 
                 R.id.mi_friends -> {
-                    setCurrentFragment(contactsFragment)
+                    setCurrentFragment(runFragment)
                 }
                 R.id.mi_calendar -> {
                     setCurrentFragment(calendarFragment)

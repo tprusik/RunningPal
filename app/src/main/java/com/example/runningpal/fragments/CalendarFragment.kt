@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.runningpal.CalendarAdapter
+import com.example.runningpal.ui.adapters.CalendarAdapter
 import com.example.runningpal.R
 import kotlinx.android.synthetic.main.fragment_calendar.*
 import java.time.LocalDate
@@ -43,7 +43,8 @@ class CalendarFragment :  Fragment(), CalendarAdapter.OnItemListener {
 
         val daysOfMon = ArrayList < String>()
 
-        val calendarAdapter = CalendarAdapter(daysOfMonth,this)
+        val calendarAdapter =
+            CalendarAdapter(daysOfMonth, this)
 
         val layoutManager =GridLayoutManager(context,7)
 

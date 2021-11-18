@@ -1,10 +1,12 @@
-package com.example.runningpal
+package com.example.runningpal.ui.adapters
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.runningpal.ChatActivity
+import com.example.runningpal.R
 import com.example.runningpal.db.User
 import kotlinx.android.synthetic.main.contact_cell.view.*
 

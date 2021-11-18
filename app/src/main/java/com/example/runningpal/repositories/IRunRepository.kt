@@ -1,5 +1,7 @@
 package com.example.runningpal.repositories
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.runningpal.db.Run
 
 interface IRunRepository {
@@ -8,11 +10,11 @@ interface IRunRepository {
     fun deleteRun(run : Run)
 
     // suspend
-    fun getAllRunsSortedByDate()
-    fun getAllRunsSortedByDistance()
-    fun getAllRunsSortedByTimeinMillis()
-    fun getAllRunsSortedByAvgSpeed()
-    fun getAllRunsSortedByCaloriesBurned()
+    fun getAllRunsSortedByDate() : LiveData<List<Run>>
+    fun getAllRunsSortedByDistance(): LiveData<List<Run>>
+    fun getAllRunsSortedByTimeinMillis(): LiveData<List<Run>>
+    fun getAllRunsSortedByAvgSpeed(): LiveData<List<Run>>
+    fun getAllRunsSortedByCaloriesBurned(): LiveData<List<Run>>
 
     fun getTotalAvgSpeed()
     fun getTotalCaloriesBurned()

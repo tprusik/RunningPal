@@ -17,7 +17,7 @@ class BaseApplication : Application() {
         //single instance of something
         single { FirebaseAuth.getInstance() }
 
-        single<IRunRepository> { RunRepository() }
+        single  <IRunRepository> { RunRepository() }
 
         viewModel {
             MainViewModel(get())

@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_maps.*
+import org.koin.android.ext.android.get
 import timber.log.Timber
 import java.lang.Math.round
 import java.util.*
@@ -49,6 +50,8 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
+
+        viewModel = get()
 
         btnToggleRun.setOnClickListener {
             toggleRun()
@@ -155,8 +158,8 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
             val avgSpeed = round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
             val dateTimestamp = Calendar.getInstance().timeInMillis
             val caloriesBurned = ((distanceInMeters / 1000f) * 80).toInt()
-            val run = Run(bmp, dateTimestamp, avgSpeed, distanceInMeters, curTimeInMillis, caloriesBurned)
-           // viewModel.insertRun(run)
+            val run = Run(UUID.randomUUID().toString(), dateTimestamp, avgSpeed, distanceInMeters, curTimeInMillis, caloriesBurned)
+             viewModel.saveRunToBase(run)
             Timber.d( "czas  "+ run.timeInMilis + " dystans " + distanceInMeters)
             stopRun()
         }

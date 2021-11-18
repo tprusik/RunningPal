@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.runningpal.ContactsAdapter
+import com.example.runningpal.ui.adapters.ContactsAdapter
 import com.example.runningpal.FindContactActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.User
@@ -34,12 +34,9 @@ class ContactsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val myViewModel: MainViewModel =  get()
-        val usera  : FirebaseAuth = get()
 
 
 
-        Timber.tag("TagNameThatIsReallyReallyReallyLong").d(myViewModel.repo.testFun());
 
         val database = FirebaseDatabase.getInstance("https://mywork-e32c4-default-rtdb.europe-west1.firebasedatabase.app/")
         val myRef = database.getReference().child("UserData")
