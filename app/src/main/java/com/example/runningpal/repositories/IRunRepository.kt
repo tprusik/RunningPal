@@ -3,6 +3,7 @@ package com.example.runningpal.repositories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.runningpal.db.Run
+import com.example.runningpal.db.RunStatistics
 
 interface IRunRepository {
 
@@ -19,10 +20,8 @@ interface IRunRepository {
     fun getTotalAvgSpeed()
     fun getTotalCaloriesBurned()
     fun getTotalTimeinMillis()
-    fun getTotalDistance()
+    fun getTotalDistance() : LiveData<Int>
 
-    fun testFun() : String
-
-
+    fun getTotalStatistics() : LiveData<RunStatistics>
 
 }

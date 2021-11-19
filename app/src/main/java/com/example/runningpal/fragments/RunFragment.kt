@@ -28,7 +28,6 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
     private lateinit var viewModel : MainViewModel
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

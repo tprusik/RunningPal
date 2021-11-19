@@ -46,7 +46,6 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
 
     private var curTimeInMillis = 0L
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
@@ -71,7 +70,6 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
         }
     }
 
-
     private fun stopRun() {
         sendCommandToService(ACTION_STOP_SERVICE)
        // findNavController().navigate(R.id.action_trackingFragment_to_runFragment)
@@ -95,7 +93,6 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
             tvTimer.text = formattedTime
         })
     }
-
 
     private fun toggleRun() {
         if(isTracking) {

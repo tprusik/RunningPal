@@ -36,10 +36,21 @@ class DashboardActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        val calendarFragment = CalendarFragment()
+        val mapFragment = TrackingFragment()
+        val userProfileFragment = UserProfileFragment()
+        val messageFragment = MessageFragment()
+        val contactsFragment = ContactsFragment()
+        val runFragment = RunFragment()
+        val statisticsFragment = StatisticsFragment()
+
+
         slidable_nav.setNavigationItemSelectedListener {
             when (it.itemId) {
 
                 R.id.slidableMenuItem1 -> Toast.makeText(applicationContext, "item 1", Toast.LENGTH_SHORT).show()
+
+                R.id.slidableMenuItem2 ->  setCurrentFragment(statisticsFragment)
 
                 R.id.slidableMenuLogout -> {
 
@@ -56,12 +67,6 @@ class DashboardActivity : AppCompatActivity() {
         }
 
 
-        val calendarFragment = CalendarFragment()
-        val mapFragment = TrackingFragment()
-        val userProfileFragment = UserProfileFragment()
-        val messageFragment = MessageFragment()
-        val contactsFragment = ContactsFragment()
-        val runFragment = RunFragment()
 
         setCurrentFragment(calendarFragment)
 

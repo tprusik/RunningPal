@@ -6,4 +6,6 @@ import com.example.runningpal.repositories.IRunRepository
 
 class StatisticsViewModel(val repo : IRunRepository)  : ViewModel() {
 
+    val totalDistance = repo.getTotalStatistics()
+
 }
