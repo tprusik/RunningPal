@@ -1,18 +1,23 @@
 package com.example.runningpal.ui.adapters
 
+import android.graphics.BitmapFactory
+import android.util.Base64
+import android.util.Base64.DEFAULT
+import android.util.Base64.decode
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.runningpal.R
 import com.example.runningpal.db.Run
 import com.example.runningpal.others.TrackingUtility
 import kotlinx.android.synthetic.main.item_run.view.*
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class RunAdapter : RecyclerView.Adapter<RunAdapter.RunViewHolder>() {
 
@@ -35,11 +40,11 @@ class RunAdapter : RecyclerView.Adapter<RunAdapter.RunViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RunViewHolder {
         return RunViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.item_run,
-                parent,
-                false
-            )
+                LayoutInflater.from(parent.context).inflate(
+                        R.layout.item_run,
+                        parent,
+                        false
+                )
         )
     }
 
@@ -52,7 +57,13 @@ class RunAdapter : RecyclerView.Adapter<RunAdapter.RunViewHolder>() {
         val run = differ.currentList[position]
 
         holder.itemView.apply {
-            //Glide.with(this).load(run.img).into(ivRunImage)
+
+            val pic = run.routePic
+            val decodedString: ByteArray = decode(pic, Base64.URL_SAFE)
+            val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+            Glide.with(this).load(decodedByte).into(ivRunImage)
+
+           // ivRunImage.setImageBitmap(decodedByte)
 
             val calendar = Calendar.getInstance().apply {
                 timeInMillis = run.timestamp

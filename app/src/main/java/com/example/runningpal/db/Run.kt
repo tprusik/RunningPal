@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 
 data class Run (
       var id : String? = null,
+      var routePic : String? = null,
      var timestamp : Long = 0L,
      var avgSpeedKmh : Float = 0f,
      var distanceMetres : Int = 0,

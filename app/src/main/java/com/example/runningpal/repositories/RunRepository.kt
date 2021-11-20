@@ -25,7 +25,7 @@ class RunRepository : IRunRepository  {
     override fun insertRun(run: Run) {
 
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        val database = FirebaseDatabase.getInstance("https://mywork-e32c4-default-rtdb.europe-west1.firebasedatabase.app/")
+        val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
         val myRef = database.getReference(DB_NODE_RUN).child(uid).push().setValue(run)
 
     }
@@ -39,8 +39,6 @@ class RunRepository : IRunRepository  {
     override fun getAllRunsSortedByTimeinMillis(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_TIME) }
 
     override fun getAllRunsSortedByAvgSpeed(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_DISTANCE) }
-
-
 
 
     override fun getAllRunsSortedByCaloriesBurned(): LiveData<List<Run>> {
