@@ -10,7 +10,7 @@ interface IRunRepository {
     fun insertRun(run : Run)
     fun deleteRun(run : Run)
 
-    // suspend
+
     fun getAllRunsSortedByDate() : LiveData<List<Run>>
     fun getAllRunsSortedByDistance(): LiveData<List<Run>>
     fun getAllRunsSortedByTimeinMillis(): LiveData<List<Run>>
@@ -20,7 +20,7 @@ interface IRunRepository {
     fun getTotalAvgSpeed()
     fun getTotalCaloriesBurned()
     fun getTotalTimeinMillis()
-    fun getTotalDistance() : LiveData<Int>
+    fun getTotalDistance()
 
     fun getTotalStatistics() : LiveData<RunStatistics>
 
