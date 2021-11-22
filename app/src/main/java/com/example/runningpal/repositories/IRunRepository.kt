@@ -10,18 +10,20 @@ interface IRunRepository {
     fun insertRun(run : Run)
     fun deleteRun(run : Run)
 
-
     fun getAllRunsSortedByDate() : LiveData<List<Run>>
     fun getAllRunsSortedByDistance(): LiveData<List<Run>>
     fun getAllRunsSortedByTimeinMillis(): LiveData<List<Run>>
     fun getAllRunsSortedByAvgSpeed(): LiveData<List<Run>>
     fun getAllRunsSortedByCaloriesBurned(): LiveData<List<Run>>
 
+    fun getTotalStatistics() : LiveData<RunStatistics>
+
+    // czy one są konieczne ?
+
     fun getTotalAvgSpeed()
     fun getTotalCaloriesBurned()
     fun getTotalTimeinMillis()
     fun getTotalDistance()
 
-    fun getTotalStatistics() : LiveData<RunStatistics>
 
 }

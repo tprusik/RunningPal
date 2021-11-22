@@ -1,8 +1,8 @@
 package com.example.runningpal
 import android.app.Application
-import com.example.runningpal.repositories.IRunRepository
-import com.example.runningpal.repositories.RunRepository
+import com.example.runningpal.repositories.*
 import com.example.runningpal.ui.viewmodels.MainViewModel
+import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.example.runningpal.ui.viewmodels.StatisticsViewModel
 import com.google.firebase.auth.FirebaseAuth
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -22,6 +22,8 @@ class BaseApplication : Application() {
         single { FirebaseAuth.getInstance() }
 
         single  <IRunRepository> { RunRepository() }
+        single  <IRunStatisticsRepository> { RunStatisticsRepository() }
+        single  <IRunnersRepository> { RunnersRepository() }
 
         viewModel {
             MainViewModel(get())
@@ -30,6 +32,11 @@ class BaseApplication : Application() {
         viewModel  {
 
             StatisticsViewModel(get())
+        }
+
+        viewModel  {
+
+            RunnersViewModel(get())
         }
     }
 

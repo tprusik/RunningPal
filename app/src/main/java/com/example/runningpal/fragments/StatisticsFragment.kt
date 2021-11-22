@@ -15,7 +15,7 @@ import org.koin.android.ext.android.get
 
 class StatisticsFragment : Fragment() {
 
-    private lateinit var statisticsViewModel :  StatisticsViewModel
+    private lateinit var viewModel :  MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +31,9 @@ class StatisticsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        statisticsViewModel = get()
+        viewModel = get()
 
-        statisticsViewModel.totalDistance.observe(viewLifecycleOwner , Observer {
+        viewModel.totalDistance.observe(viewLifecycleOwner , Observer {
 
             var totalDistance = it
 

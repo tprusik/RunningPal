@@ -23,7 +23,7 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
     private  val runSortedByCaloriesBurned = repo.getAllRunsSortedByCaloriesBurned()
     private  val runSortedByTimeInMillis = repo.getAllRunsSortedByTimeinMillis()
     private  val runSortedByAvgSpeed = repo.getAllRunsSortedByAvgSpeed()
-
+    val totalDistance = repo.getTotalStatistics()
 
     val runs = MediatorLiveData<List<Run>>()
 

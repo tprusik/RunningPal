@@ -23,57 +23,13 @@ import timber.log.Timber
 
 class ContactsFragment : Fragment() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-
-
-
-
-        val database = FirebaseDatabase.getInstance("https://mywork-e32c4-default-rtdb.europe-west1.firebasedatabase.app/")
-        val myRef = database.getReference().child("UserData")
-
-
-        var contacts =  mutableListOf<User>()
-
-        val adapter = ContactsAdapter(contacts)
-        rvContacts.adapter = adapter
-        rvContacts.layoutManager = LinearLayoutManager(context)
-
-        btnContactsFindNew.setOnClickListener{
-
-            val intent  = Intent(context, FindContactActivity::class.java)
-            startActivity(intent)
-
-        }
-
-        myRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-
-             for(postSnapshot in snapshot.children)
-             {
-
-                 val user  = postSnapshot.getValue(User::class.java)
-                 contacts.add(user!!)
-
-
-             }
-                adapter.notifyDataSetChanged()
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
 
     }
 

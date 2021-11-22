@@ -2,12 +2,11 @@ package com.example.runningpal.db
 
 data class User (
 
-        val email: String,
-    val nick:String,
-    val uid : String
+        var email: String? = null,
+        var nick:String? =  null,
+        var profilePic : String? = null,
+        var backgroundPic : String? = null,
+        var id : String? = null
 
 )
-{
-    constructor() : this("","","")
 
-}

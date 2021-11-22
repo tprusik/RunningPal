@@ -130,7 +130,8 @@ class RunRepository : IRunRepository  {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
         val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
-        val myRef = database.getReference(DB_NODE_RUN).child(uid).orderByChild(orderByPath)
+
+        database.getReference(DB_NODE_RUN).child(uid).orderByChild(orderByPath)
                 .addValueEventListener(object : ValueEventListener {
 
                     val runs =  mutableListOf<Run>()
@@ -153,6 +154,5 @@ class RunRepository : IRunRepository  {
         return sortedRuns
 
     }
-
 
 }
