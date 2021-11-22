@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.runningpal.R
 import com.example.runningpal.db.Run
+import com.example.runningpal.others.DatabaseUtility.convertBitmapToString
+import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
 import com.example.runningpal.others.TrackingUtility
 import kotlinx.android.synthetic.main.item_run.view.*
 import java.text.SimpleDateFormat
@@ -58,10 +60,11 @@ class RunAdapter : RecyclerView.Adapter<RunAdapter.RunViewHolder>() {
 
         holder.itemView.apply {
 
-            val pic = run.routePic
-            val decodedString: ByteArray = decode(pic, Base64.URL_SAFE)
-            val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-            Glide.with(this).load(decodedByte).into(ivRunImage)
+            val convertedPic = run.routePic!!
+
+            val pic  = convertStringToBitmap(convertedPic)
+
+            Glide.with(this).load(pic).into(ivRunImage)
 
            // ivRunImage.setImageBitmap(decodedByte)
 

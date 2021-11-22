@@ -9,4 +9,8 @@ interface IRunnersRepository {
 
     fun getAllRunnersSortedByLastRunDate() : LiveData<List<User>>
 
+    fun getCurrentUser() : LiveData<User>
+
+    fun updateUser(user : User)
+
 }

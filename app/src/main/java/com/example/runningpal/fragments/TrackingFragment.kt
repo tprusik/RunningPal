@@ -16,6 +16,7 @@ import com.example.runningpal.others.Constants.ACTION_STOP_SERVICE
 import com.example.runningpal.others.Constants.MAP_ZOOM
 import com.example.runningpal.others.Constants.POLYLINE_COLOR
 import com.example.runningpal.others.Constants.POLYLINE_WIDTH
+import com.example.runningpal.others.DatabaseUtility.convertBitmapToString
 import com.example.runningpal.others.TrackingUtility
 import com.example.runningpal.services.Polyline
 import com.example.runningpal.services.TrackingService
@@ -158,7 +159,7 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
 
             val bitmap = bmp!!.copy(bmp.config,true)
 
-            val trackPic = getImageData(bitmap)
+            val trackPic = convertBitmapToString(bmp)
             val avgSpeed = round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
             val dateTimestamp = Calendar.getInstance().timeInMillis
             val caloriesBurned = ((distanceInMeters / 1000f) * 80).toInt()
@@ -233,15 +234,5 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
         mapView?.onSaveInstanceState(outState)
     }
 
-    fun getImageData(bmp: Bitmap) :  String {
-        val bao = ByteArrayOutputStream()
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, bao) // bmp is bitmap from user image file
-        bmp.recycle()
-        val byteArray: ByteArray = bao.toByteArray()
-        val imageB64: String = Base64.encodeToString(byteArray, Base64.URL_SAFE)
 
-
-
-        return imageB64
-    }
 }

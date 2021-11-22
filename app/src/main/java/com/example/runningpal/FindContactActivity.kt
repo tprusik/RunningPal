@@ -31,11 +31,9 @@ class FindContactActivity : AppCompatActivity() {
         setupRecyclerView()
 
 
-
         viewModel.allRunners.observe(this, Observer {
             userAdapter.submitList(it)
         })
-
 
 
     }

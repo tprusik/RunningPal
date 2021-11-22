@@ -29,10 +29,10 @@ class CameraActivity : AppCompatActivity() {
     companion object{
 
         private lateinit var SelectedImageFileUri : Uri
-        private const val CAMERA_PERMISSION_CODE = 1
-        private const val CAMERA_REQUEST_CODE = 2
+        const val CAMERA_PERMISSION_CODE = 1
+        const val CAMERA_REQUEST_CODE = 2
         private const val READ_EXTERNAL_STORAGE_PERMISSION_CODE = 121
-        private const val READ_EXTERNAL_STORAGE_REQUEST_CODE = 212
+        const val READ_EXTERNAL_STORAGE_REQUEST_CODE = 212
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,7 +129,6 @@ class CameraActivity : AppCompatActivity() {
 
                     Toast.makeText(this, "Nie przyznano pozwolenia Odczytania zdjęć", Toast.LENGTH_SHORT).show()
                 }
-
 
             }
         }
