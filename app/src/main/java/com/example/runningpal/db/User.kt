@@ -6,7 +6,8 @@ data class User (
         var nick:String? =  null,
         var profilePic : String? = null,
         var backgroundPic : String? = null,
-        var id : String? = null
+        var uid : String? = null,
+        var contacts: List<String>? = null
 
 )
 

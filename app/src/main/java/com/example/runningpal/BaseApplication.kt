@@ -30,7 +30,6 @@ class BaseApplication : Application() {
         }
 
         viewModel  {
-
             StatisticsViewModel(get())
         }
 

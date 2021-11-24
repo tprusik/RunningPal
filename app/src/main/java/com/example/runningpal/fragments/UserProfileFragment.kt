@@ -23,6 +23,7 @@ import com.example.runningpal.R
 import com.example.runningpal.db.RunStatistics
 import com.example.runningpal.db.User
 import com.example.runningpal.others.DatabaseUtility.convertBitmapToString
+import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
 import com.example.runningpal.ui.adapters.RunAdapter
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.example.runningpal.ui.viewmodels.StatisticsViewModel
@@ -45,8 +46,7 @@ class UserProfileFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,7 +57,6 @@ class UserProfileFragment : Fragment() {
 
 
         var runStats = viewModel.getRunStatistics(currentUser?.uid!!).observe(viewLifecycleOwner, Observer {
-
 
 
         })
@@ -75,7 +74,9 @@ class UserProfileFragment : Fragment() {
             }
             else
             {
-                //
+                val pic = convertStringToBitmap(it.profilePic!!)
+                Glide.with(this).load(pic).into(ivUserProfileAvatar)
+
             }
 
             if(it.backgroundPic==null){
@@ -84,7 +85,8 @@ class UserProfileFragment : Fragment() {
             }
             else
             {
-                //
+                val pic = convertStringToBitmap(it.backgroundPic!!)
+                Glide.with(this).load(pic).into(ivUserProfileAvatar)
             }
 
         })
@@ -98,8 +100,8 @@ class UserProfileFragment : Fragment() {
 
         btnUserProfileFriends.setOnClickListener{
 
-            cameraShot()
-
+            val intent = Intent(context,FindContactActivity::class.java)
+            startActivity(intent)
         }
 
 
@@ -109,7 +111,8 @@ class UserProfileFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+
+
         return inflater.inflate(R.layout.fragment_user_profile, container, false)
     }
 

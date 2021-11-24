@@ -26,21 +26,25 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/tvUserProfileName"
+        android:id="@+id/tvUserProfileEmail"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:textSize="15sp"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvUserProfileEmail"
+        app:layout_constraintStart_toEndOf="@+id/tvUserProfileName"
         app:layout_constraintTop_toBottomOf="@id/ivUserProfileBackground" />
 
     <TextView
-        android:id="@+id/tvUserProfileEmail"
+        android:id="@+id/tvUserProfileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/tvUserProfileName"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toStartOf="@+id/tvUserProfileEmail"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +60,7 @@
         android:textColor="@color/black"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/tvUserProfileEmail"
+        app:layout_constraintStart_toStartOf="@+id/tvUserProfileName"
         app:layout_constraintTop_toBottomOf="@id/tvUserProfileName" />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -11,10 +11,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.runningpal.ChatActivity
+import com.example.runningpal.FindContactActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.User
+import com.example.runningpal.fragments.FriendProfileFragment
+import com.example.runningpal.others.Constants
+import com.example.runningpal.others.Constants.ACTION_SHOW_FRIEND_PROFILE
+import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
+import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import kotlinx.android.synthetic.main.item_run.view.*
 import kotlinx.android.synthetic.main.user_item.view.*
+import org.koin.java.KoinJavaComponent.get
+import timber.log.Timber
 
 class ContactsAdapter (
 
@@ -27,7 +35,7 @@ class ContactsAdapter (
     val diffCallback = object : DiffUtil.ItemCallback<User>() {
 
         override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.uid == newItem.uid
         }
 
         override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
@@ -49,6 +57,7 @@ class ContactsAdapter (
 
     override fun onBindViewHolder(holder: ContactsViewHolder, position: Int) {
 
+
         val user = differ.currentList[position]
 
         holder.itemView.apply {
@@ -59,17 +68,20 @@ class ContactsAdapter (
                 Glide.with(this).load(R.drawable.default_user_avatar).into(ivUserItem)
             else
             {
-                val pic =user.profilePic
-                val decodedString: ByteArray = Base64.decode(pic, Base64.URL_SAFE)
-                val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-                Glide.with(this).load(decodedByte).into(ivUserItem)
+                val pic =convertStringToBitmap(user.profilePic!!)
+
+                Glide.with(this).load(pic).into(ivUserItem)
             }
 
             setOnClickListener{
 
-                val intent = Intent(context, ChatActivity::class.java)
-                intent.putExtra("name",user.nick)
-                intent.putExtra("uid",user.id)
+                val intent = Intent(context, FindContactActivity::class.java)
+                    .also {
+                        it.action = Constants.ACTION_SHOW_FRIEND_PROFILE
+                        Timber.d("ter" + user.uid)
+                        it.putExtra("id",user.uid)
+                    }
+
                 context.startActivity(intent)
 
             }
