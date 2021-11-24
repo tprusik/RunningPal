@@ -7,6 +7,8 @@ interface IRunnersRepository {
 
     fun getAllRunners() : LiveData<List<User>>
 
+    fun getSelectedRunners( runners : List<String>) : LiveData<List<User>>
+
     fun getRunner(id: String) : LiveData<User>
 
     fun getAllRunnersSortedByLastRunDate() : LiveData<List<User>>

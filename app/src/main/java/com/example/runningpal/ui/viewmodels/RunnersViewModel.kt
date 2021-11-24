@@ -12,11 +12,12 @@ class RunnersViewModel(val repo : IRunnersRepository) : ViewModel() {
 
     val selectedItem: LiveData<User> get() = runner
 
-    fun selectItem(user : User) {
-        runner.value = user
+    fun selectItem(item: User) {
+        runner.value = item
     }
 
 
+    fun getSelectedRunner(id : List<String>) = repo.getSelectedRunners(id)
 
     fun retRunner() : LiveData<User> { return runner}
 

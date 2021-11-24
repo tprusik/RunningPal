@@ -24,6 +24,7 @@ import com.example.runningpal.db.RunStatistics
 import com.example.runningpal.db.User
 import com.example.runningpal.others.DatabaseUtility.convertBitmapToString
 import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
+import com.example.runningpal.ui.adapters.ContactsAdapter
 import com.example.runningpal.ui.adapters.RunAdapter
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.example.runningpal.ui.viewmodels.StatisticsViewModel
@@ -39,10 +40,12 @@ import java.io.IOException
 class UserProfileFragment : Fragment() {
 
     private  lateinit var mAuth : FirebaseAuth
-    private lateinit var viewModel : StatisticsViewModel
+    private lateinit var statisticsViewModel : StatisticsViewModel
     private lateinit var userViewModel : RunnersViewModel
     private lateinit var  currentUser : FirebaseUser
     private lateinit var user : User
+    private lateinit var contactsAdapter : ContactsAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,14 +55,12 @@ class UserProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mAuth = FirebaseAuth.getInstance()
         val currentUser =  mAuth.currentUser
-        viewModel = get()
+        statisticsViewModel = get()
         userViewModel = get()
 
+        setupRecyclerView()
 
-        var runStats = viewModel.getRunStatistics(currentUser?.uid!!).observe(viewLifecycleOwner, Observer {
 
-
-        })
 
 
         userViewModel.user.observe(viewLifecycleOwner, Observer {
@@ -89,6 +90,17 @@ class UserProfileFragment : Fragment() {
                 Glide.with(this).load(pic).into(ivUserProfileAvatar)
             }
 
+            val ids = it.contacts as List<String>
+            userViewModel.getSelectedRunner(ids).observe(viewLifecycleOwner, Observer {
+
+                contactsAdapter.submitList(it)
+
+
+            })
+
+
+
+
         })
 
 
@@ -108,13 +120,20 @@ class UserProfileFragment : Fragment() {
         tvUserProfileName.setText(currentUser?.displayName)
     }
 
+    private fun setupRecyclerView() = rvUserProvileFriends.apply {
+        contactsAdapter = ContactsAdapter()
+        adapter = contactsAdapter
+        layoutManager = LinearLayoutManager(requireContext())
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-
         return inflater.inflate(R.layout.fragment_user_profile, container, false)
     }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

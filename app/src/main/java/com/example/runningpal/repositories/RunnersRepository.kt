@@ -51,6 +51,42 @@ class RunnersRepository : IRunnersRepository {
 
     }
 
+    override fun getSelectedRunners(ids: List<String>): LiveData<List<User>> {
+       val selectedRunners = MutableLiveData<List<User>>()
+
+        val runners = mutableListOf<User>()
+
+        val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
+
+        for (id in ids){
+
+            database.getReference(DB_NODE_USER).child(id)
+                    .addValueEventListener(object : ValueEventListener {
+
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val us = snapshot.getValue(User::class.java)!!
+                            Timber.d("ss"+ us.email)
+
+                            runners.add(us)
+
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {}
+
+                    })
+
+
+
+
+        }
+
+        selectedRunners.postValue(runners)
+
+        return selectedRunners
+
+    }
+
+
     override fun getRunner(id: String): LiveData<User> {
 
             var  user  = MutableLiveData<User>()
@@ -59,8 +95,6 @@ class RunnersRepository : IRunnersRepository {
 
             database.getReference(DB_NODE_USER).child(id)
                 .addValueEventListener(object : ValueEventListener {
-
-
 
                     override fun onDataChange(snapshot: DataSnapshot) {
 
