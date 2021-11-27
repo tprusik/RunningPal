@@ -26,6 +26,7 @@ class LoginActivity : AppCompatActivity() {
         private const val RC_SIGN_IN = 120
 
     }
+
     private  lateinit var mAuth : FirebaseAuth
     private  lateinit var googleSignInClient :GoogleSignInClient
 
@@ -41,7 +42,6 @@ class LoginActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         mAuth = FirebaseAuth.getInstance()
-
 
 
         btnGoogleSignIn.setOnClickListener {

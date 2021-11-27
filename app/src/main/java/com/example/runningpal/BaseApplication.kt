@@ -2,6 +2,7 @@ package com.example.runningpal
 import android.app.Application
 import com.example.runningpal.repositories.*
 import com.example.runningpal.ui.viewmodels.MainViewModel
+import com.example.runningpal.ui.viewmodels.MessageViewModel
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.example.runningpal.ui.viewmodels.StatisticsViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +25,7 @@ class BaseApplication : Application() {
         single  <IRunRepository> { RunRepository() }
         single  <IRunStatisticsRepository> { RunStatisticsRepository() }
         single  <IRunnersRepository> { RunnersRepository() }
+        single  <IMessageRepository> { MessageRepository() }
 
         viewModel {
             MainViewModel(get())
@@ -36,6 +38,12 @@ class BaseApplication : Application() {
         viewModel  {
 
             RunnersViewModel(get())
+        }
+
+        viewModel  {
+
+            MessageViewModel(get())
+
         }
     }
 

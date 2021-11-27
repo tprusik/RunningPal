@@ -48,7 +48,6 @@ class RunnersRepository : IRunnersRepository {
 
             return runners
 
-
     }
 
     override fun getSelectedRunners(ids: List<String>): LiveData<List<User>> {
@@ -74,9 +73,6 @@ class RunnersRepository : IRunnersRepository {
                         override fun onCancelled(error: DatabaseError) {}
 
                     })
-
-
-
 
         }
 

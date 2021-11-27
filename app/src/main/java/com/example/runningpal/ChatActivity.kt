@@ -2,23 +2,30 @@ package com.example.runningpal
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.runningpal.db.Message
+import com.example.runningpal.others.DatabaseUtility
+import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
 import com.example.runningpal.ui.adapters.MessageAdapter
+import com.example.runningpal.ui.viewmodels.MessageViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.user_item.view.*
+import org.koin.android.ext.android.get
+import timber.log.Timber
 
 class ChatActivity : AppCompatActivity() {
 
-    companion object{
 
-        private lateinit var messageList:MutableList<Message>
+    private lateinit var messageViewModel : MessageViewModel
+    private lateinit var messageAdapter : MessageAdapter
 
-    }
 
     var SenderRoom : String? = null
     var ReceiverRoom : String? = null
@@ -27,64 +34,66 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        messageList =  mutableListOf<Message>()
+        messageViewModel = get()
+        setupRecyclerView()
+
         val database = FirebaseDatabase.getInstance("https://mywork-e32c4-default-rtdb.europe-west1.firebasedatabase.app/")
         val myRef = database.getReference()
 
 
-        val name = intent.getStringExtra("name")
-        val uidReceiver = intent.getStringExtra("uid")
+        val pic = intent.getStringExtra("pic")
+       // val idReceiver = intent.getStringExtra("id")
+       val idReceiver =  "oVuVAUfn0JO9MfSbZuwFcuWuYsl2"
+        val nameReceiver = intent.getStringExtra("name")
+
+        tvChatAactivity.setText(nameReceiver)
+
+        if(pic==null){
+
+            Glide.with(this).load(R.drawable.default_user_avatar).into(ivChatActivity)
+
+        }
+        else{
+
+            val image =  convertStringToBitmap(pic)
+            Glide.with(this).load(image).into(ivChatActivity)
+        }
+
         val uidSender = FirebaseAuth.getInstance().currentUser?.uid
-        supportActionBar?.title = name
 
 
-        SenderRoom = uidReceiver + uidSender
-        ReceiverRoom = uidSender + uidReceiver
-
-        val adapter = MessageAdapter(messageList)
-        rvChat.layoutManager = LinearLayoutManager(this)
-        rvChat.adapter = adapter
+       // SenderRoom = uidReceiver + uidSender
+      //  ReceiverRoom = uidSender + uidReceiver
 
 
-        myRef.child("chats").child(SenderRoom!!).child("messages")
-                .addValueEventListener(object : ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
+        messageViewModel.getMessages(idReceiver!!).observe(this, Observer {
 
-                        messageList.clear()
+            Timber.d("jestem tutaj ? ")
+            messageAdapter.submitList(it)
 
-                        for(snap in snapshot.children){
-
-                            val message = snap.getValue(Message::class.java)
-                            messageList.add(message!!)
-                        }
-                        adapter.notifyDataSetChanged()
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-
-
-                })
+        })
 
 
         ibChatPostMessage.setOnClickListener{
 
             val message = etChatPostMessage.text.toString()
             val messageObject = Message(uidSender!!,message)
-            myRef.child("chats").child(SenderRoom!!).child("messages").push()
-                .setValue(messageObject).addOnSuccessListener {
 
-                    myRef.child("chats").child(ReceiverRoom!!).child("messages").push()
-                        .setValue(messageObject)
 
-                }
-
-            addMessageToBase(messageObject,uidReceiver!!)
+           messageViewModel.sendMessage(idReceiver!!,messageObject)
         }
 
 
     }
+
+    fun setupRecyclerView() = rvChat.apply {
+
+        messageAdapter = MessageAdapter()
+        adapter = messageAdapter
+        layoutManager = LinearLayoutManager(context)
+
+    }
+
 
     fun addMessageToBase(message: Message, receiver : String) {
 
