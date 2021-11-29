@@ -2,6 +2,7 @@ package com.example.runningpal.fragments
 
 import android.Manifest
 import android.app.Activity
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -33,9 +34,13 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_camera.*
 import kotlinx.android.synthetic.main.fragment_run.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.get
+import timber.log.Timber
 import java.io.IOException
-
 
 class UserProfileFragment : Fragment() {
 
@@ -45,7 +50,7 @@ class UserProfileFragment : Fragment() {
     private lateinit var  currentUser : FirebaseUser
     private lateinit var user : User
     private lateinit var contactsAdapter : ContactsAdapter
-
+    private lateinit var userContacts : List<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,13 +64,11 @@ class UserProfileFragment : Fragment() {
         userViewModel = get()
 
         setupRecyclerView()
-
-
+        userContacts = mutableListOf<String>()
 
 
         userViewModel.user.observe(viewLifecycleOwner, Observer {
 
-            user = it
 
             tvUserProfileName.setText(it.nick)
             tvUserProfileEmail.setText(it.email)
@@ -84,31 +87,36 @@ class UserProfileFragment : Fragment() {
                 Glide.with(this).load(R.drawable.default_user_background).into(ivUserProfileBackground)
 
             }
+
             else
             {
                 val pic = convertStringToBitmap(it.backgroundPic!!)
                 Glide.with(this).load(pic).into(ivUserProfileAvatar)
             }
 
-            val ids = it.contacts as List<String>
-            userViewModel.getSelectedRunner(ids).observe(viewLifecycleOwner, Observer {
+        })
 
-                contactsAdapter.submitList(it)
+        userViewModel.runners.observe(viewLifecycleOwner, Observer {
 
+            val cont = it.contacts!!.toSet()
+            userContacts = cont.toList()
+
+            Timber.d("a tu ? " + userContacts.size)
+
+            userViewModel.getSelectedRunners(userContacts.toList()).observe(viewLifecycleOwner, Observer {
+
+                val users = it
+                contactsAdapter.submitList(users)
+                contactsAdapter.notifyDataSetChanged()
+                Timber.d("hej ss " + userContacts.size.toString())
 
             })
 
 
-
-
         })
 
+            ivUserProfileAvatar.setOnClickListener{ cameraShot() }
 
-        ivUserProfileAvatar.setOnClickListener{
-
-            cameraShot()
-
-        }
 
         btnUserProfileFriends.setOnClickListener{
 
@@ -117,13 +125,14 @@ class UserProfileFragment : Fragment() {
         }
 
 
+
         tvUserProfileName.setText(currentUser?.displayName)
     }
 
     private fun setupRecyclerView() = rvUserProvileFriends.apply {
         contactsAdapter = ContactsAdapter()
         adapter = contactsAdapter
-        layoutManager = LinearLayoutManager(requireContext())
+        layoutManager = LinearLayoutManager(context)
     }
 
 

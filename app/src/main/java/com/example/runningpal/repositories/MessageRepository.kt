@@ -25,8 +25,7 @@ class MessageRepository : IMessageRepository {
 
             val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
 
-
-                database.getReference(DbConstants.DB_NODE_MESSAGE_FRIENDS).child(uid)
+                database.getReference(DbConstants.DB_NODE_MESSAGE_FRIENDS).child(uid).child("MESSAGE_CONTACTS")
                         .addValueEventListener(object : ValueEventListener {
 
                             override fun onDataChange(snapshot: DataSnapshot) {
@@ -36,7 +35,7 @@ class MessageRepository : IMessageRepository {
                                     val messageContact = snap.getValue(MessageContact::class.java)
 
                                     if (messageContact != null) {
-                                        Timber.d("ss" + messageContact.name)
+                                        Timber.d("MessageRepository getMessageFriends  " + messageContact.name)
 
                                         messageContacts.add(messageContact)
                                     }
@@ -109,8 +108,20 @@ class MessageRepository : IMessageRepository {
 
                 }
 
-
     }
 
+    override fun updateMessageContact(messageContact : MessageContact) {
 
+        val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
+        val myRef = database.getReference()
+
+
+        myRef.child("TestUserChats").child(FirebaseAuth.getInstance().currentUser!!.uid).child("MESSAGE_CONTACTS").child(messageContact.uid!!)
+                .setValue(messageContact).addOnSuccessListener {
+
+                    myRef.child("TestUserChats").child(messageContact.uid!!).child("MESSAGE_CONTACTS").child(FirebaseAuth.getInstance().currentUser!!.uid)
+                            .setValue(messageContact)
+                }
+
+    }
 }

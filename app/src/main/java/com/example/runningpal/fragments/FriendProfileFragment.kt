@@ -6,14 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.runningpal.FindContactActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.User
 import com.example.runningpal.others.DatabaseUtility
+import com.example.runningpal.ui.adapters.ContactsAdapter
 import com.example.runningpal.ui.viewmodels.MainViewModel
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.example.runningpal.ui.viewmodels.StatisticsViewModel
@@ -29,15 +32,12 @@ import timber.log.Timber
 class FriendProfileFragment : Fragment() {
 
     private lateinit var viewModel : StatisticsViewModel
-
-
+    private lateinit var userViewModel : RunnersViewModel
     private lateinit var runner : User
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
 
     }
 
@@ -46,18 +46,19 @@ class FriendProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_friend_profile, container, false)
 
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = get()
+        userViewModel = get()
 
 
         val friendViewModel by sharedViewModel<RunnersViewModel>()
 
 
         Timber.d("onViewCreated fragment" + friendViewModel.hashCode())
+
         friendViewModel.selectedItem.observe(viewLifecycleOwner, Observer {
 
             runner = it
@@ -98,9 +99,14 @@ class FriendProfileFragment : Fragment() {
                 Toast.makeText(context,"dodano kolegę do bazy",Toast.LENGTH_SHORT).show()
 
         }
+
+        btnFriendProfile.setOnClickListener {
+
+
+
+
+        }
     }
-
-
 
 
 }

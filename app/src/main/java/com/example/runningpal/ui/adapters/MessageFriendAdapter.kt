@@ -57,8 +57,8 @@ class MessageFriendAdapter (
         holder.itemView.apply {
 
             tvContactMessageUser.text = user.name
-            tvContactMessage.text = user.message
-
+            tvContactMessage.text = user.lastMessage
+            Timber.d("MessageFriendAdapter  " +  user.uid)
             if(user.profilePic == null)
                 Glide.with(this).load(R.drawable.default_user_avatar).into(ivContactMessage)
             else
@@ -73,6 +73,7 @@ class MessageFriendAdapter (
 
                 val intent = Intent(context, ChatActivity::class.java)
                         .also {
+                            Timber.d("MessageFriendAdapter  " +  user.uid)
                             it.putExtra("id",user.uid)
                             it.putExtra("name",user.name)
                         }

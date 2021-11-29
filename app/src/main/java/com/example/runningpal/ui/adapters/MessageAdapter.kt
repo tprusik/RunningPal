@@ -24,7 +24,7 @@ class MessageAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     val diffCallback = object : DiffUtil.ItemCallback<Message>() {
 
         override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean {
-            return oldItem.senderID == newItem.senderID
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean {

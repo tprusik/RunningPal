@@ -36,6 +36,7 @@ class RegisterActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                     ).show()
                 }
+
                 else ->{
 
                     val nick:String = etRegisterNick.text.toString()

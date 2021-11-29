@@ -67,7 +67,8 @@ class NewMessageAdapter: RecyclerView.Adapter<NewMessageAdapter.NewMessageViewHo
 //
                 val intent = Intent(context, ChatActivity::class.java)
                         .also {
-                           // it.action = Constants.ACTION_SHOW_FRIEND_PROFILE
+
+                            Timber.d("New message adapter"+ user.uid)
                             it.putExtra("pic",user.profilePic)
                             it.putExtra("id",user.uid)
                             it.putExtra("name",user.nick)

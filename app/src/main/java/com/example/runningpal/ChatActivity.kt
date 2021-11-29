@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.runningpal.db.Message
+import com.example.runningpal.db.MessageContact
 import com.example.runningpal.others.DatabaseUtility
 import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
 import com.example.runningpal.ui.adapters.MessageAdapter
@@ -19,16 +20,13 @@ import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.user_item.view.*
 import org.koin.android.ext.android.get
 import timber.log.Timber
+import java.util.*
 
 class ChatActivity : AppCompatActivity() {
 
-
     private lateinit var messageViewModel : MessageViewModel
     private lateinit var messageAdapter : MessageAdapter
-
-
-    var SenderRoom : String? = null
-    var ReceiverRoom : String? = null
+    private lateinit var receiverID : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +35,9 @@ class ChatActivity : AppCompatActivity() {
         messageViewModel = get()
         setupRecyclerView()
 
-        val database = FirebaseDatabase.getInstance("https://mywork-e32c4-default-rtdb.europe-west1.firebasedatabase.app/")
-        val myRef = database.getReference()
-
 
         val pic = intent.getStringExtra("pic")
-       // val idReceiver = intent.getStringExtra("id")
-       val idReceiver =  "oVuVAUfn0JO9MfSbZuwFcuWuYsl2"
+        receiverID = intent.getStringExtra("id")!!
         val nameReceiver = intent.getStringExtra("name")
 
         tvChatAactivity.setText(nameReceiver)
@@ -62,11 +56,29 @@ class ChatActivity : AppCompatActivity() {
         val uidSender = FirebaseAuth.getInstance().currentUser?.uid
 
 
-       // SenderRoom = uidReceiver + uidSender
-      //  ReceiverRoom = uidSender + uidReceiver
+         getMessages()
 
 
-        messageViewModel.getMessages(idReceiver!!).observe(this, Observer {
+        ibChatPostMessage.setOnClickListener{
+            val timestamp = System.currentTimeMillis().toString()
+
+            val message = etChatPostMessage.text.toString()
+            val messageObject = Message(uidSender!!,message,UUID.randomUUID().toString())
+            val messageContact = MessageContact(nameReceiver,message,timestamp,receiverID,pic)
+
+            messageViewModel.sendMessage(receiverID,messageObject)
+            messageViewModel.updateMessageContact(messageContact)
+
+           getMessages()
+
+        }
+
+
+    }
+
+    fun getMessages(){
+
+        messageViewModel.getMessages(receiverID).observe(this, Observer {
 
             Timber.d("jestem tutaj ? ")
             messageAdapter.submitList(it)
@@ -74,17 +86,20 @@ class ChatActivity : AppCompatActivity() {
         })
 
 
-        ibChatPostMessage.setOnClickListener{
+    }
 
-            val message = etChatPostMessage.text.toString()
-            val messageObject = Message(uidSender!!,message)
+    override fun onStop() {
+        super.onStop()
 
+        messageViewModel.getMessages(receiverID).observe(this, Observer {
 
-           messageViewModel.sendMessage(idReceiver!!,messageObject)
-        }
+            Timber.d("jestem tutaj ? ")
+            messageAdapter.submitList(it)
 
+        })
 
     }
+
 
     fun setupRecyclerView() = rvChat.apply {
 
@@ -94,19 +109,4 @@ class ChatActivity : AppCompatActivity() {
 
     }
 
-
-    fun addMessageToBase(message: Message, receiver : String) {
-
-        val database = FirebaseDatabase.getInstance("https://mywork-e32c4-default-rtdb.europe-west1.firebasedatabase.app/")
-        val myRef = database.getReference()
-
-
-        myRef.child("TestUserChats").child(FirebaseAuth.getInstance().currentUser!!.uid).child(receiver).push()
-                .setValue(message).addOnSuccessListener {
-
-                    myRef.child("TestUserChats").child(receiver).child(FirebaseAuth.getInstance().currentUser!!.uid).push()
-                            .setValue(message)
-
-                }
-    }
 }

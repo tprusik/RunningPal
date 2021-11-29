@@ -40,7 +40,7 @@ class DashboardActivity : AppCompatActivity() {
         val mapFragment = TrackingFragment()
         val userProfileFragment = UserProfileFragment()
         val messageFragment = MessageFragment()
-        val contactsFragment = ContactsFragment()
+        val roomFragment = RunRoomFragment()
         val runFragment = RunFragment()
         val statisticsFragment = StatisticsFragment()
 
@@ -68,7 +68,7 @@ class DashboardActivity : AppCompatActivity() {
 
 
 
-        setCurrentFragment(calendarFragment)
+        setCurrentFragment(runFragment)
 
         // pasek nawigacji
         bottomNavigationView.setOnItemSelectedListener {
@@ -78,7 +78,7 @@ class DashboardActivity : AppCompatActivity() {
                     setCurrentFragment(runFragment)
                 }
                 R.id.mi_calendar -> {
-                    setCurrentFragment(calendarFragment)
+                    setCurrentFragment(roomFragment)
                 }
 
                 R.id.mi_sportsActivity -> {

@@ -32,8 +32,8 @@ import kotlin.collections.ArrayList
 
 class MessageFragment : Fragment() {
 
-    private lateinit var contactsAdapter: NewMessageAdapter
-    private lateinit var messageAdapter: MessageFriendAdapter
+    private lateinit var newMessageAdapter:  NewMessageAdapter
+    private lateinit var messageFriendAdapter: MessageFriendAdapter
     private lateinit var messageViewModel: MessageViewModel
     private lateinit var userViewModel: RunnersViewModel
     private lateinit var user : User
@@ -51,35 +51,29 @@ class MessageFragment : Fragment() {
         userViewModel = get()
         user = User()
 
-
         messageViewModel.messageFriends.observe(viewLifecycleOwner, Observer {
 
             Timber.d("Message Fragment")
-            messageAdapter.submitList(it)
-
-
-        })
-
-
-        userViewModel.user.observe(viewLifecycleOwner, Observer {
-
-           user = it
+            messageFriendAdapter.submitList(it)
 
         })
 
 
+        userViewModel.user.observe(viewLifecycleOwner, Observer { user = it })
 
 
 
         fabMessageFragment.setOnClickListener{
 
-            userViewModel.getSelectedRunner(user.contacts!!).observe(viewLifecycleOwner, Observer {
+            userViewModel.getSelectedRunners(user.contacts!!).observe(viewLifecycleOwner, Observer {
 
-                contactsAdapter.submitList(it)
+                newMessageAdapter.submitList(it)
+                changeRecycleView()
+
 
             })
 
-            changeRecycleView()
+
 
         }
 
@@ -89,9 +83,9 @@ class MessageFragment : Fragment() {
 
     private fun setupRecycleView() = rvMessageFragment.apply{
 
-        contactsAdapter = NewMessageAdapter()
-        messageAdapter =  MessageFriendAdapter()
-        adapter = messageAdapter
+        newMessageAdapter = NewMessageAdapter()
+        messageFriendAdapter =  MessageFriendAdapter()
+        adapter = messageFriendAdapter
         layoutManager = LinearLayoutManager(context)
 
     }
@@ -99,11 +93,11 @@ class MessageFragment : Fragment() {
     private fun changeRecycleView() = rvMessageFragment.apply{
 
         if(adapter is MessageFriendAdapter){
-            adapter = contactsAdapter
+            adapter = newMessageAdapter
             layoutManager = LinearLayoutManager(context)
 
         }else {
-            adapter = messageAdapter
+            adapter = messageFriendAdapter
             layoutManager = LinearLayoutManager(context)
 
         }
