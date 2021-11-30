@@ -3,7 +3,9 @@ package com.example.runningpal.repositories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.runningpal.db.DbConstants
+import com.example.runningpal.db.DbConstants.DB_NODE_RUN_INVITATION
 import com.example.runningpal.db.DbConstants.DB_NODE_USER
+import com.example.runningpal.db.Invitation
 import com.example.runningpal.db.Run
 import com.example.runningpal.db.User
 import com.google.firebase.auth.FirebaseAuth
@@ -155,6 +157,49 @@ class RunnersRepository : IRunnersRepository {
         val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL).getReference(DB_NODE_USER).child(uid)
 
         database.setValue(user)
+
+    }
+
+    override fun getInvitation(): LiveData<Invitation> {
+
+        var invitation = MutableLiveData<Invitation>()
+
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+
+        val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
+
+        database.getReference(DB_NODE_RUN_INVITATION).child(uid)
+                .addValueEventListener(object : ValueEventListener {
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+
+                        for(snap in snapshot.children){
+
+                            Timber.d("invitatiom")
+                            val currInvitation = snap.getValue(Invitation::class.java)
+                            invitation.postValue(currInvitation!!)
+
+                        }
+
+
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {}
+
+                })
+
+        return invitation
+
+
+    }
+
+    override fun sendInvitation(invitation: Invitation) {
+
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+
+        val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
+        val myRef = database.getReference(DB_NODE_RUN_INVITATION).child(invitation.receiverID!!).push().setValue(invitation)
+
 
     }
 }

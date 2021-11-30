@@ -13,6 +13,7 @@ import com.example.runningpal.db.User
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import kotlinx.android.synthetic.main.fragment_run_room.*
 import org.koin.android.ext.android.get
+import timber.log.Timber
 
 
 class RunRoomFragment : Fragment() {
@@ -40,6 +41,11 @@ class RunRoomFragment : Fragment() {
 
        val dialog = ChooseUserDialogFragment()
 
+
+        runnersViewModel.invitation.observe(viewLifecycleOwner, Observer {
+
+            Timber.d("dostalem")
+        })
 
 
         btnInviteRunRoomFragment.setOnClickListener {

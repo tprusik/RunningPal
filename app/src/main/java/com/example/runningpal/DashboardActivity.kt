@@ -7,8 +7,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.runningpal.fragments.*
 import com.example.runningpal.others.Constants
 import com.google.firebase.auth.FirebaseAuth
@@ -27,8 +25,7 @@ class DashboardActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         // niekonieczne to co poniżej
 
-       
-        
+
         // change striung resources
         toggle = ActionBarDrawerToggle(this,drawerLayout,R.string.common_open_on_phone,R.string.appbar_scrolling_view_behavior)
         drawerLayout.addDrawerListener(toggle)

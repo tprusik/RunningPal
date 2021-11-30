@@ -1,19 +1,22 @@
 package com.example.runningpal.fragments
 
 import android.Manifest
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.runningpal.R
 import com.example.runningpal.others.Constants.REQUEST_CODE_LOCATION_PERMISSION
 import com.example.runningpal.others.RunSortType
 import com.example.runningpal.others.TrackingUtility
+import com.example.runningpal.services.ListenerService
+import com.example.runningpal.services.TrackingService
 import com.example.runningpal.ui.adapters.RunAdapter
 import com.example.runningpal.ui.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_run.*
@@ -71,11 +74,25 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
 
 
         viewModel.runs.observe(viewLifecycleOwner, Observer {
-           runAdapter.submitList(it)
+            runAdapter.submitList(it)
         })
 
 
+
+        btnNewRun.setOnClickListener{
+
+
+            Intent(requireContext(), ListenerService::class.java).also {
+                requireContext().startService(it)
+                Timber.d("tutaj")
+            }
+
+        }
+
+
     }
+
+
 
     private fun setupRecyclerView() = rvRuns.apply {
         runAdapter = RunAdapter()
@@ -125,7 +142,7 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
     }
 

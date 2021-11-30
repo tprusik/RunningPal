@@ -1,6 +1,7 @@
 package com.example.runningpal.repositories
 
 import androidx.lifecycle.LiveData
+import com.example.runningpal.db.Invitation
 import com.example.runningpal.db.User
 
 interface IRunnersRepository {
@@ -16,5 +17,9 @@ interface IRunnersRepository {
     fun getCurrentUser() : LiveData<User>
 
     fun updateUser(user : User)
+
+    fun getInvitation() : LiveData<Invitation>
+
+    fun sendInvitation(invitation : Invitation)
 
 }
