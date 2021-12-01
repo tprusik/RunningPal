@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.runningpal.R
 import com.example.runningpal.db.Invitation
@@ -22,9 +23,14 @@ import timber.log.Timber
 class ChooseUserDialogFragment :  DialogFragment() {
 
     private lateinit var users : List<User>
-    private lateinit var nicks : MutableList<String>
-    private lateinit var usersAray : Array<String>
-    private lateinit var viewModel: RunnersViewModel
+    private  var nicks : MutableList<String>
+    private  var usersAray : Array<String>
+
+    companion object{
+
+        val ids = MutableLiveData<Int>()
+
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
@@ -33,7 +39,7 @@ class ChooseUserDialogFragment :  DialogFragment() {
             val builder = AlertDialog.Builder(it)
            builder.setItems(usersAray,DialogInterface.OnClickListener { dialog, which ->
 
-            sendInvite(which)
+            ids.postValue(which)
 
            })
 
@@ -42,40 +48,23 @@ class ChooseUserDialogFragment :  DialogFragment() {
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 
-    fun sendInvite(id : Int){
-
-        val user = users.get(id)
-
-        val invitation = Invitation(user.uid,"rVZAsWtKgpeAHaeIN8vTlxSdcpk1","1")
-
-        viewModel.sendInvitation(invitation)
-        Timber.d("Wysłano zaproszenie")
-
-    }
 
     init{
 
         nicks = mutableListOf<String>()
         usersAray = arrayOf<String>()
-        viewModel = get()
 
     }
 
     fun submitList(user : List<User>){
-
         users = user
 
-
         for(u in user){
-
             Timber.d("dodano")
             nicks.add(u.nick!!)
-
         }
-
         usersAray = nicks.toTypedArray() as Array<String>
 
     }
-
 
 }

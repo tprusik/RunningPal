@@ -7,16 +7,24 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import com.example.runningpal.db.User
 import com.example.runningpal.fragments.*
 import com.example.runningpal.others.Constants
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_dashboard.*
+import timber.log.Timber
 
 class DashboardActivity : AppCompatActivity() {
 
     private  lateinit var mAuth : FirebaseAuth
     private  lateinit var toggle: ActionBarDrawerToggle
 
+
+    companion object{
+
+        val runnersInRoom = MutableLiveData<User>()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -98,7 +106,6 @@ class DashboardActivity : AppCompatActivity() {
     }
 
 
-
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
@@ -106,12 +113,22 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun navigateToTrackingFragmentIfNeeded(intent: Intent?) {
+        // when ? tu powinno być when
+
         if(intent?.action == Constants.ACTION_SHOW_TRACKING_FRAGMENT) {
 
-            val trackingFragment = TrackingFragment()
+            val fragment = TrackingFragment()
+            setCurrentFragment(fragment)
+        }
 
-            setCurrentFragment(trackingFragment)
+        if(intent?.action == Constants.ACTION_SHOW_ROOM) {
 
+            val id = intent.getStringExtra("idRoom")
+            val receiverID = intent.getStringExtra("idReceiver")
+
+
+            val fragment = RunRoomFragment()
+            setCurrentFragment(fragment)
         }
     }
 

@@ -18,6 +18,7 @@ import com.example.runningpal.DashboardActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.Invitation
 import com.example.runningpal.others.Constants
+import com.example.runningpal.others.Constants.ACTION_SHOW_ROOM
 import com.example.runningpal.others.TrackingUtility
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import org.koin.android.ext.android.get
@@ -44,6 +45,7 @@ init{
 }
 
 
+
     override fun onCreate() {
         super.onCreate()
 
@@ -51,8 +53,9 @@ init{
 
         viewModel.invitation.observe(this, Observer {
 
+            val roomID = it.idRoom
             Timber.d("serwis")
-            createNotification()
+            createNotification(roomID!!)
         })
 
 
@@ -69,8 +72,8 @@ init{
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotification(){
+
+    private fun createNotification(idRoom : String){
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE)
                 as NotificationManager
@@ -86,24 +89,19 @@ init{
             .setOngoing(true)
             .setSmallIcon(R.drawable.ic_bottom_nav_bar_message)
             .setContentTitle("Odebrano zaproszenie")
-            .setContentText(LocalDateTime.now().toString())
-            .setContentIntent(getMainActivityPendingIntent())
+            .setContentIntent(getRunRoomPendingIntent(idRoom))
 
-        with(NotificationManagerCompat.from(this)) {
-            // notificationId is a unique int for each notification that you must define
-            notify(1, notificationBuilder.build())
-        }
-
-
-
+        notificationManager.notify(1,notificationBuilder.build())
 
 
     }
 
-    private fun getMainActivityPendingIntent() = PendingIntent.getActivity(
+    private fun getRunRoomPendingIntent(idRoom : String) = PendingIntent.getActivity(
         this,
         0,
         Intent(this, DashboardActivity::class.java).also {
+            it.action = ACTION_SHOW_ROOM
+            it.putExtra("id",idRoom)
         },
         PendingIntent.FLAG_UPDATE_CURRENT
     )

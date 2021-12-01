@@ -1,6 +1,9 @@
 package com.example.runningpal
 import android.app.Application
+import android.content.Intent
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.runningpal.repositories.*
+import com.example.runningpal.services.ListenerService
 import com.example.runningpal.ui.viewmodels.MainViewModel
 import com.example.runningpal.ui.viewmodels.MessageViewModel
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
@@ -49,6 +52,10 @@ class BaseApplication : Application() {
 
         override fun onCreate() {
             super.onCreate()
+
+            Intent(baseContext, ListenerService::class.java).also {
+                baseContext.startService(it)
+            }
 
             if (BuildConfig.DEBUG) {
                 Timber.plant(Timber.DebugTree())

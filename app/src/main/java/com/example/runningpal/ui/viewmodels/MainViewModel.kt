@@ -5,7 +5,9 @@ import android.widget.Toast
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.runningpal.db.Room
 import com.example.runningpal.db.Run
+import com.example.runningpal.db.Runner
 import com.example.runningpal.others.RunSortType
 import com.example.runningpal.repositories.IRunRepository
 import com.google.firebase.storage.FirebaseStorage
@@ -89,7 +91,13 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
                 Timber.d("Udalo sie wgrac ")
             }
 
-
     }
+
+    fun addRunnerToRoom(runner: Runner) =  viewModelScope.launch { repo.addRunnerToRoom(runner) }
+    fun createRoom(room : Room) = viewModelScope.launch { repo.createRoom(room) }
+
+    fun getRoom(idRoom : String) = repo.getRoom(idRoom)
+
+    fun getRunners(idRoom: String) = repo.getRunners(idRoom)
 
 }

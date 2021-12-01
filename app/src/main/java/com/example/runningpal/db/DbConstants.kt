@@ -11,6 +11,7 @@ object DbConstants {
     const val DB_NODE_USER = "UserData"
     const val DB_NODE_MESSAGE_FRIENDS = "TestUserChats"
     const val DB_NODE_RUN_INVITATION = "INVITATION"
+    const val DB_NODE_RUN_ROOM = "ROOM"
 
 
     const val ORDER_BY_DISTANCE = "distanceMetres"

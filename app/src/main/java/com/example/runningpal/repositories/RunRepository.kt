@@ -2,14 +2,13 @@ package com.example.runningpal.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.runningpal.db.*
 import com.example.runningpal.db.DbConstants.DB_INSTANCE_URL
 import com.example.runningpal.db.DbConstants.DB_NODE_RUN
+import com.example.runningpal.db.DbConstants.DB_NODE_RUN_ROOM
 import com.example.runningpal.db.DbConstants.ORDER_BY_DATE
 import com.example.runningpal.db.DbConstants.ORDER_BY_DISTANCE
 import com.example.runningpal.db.DbConstants.ORDER_BY_TIME
-import com.example.runningpal.db.Run
-import com.example.runningpal.db.RunStatistics
-import com.example.runningpal.db.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -153,6 +152,93 @@ class RunRepository : IRunRepository  {
 
         return sortedRuns
 
+    }
+
+    override  fun addRunnerToRoom(runner : Runner){
+
+        Timber.d("add Runner ${runner.name}  ${runner.idRoom}  ${runner.id}")
+        val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
+
+        val myRef = database.getReference(DB_NODE_RUN_ROOM).child(runner.idRoom!!).child("RUNNER").child(runner.id!!).setValue(runner)
+        Timber.d("add Runner ${runner.name}  ${runner.idRoom}")
+
+    }
+
+    override fun getRoom(roomID: String): LiveData<Room> {
+
+        var  room  = MutableLiveData<Room>()
+
+        val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
+
+        database.getReference(DB_NODE_RUN_ROOM).child(roomID)
+                .addValueEventListener(object : ValueEventListener {
+
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+
+                        val roomObject = snapshot.getValue(Room::class.java)
+
+                        if(roomObject!=null) {
+
+                            Timber.d("room z firebase ${roomObject.id} ")
+
+                            room.postValue(roomObject!!)
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {}
+
+                })
+
+        return room
+
+    }
+
+    override fun getRunners(roomID: String): LiveData<List<Runner>> {
+
+        var  room = MutableLiveData<List<Runner>>()
+        var  runnerList = mutableListOf<Runner>()
+
+        val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
+
+        database.getReference(DB_NODE_RUN_ROOM).child(roomID).child("RUNNER")
+                .addValueEventListener(object : ValueEventListener {
+
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+
+                        for(snap in snapshot.children){
+
+                            val runnerObject = snap.getValue(Runner::class.java)
+
+                            if(runnerObject!=null) {
+
+                                Timber.d("runner z firebase ${runnerObject.id} ")
+                                runnerList.add(runnerObject)
+
+                            }
+
+
+                        }
+
+                        room.postValue(runnerList!!)
+
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {}
+
+                })
+
+        return room
+
+    }
+
+    override fun createRoom(room : Room){
+
+        val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
+
+        val myRef = database.getReference(DB_NODE_RUN_ROOM).child(room.id!!).setValue(room)
+        Timber.d("add Room ${room.id} ")
     }
 
 }

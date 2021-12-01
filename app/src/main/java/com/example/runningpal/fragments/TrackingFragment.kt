@@ -27,16 +27,15 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
 import kotlinx.android.synthetic.main.fragment_maps.*
 import org.koin.android.ext.android.get
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
 
 import java.lang.Math.round
 import java.util.*
 
-
 class TrackingFragment : Fragment(R.layout.fragment_maps) {
 
     private var map: GoogleMap? = null
-
 
     private lateinit var viewModel : MainViewModel
 
@@ -84,6 +83,13 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
             pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
+            var distanceInMeters = 0
+
+            for(polyline in it) {
+                distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
+            }
+
+            Timber.d("Dystans: ${distanceInMeters}")//////////////////////
         })
 
         TrackingService.timeRunInMillis.observe(viewLifecycleOwner, Observer {
@@ -148,9 +154,6 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
 
         zoomToSeeWholeTrack()
 
-
-// bitmap is now OK for you to use without recycling errors.
-
         map?.snapshot { bmp ->
             var distanceInMeters = 0
             for(polyline in pathPoints) {
@@ -167,7 +170,6 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
             val run = Run(UUID.randomUUID().toString(), trackPic, dateTimestamp, avgSpeed, distanceInMeters, curTimeInMillis, caloriesBurned)
              viewModel.saveRunToBase(run)
              viewModel.saveTrackSnapshotToBase(bmp, run.id!!)
-
 
             stopRun()
         }
@@ -188,6 +190,7 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
         if(pathPoints.isNotEmpty() && pathPoints.last().size > 1) {
             val preLastLatLng = pathPoints.last()[pathPoints.last().size - 2]
             val lastLatLng = pathPoints.last().last()
+            Timber.d("wsp:  ${lastLatLng}")/////////////////////////////////
             val polylineOptions = PolylineOptions()
                     .color(POLYLINE_COLOR)
                     .width(POLYLINE_WIDTH)
