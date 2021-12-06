@@ -2,7 +2,6 @@ package com.example.runningpal.fragments
 
 import android.Manifest
 import android.app.Activity
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -17,30 +16,20 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.runningpal.CameraActivity
-import com.example.runningpal.DashboardActivity
-import com.example.runningpal.FindContactActivity
+import com.example.runningpal.activities.CameraActivity
+import com.example.runningpal.activities.FindContactActivity
 import com.example.runningpal.R
-import com.example.runningpal.db.RunStatistics
 import com.example.runningpal.db.User
 import com.example.runningpal.others.DatabaseUtility.convertBitmapToString
 import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
 import com.example.runningpal.ui.adapters.ContactsAdapter
-import com.example.runningpal.ui.adapters.RunAdapter
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.example.runningpal.ui.viewmodels.StatisticsViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.android.synthetic.main.activity_camera.*
-import kotlinx.android.synthetic.main.fragment_run.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.get
 import timber.log.Timber
-import java.io.IOException
 
 class UserProfileFragment : Fragment() {
 
@@ -120,7 +109,7 @@ class UserProfileFragment : Fragment() {
 
         btnUserProfileFriends.setOnClickListener{
 
-            val intent = Intent(context,FindContactActivity::class.java)
+            val intent = Intent(context, FindContactActivity::class.java)
             startActivity(intent)
         }
 

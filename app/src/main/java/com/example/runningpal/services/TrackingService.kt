@@ -15,7 +15,7 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.example.runningpal.DashboardActivity
+import com.example.runningpal.activities.DashboardActivity
 import com.example.runningpal.R
 import com.example.runningpal.others.Constants.ACTION_PAUSE_SERVICE
 import com.example.runningpal.others.Constants.ACTION_SHOW_TRACKING_FRAGMENT

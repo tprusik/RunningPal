@@ -8,11 +8,9 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.runningpal.ChatActivity
-import com.example.runningpal.FindContactActivity
+import com.example.runningpal.activities.ChatActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.User
-import com.example.runningpal.others.Constants
 import com.example.runningpal.others.DatabaseUtility
 import kotlinx.android.synthetic.main.user_item.view.*
 import timber.log.Timber

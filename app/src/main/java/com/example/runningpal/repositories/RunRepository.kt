@@ -3,31 +3,32 @@ package com.example.runningpal.repositories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.runningpal.db.*
-import com.example.runningpal.db.DbConstants.DB_INSTANCE_URL
-import com.example.runningpal.db.DbConstants.DB_NODE_RUN
-import com.example.runningpal.db.DbConstants.DB_NODE_RUN_ROOM
-import com.example.runningpal.db.DbConstants.ORDER_BY_DATE
-import com.example.runningpal.db.DbConstants.ORDER_BY_DISTANCE
-import com.example.runningpal.db.DbConstants.ORDER_BY_TIME
+import com.example.runningpal.others.DbConstants.DB_INSTANCE_URL
+import com.example.runningpal.others.DbConstants.DB_NODE_RUN
+import com.example.runningpal.others.DbConstants.DB_NODE_RUN_ROOM
+import com.example.runningpal.others.DbConstants.ORDER_BY_CALORIES_BURNED
+import com.example.runningpal.others.DbConstants.ORDER_BY_DATE
+import com.example.runningpal.others.DbConstants.ORDER_BY_DISTANCE
+import com.example.runningpal.others.DbConstants.ORDER_BY_TIME
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.delay
 import timber.log.Timber
 
 class RunRepository : IRunRepository  {
 
 
-    override fun insertRun(run: Run) {
+    private var userID : String
+    private var database : FirebaseDatabase
 
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
-        val myRef = database.getReference(DB_NODE_RUN).child(uid).push().setValue(run)
-
+    init{
+        userID =  FirebaseAuth.getInstance().currentUser!!.uid
+        database =  FirebaseDatabase.getInstance(DB_INSTANCE_URL)
     }
+
+    override fun insertRun(run: Run) { database.getReference(DB_NODE_RUN).child(userID).push().setValue(run) }
 
     override fun deleteRun(run: Run) {}
 
@@ -39,39 +40,7 @@ class RunRepository : IRunRepository  {
 
     override fun getAllRunsSortedByAvgSpeed(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_DISTANCE) }
 
-
-    override fun getAllRunsSortedByCaloriesBurned(): LiveData<List<Run>> {
-        var  runs  = MutableLiveData<List<Run>>()
-
-
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        val database = FirebaseDatabase.getInstance("https://mywork-e32c4-default-rtdb.europe-west1.firebasedatabase.app/")
-        val myRef = database.getReference("Runs").child(uid).orderByChild("caloriesBurnt")
-                .addValueEventListener(object : ValueEventListener {
-
-                    val listr =  mutableListOf<Run>()
-
-                    override fun onDataChange(snapshot: DataSnapshot) {
-
-                        for(snap in snapshot.children){
-
-                            val run = snap.getValue(Run::class.java)!!
-                            listr.add(run)
-                            Timber.d(run.avgSpeedKmh.toString())
-
-                            runs.postValue(listr)
-
-                        }
-
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {}
-
-                })
-
-        return runs
-
-    }
+    override fun getAllRunsSortedByCaloriesBurned(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_CALORIES_BURNED)}
 
     override fun getTotalAvgSpeed() {}
 
@@ -82,12 +51,9 @@ class RunRepository : IRunRepository  {
     override fun getTotalDistance()  {}
 
     override fun getTotalStatistics(): LiveData<RunStatistics> {
-
         var totalStatistics = MutableLiveData<RunStatistics>()
 
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
-        val myRef = database.getReference(DB_NODE_RUN).child(uid)
+       database.getReference(DB_NODE_RUN).child(userID)
             .addValueEventListener(object : ValueEventListener {
 
                 var totRuns = 0
@@ -103,7 +69,7 @@ class RunRepository : IRunRepository  {
 
                         totRuns ++
                         totDistance += run.distanceMetres
-                        totCaloriesBurned += run.caloriesBurnt
+                        totCaloriesBurned += run.caloriesBurned
                         totTime += run.timeInMilis
 
 
@@ -126,11 +92,7 @@ class RunRepository : IRunRepository  {
 
         var  sortedRuns  = MutableLiveData<List<Run>>()
 
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-
-        val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
-
-        database.getReference(DB_NODE_RUN).child(uid).orderByChild(orderByPath)
+        database.getReference(DB_NODE_RUN).child(userID).orderByChild(orderByPath)
                 .addValueEventListener(object : ValueEventListener {
 
                     val runs =  mutableListOf<Run>()
@@ -147,7 +109,6 @@ class RunRepository : IRunRepository  {
                     }
 
                     override fun onCancelled(error: DatabaseError) {}
-
                 })
 
         return sortedRuns
@@ -155,33 +116,25 @@ class RunRepository : IRunRepository  {
     }
 
     override  fun addRunnerToRoom(runner : Runner){
-
-        Timber.d("add Runner ${runner.name}  ${runner.idRoom}  ${runner.id}")
-        val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
-
-        val myRef = database.getReference(DB_NODE_RUN_ROOM).child(runner.idRoom!!).child("RUNNER").child(runner.id!!).setValue(runner)
-        Timber.d("add Runner ${runner.name}  ${runner.idRoom}")
+        Timber.d("add Runner ${runner.name}  ${runner.idRoom}  ${runner.distanceMetres}")
+        database.getReference(DB_NODE_RUN_ROOM).child(runner.idRoom!!).child("RUNNER").child(runner.id!!).setValue(runner)
 
     }
 
     override fun getRoom(roomID: String): LiveData<Room> {
-
         var  room  = MutableLiveData<Room>()
 
-        val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
+
 
         database.getReference(DB_NODE_RUN_ROOM).child(roomID)
                 .addValueEventListener(object : ValueEventListener {
-
 
                     override fun onDataChange(snapshot: DataSnapshot) {
 
                         val roomObject = snapshot.getValue(Room::class.java)
 
                         if(roomObject!=null) {
-
                             Timber.d("room z firebase ${roomObject.id} ")
-
                             room.postValue(roomObject!!)
                         }
                     }
@@ -197,15 +150,13 @@ class RunRepository : IRunRepository  {
     override fun getRunners(roomID: String): LiveData<List<Runner>> {
 
         var  room = MutableLiveData<List<Runner>>()
-        var  runnerList = mutableListOf<Runner>()
-
-        val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
 
         database.getReference(DB_NODE_RUN_ROOM).child(roomID).child("RUNNER")
                 .addValueEventListener(object : ValueEventListener {
 
-
                     override fun onDataChange(snapshot: DataSnapshot) {
+
+                        var  runnerList = mutableListOf<Runner>()
 
                         for(snap in snapshot.children){
 
@@ -213,11 +164,10 @@ class RunRepository : IRunRepository  {
 
                             if(runnerObject!=null) {
 
-                                Timber.d("runner z firebase ${runnerObject.id} ")
                                 runnerList.add(runnerObject)
+                                Timber.d("runner z firebase ${runnerList.size} ")
 
                             }
-
 
                         }
 
@@ -233,11 +183,8 @@ class RunRepository : IRunRepository  {
 
     }
 
-    override fun createRoom(room : Room){
 
-        val database = FirebaseDatabase.getInstance(DB_INSTANCE_URL)
-
-        val myRef = database.getReference(DB_NODE_RUN_ROOM).child(room.id!!).setValue(room)
+    override fun createRoom(room : Room){ database.getReference(DB_NODE_RUN_ROOM).child(room.id!!).setValue(room)
         Timber.d("add Room ${room.id} ")
     }
 

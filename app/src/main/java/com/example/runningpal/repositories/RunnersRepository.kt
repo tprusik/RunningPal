@@ -2,11 +2,10 @@ package com.example.runningpal.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.runningpal.db.DbConstants
-import com.example.runningpal.db.DbConstants.DB_NODE_RUN_INVITATION
-import com.example.runningpal.db.DbConstants.DB_NODE_USER
+import com.example.runningpal.others.DbConstants
+import com.example.runningpal.others.DbConstants.DB_NODE_RUN_INVITATION
+import com.example.runningpal.others.DbConstants.DB_NODE_USER
 import com.example.runningpal.db.Invitation
-import com.example.runningpal.db.Run
 import com.example.runningpal.db.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -17,35 +16,41 @@ import timber.log.Timber
 
 class RunnersRepository : IRunnersRepository {
 
+    private  var userID : String
+    private var database : FirebaseDatabase
+
+    init{
+
+        userID = FirebaseAuth.getInstance().currentUser!!.uid
+        database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
+    }
+
+    override fun insertUser(user :User){database.getReference(DB_NODE_USER).setValue(user)}
+    override fun updateUser(user: User) { database.getReference(DB_NODE_USER).child(userID).setValue(user) }
+    override fun sendInvitation(invitation: Invitation) { database.getReference(DB_NODE_RUN_INVITATION).child(invitation.receiverID!!).push().setValue(invitation) }
+
+
     override fun getAllRunners(): LiveData<List<User>> {
 
             var  runners  = MutableLiveData<List<User>>()
 
-            val uid = FirebaseAuth.getInstance().currentUser!!.uid
-
-            val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
-
-            database.getReference(DbConstants.DB_NODE_USER)
+            database.getReference(DB_NODE_USER)
                     .addValueEventListener(object : ValueEventListener {
-
                         val users =  mutableListOf<User>()
-
                         override fun onDataChange(snapshot: DataSnapshot) {
 
                             for(snap in snapshot.children){
 
                                 val user = snap.getValue(User::class.java)
 
-                                if(user!!.uid!=uid)
+                                if(user!!.uid!=userID)
                                 users.add(user!!)
                             }
 
                             runners.postValue(users)
 
                         }
-
                         override fun onCancelled(error: DatabaseError) {}
-
                     })
 
             return runners
@@ -53,22 +58,22 @@ class RunnersRepository : IRunnersRepository {
     }
 
     override fun getSelectedRunners(ids: List<String>): LiveData<List<User>> {
-       val selectedRunners = MutableLiveData<List<User>>()
 
+       val selectedRunners = MutableLiveData<List<User>>()
         val runners = mutableListOf<User>()
 
-        val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
-
         for (id in ids){
-
             database.getReference(DB_NODE_USER).child(id)
                     .addValueEventListener(object : ValueEventListener {
 
                         override fun onDataChange(snapshot: DataSnapshot) {
+
                             val us = snapshot.getValue(User::class.java)!!
                             Timber.d("ss"+ us.email)
 
                             runners.add(us)
+
+                            selectedRunners.postValue(runners)
 
                         }
 
@@ -78,32 +83,24 @@ class RunnersRepository : IRunnersRepository {
 
         }
 
-        selectedRunners.postValue(runners)
-
         return selectedRunners
 
     }
-
 
     override fun getRunner(id: String): LiveData<User> {
 
             var  user  = MutableLiveData<User>()
 
-            val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
-
             database.getReference(DB_NODE_USER).child(id)
                 .addValueEventListener(object : ValueEventListener {
 
                     override fun onDataChange(snapshot: DataSnapshot) {
-
                         val us = snapshot.getValue(User::class.java)!!
 
                         Timber.d("ss"+ us.email)
                         user.postValue(us!!)
 
                     }
-
-
 
                     override fun onCancelled(error: DatabaseError) {}
 
@@ -113,6 +110,7 @@ class RunnersRepository : IRunnersRepository {
 
         }
 
+
     override fun getAllRunnersSortedByLastRunDate(): LiveData<List<User>> {
         TODO("Not yet implemented")
     }
@@ -121,13 +119,8 @@ class RunnersRepository : IRunnersRepository {
 
         var  user  = MutableLiveData<User>()
 
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-
-        val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
-
         database.getReference(DB_NODE_USER)
                 .addValueEventListener(object : ValueEventListener {
-
 
                     override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -137,7 +130,6 @@ class RunnersRepository : IRunnersRepository {
                             user.postValue(currentUser!!)
 
                         }
-
 
                     }
 
@@ -151,24 +143,11 @@ class RunnersRepository : IRunnersRepository {
 
 
 
-    override fun updateUser(user: User) {
-
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL).getReference(DB_NODE_USER).child(uid)
-
-        database.setValue(user)
-
-    }
-
     override fun getInvitation(): LiveData<Invitation> {
 
         var invitation = MutableLiveData<Invitation>()
 
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-
-        val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
-
-        database.getReference(DB_NODE_RUN_INVITATION).child(uid)
+        database.getReference(DB_NODE_RUN_INVITATION).child(userID)
                 .addValueEventListener(object : ValueEventListener {
 
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -181,7 +160,6 @@ class RunnersRepository : IRunnersRepository {
 
                         }
 
-
                     }
 
                     override fun onCancelled(error: DatabaseError) {}
@@ -190,16 +168,7 @@ class RunnersRepository : IRunnersRepository {
 
         return invitation
 
-
     }
 
-    override fun sendInvitation(invitation: Invitation) {
 
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-
-        val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
-        val myRef = database.getReference(DB_NODE_RUN_INVITATION).child(invitation.receiverID!!).push().setValue(invitation)
-
-
-    }
 }

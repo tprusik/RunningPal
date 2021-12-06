@@ -1,8 +1,6 @@
-package com.example.runningpal.db
+package com.example.runningpal.others
 
 object DbConstants {
-
-
 
     const val DB_INSTANCE_URL = "https://mywork-e32c4-default-rtdb.europe-west1.firebasedatabase.app/"
 

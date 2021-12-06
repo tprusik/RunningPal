@@ -7,7 +7,6 @@ data class User (
         var profilePic : String? = null,
         var backgroundPic : String? = null,
         var uid : String? = null,
-        var contacts: MutableList<String>? = mutableListOf<String>()
-
+        var contacts: MutableList<String>? = mutableListOf()
 )
 

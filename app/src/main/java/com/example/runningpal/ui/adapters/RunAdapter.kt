@@ -1,9 +1,5 @@
 package com.example.runningpal.ui.adapters
 
-import android.graphics.BitmapFactory
-import android.util.Base64
-import android.util.Base64.DEFAULT
-import android.util.Base64.decode
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.runningpal.R
 import com.example.runningpal.db.Run
-import com.example.runningpal.others.DatabaseUtility.convertBitmapToString
 import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
 import com.example.runningpal.others.TrackingUtility
 import kotlinx.android.synthetic.main.item_run.view.*
@@ -82,7 +77,7 @@ class RunAdapter : RecyclerView.Adapter<RunAdapter.RunViewHolder>() {
 
             tvTime.text = TrackingUtility.getFormattedStopWatchTime(run.timeInMilis)
 
-            val caloriesBurned = "${run.caloriesBurnt}kcal"
+            val caloriesBurned = "${run.caloriesBurned}kcal"
             tvCalories.text = caloriesBurned
         }
     }

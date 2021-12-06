@@ -83,13 +83,7 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
             pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
-            var distanceInMeters = 0
 
-            for(polyline in it) {
-                distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
-            }
-
-            Timber.d("Dystans: ${distanceInMeters}")//////////////////////
         })
 
         TrackingService.timeRunInMillis.observe(viewLifecycleOwner, Observer {

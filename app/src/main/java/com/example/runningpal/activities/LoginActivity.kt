@@ -1,13 +1,13 @@
-package com.example.runningpal
+package com.example.runningpal.activities
 
 import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
+import com.example.runningpal.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -20,8 +20,6 @@ import kotlinx.android.synthetic.main.activity_register.*
 
 class LoginActivity : AppCompatActivity() {
 
-
-    // ?
     companion object{
         private const val RC_SIGN_IN = 120
 
@@ -99,7 +97,7 @@ class LoginActivity : AppCompatActivity() {
                                     // przekierowanie do main activity oraz dodanie flag aby nie powrócić tutaj spowrotem
 
                                     val intent =
-                                            Intent(this@LoginActivity,DashboardActivity::class.java)
+                                            Intent(this@LoginActivity, DashboardActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                     intent.putExtra("user_id",firebaseUser.uid)
                                     intent.putExtra("email_id",email)
@@ -166,7 +164,7 @@ class LoginActivity : AppCompatActivity() {
                     ).show()
 
                     val intent =
-                            Intent(this@LoginActivity,DashboardActivity::class.java)
+                            Intent(this@LoginActivity, DashboardActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
 

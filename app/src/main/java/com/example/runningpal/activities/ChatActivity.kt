@@ -1,23 +1,18 @@
-package com.example.runningpal
+package com.example.runningpal.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.runningpal.R
 import com.example.runningpal.db.Message
 import com.example.runningpal.db.MessageContact
-import com.example.runningpal.others.DatabaseUtility
 import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
 import com.example.runningpal.ui.adapters.MessageAdapter
 import com.example.runningpal.ui.viewmodels.MessageViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.user_item.view.*
 import org.koin.android.ext.android.get
 import timber.log.Timber
 import java.util.*

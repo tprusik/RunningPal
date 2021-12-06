@@ -12,6 +12,7 @@ import com.example.runningpal.db.Run
 import com.example.runningpal.db.Runner
 import com.example.runningpal.others.DatabaseUtility
 import kotlinx.android.synthetic.main.runner_card_item.view.*
+import timber.log.Timber
 
 class RunnerCardAdapter(
 
@@ -49,7 +50,8 @@ class RunnerCardAdapter(
 
         holder.itemView.apply {
 
-            tvRunnerCardName.setText("Jarek")
+            Timber.d("timp" + user.avgSpeedKmh)
+            tvRunnerCardName.setText(user.distanceMetres.toString())
             val temp = user.avgSpeedKmh
             tvRunnerCardTemp.setText(temp.toString())
             val distance =  user.distanceMetres

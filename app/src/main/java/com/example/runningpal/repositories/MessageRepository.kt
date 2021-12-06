@@ -2,10 +2,9 @@ package com.example.runningpal.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.runningpal.db.DbConstants
+import com.example.runningpal.others.DbConstants
 import com.example.runningpal.db.Message
 import com.example.runningpal.db.MessageContact
-import com.example.runningpal.db.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,8 +18,6 @@ class MessageRepository : IMessageRepository {
 
             val messageContactsLiveData = MutableLiveData<List<MessageContact>>()
 
-            val messageContacts = mutableListOf<MessageContact>()
-
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
             val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
@@ -29,6 +26,8 @@ class MessageRepository : IMessageRepository {
                         .addValueEventListener(object : ValueEventListener {
 
                             override fun onDataChange(snapshot: DataSnapshot) {
+
+                                val messageContacts = mutableListOf<MessageContact>()
 
                                 for(snap in snapshot.children) {
 
@@ -59,7 +58,7 @@ class MessageRepository : IMessageRepository {
 
         val messageLiveData = MutableLiveData<List<Message>>()
 
-        val messages = mutableListOf<Message>()
+
 
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
@@ -70,6 +69,8 @@ class MessageRepository : IMessageRepository {
                 .addValueEventListener(object : ValueEventListener {
 
                     override fun onDataChange(snapshot: DataSnapshot) {
+
+                        val messages = mutableListOf<Message>()
 
                         for(snap in snapshot.children) {
 
@@ -124,4 +125,6 @@ class MessageRepository : IMessageRepository {
                 }
 
     }
+
+
 }

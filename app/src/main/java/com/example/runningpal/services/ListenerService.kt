@@ -4,29 +4,19 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.IBinder
-import android.util.TimeFormatException
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationBuilderWithBuilderAccessor
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.example.runningpal.DashboardActivity
+import com.example.runningpal.activities.DashboardActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.Invitation
 import com.example.runningpal.others.Constants
 import com.example.runningpal.others.Constants.ACTION_SHOW_ROOM
-import com.example.runningpal.others.TrackingUtility
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import org.koin.android.ext.android.get
-import org.koin.java.KoinJavaComponent.get
 import timber.log.Timber
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 
 class ListenerService : LifecycleService() {
 
@@ -45,7 +35,6 @@ init{
 }
 
 
-
     override fun onCreate() {
         super.onCreate()
 
@@ -57,7 +46,6 @@ init{
             Timber.d("serwis")
             createNotification(roomID!!)
         })
-
 
     }
 
@@ -73,7 +61,7 @@ init{
     }
 
 
-    private fun createNotification(idRoom : String){
+     fun createNotification(idRoom : String){
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE)
                 as NotificationManager
@@ -96,7 +84,7 @@ init{
 
     }
 
-    private fun getRunRoomPendingIntent(idRoom : String) = PendingIntent.getActivity(
+     fun getRunRoomPendingIntent(idRoom : String) = PendingIntent.getActivity(
         this,
         0,
         Intent(this, DashboardActivity::class.java).also {
@@ -107,7 +95,7 @@ init{
     )
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationChannel(notificationManager: NotificationManager) {
+     fun createNotificationChannel(notificationManager: NotificationManager) {
         val channel = NotificationChannel(
             Constants.NOTIFICATION_CHANNEL_ID,
             Constants.NOTIFICATION_CHANNEL_NAME,
@@ -115,6 +103,5 @@ init{
         )
         notificationManager.createNotificationChannel(channel)
     }
-
 
 }

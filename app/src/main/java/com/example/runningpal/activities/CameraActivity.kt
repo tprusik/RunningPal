@@ -1,4 +1,4 @@
-package com.example.runningpal
+package com.example.runningpal.activities
 
 import android.Manifest
 import android.app.Activity
@@ -9,20 +9,15 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.example.runningpal.R
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.IOException
-import java.net.URI
 
 class CameraActivity : AppCompatActivity() {
 
@@ -60,7 +55,7 @@ class CameraActivity : AppCompatActivity() {
 
         btn_CameraUpload.setOnClickListener{
 
-            if(SelectedImageFileUri!=null){
+            if(SelectedImageFileUri !=null){
                val fileExtension =  MimeTypeMap.getSingleton().getExtensionFromMimeType(contentResolver.getType(SelectedImageFileUri!!))
 
                 val sRef :StorageReference = FirebaseStorage.getInstance().reference.child(

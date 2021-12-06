@@ -8,5 +8,4 @@ data class Runner (
         val pic : String? = null,
         var avgSpeedKmh : Float = 0f,
         var distanceMetres : Int = 0,
-
-        )
+)

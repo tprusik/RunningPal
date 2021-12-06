@@ -1,11 +1,10 @@
-package com.example.runningpal
+package com.example.runningpal.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import com.example.runningpal.fragments.TrackingFragment
-import com.example.runningpal.others.Constants.ACTION_SHOW_TRACKING_FRAGMENT
+import com.example.runningpal.R
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
@@ -16,7 +15,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        
         //przkierowanie usera w przypadku gdy jet on zalogowany lub nie
         mAuth = FirebaseAuth.getInstance()
 

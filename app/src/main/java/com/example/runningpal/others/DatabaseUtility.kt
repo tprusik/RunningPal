@@ -14,7 +14,7 @@ object DatabaseUtility {
 
     }
 
-    fun convertBitmapToString(bmp : Bitmap) : String{
+   fun convertBitmapToString(bmp : Bitmap) : String{
 
          val bitmap = bmp!!.copy(bmp.config,true)
 

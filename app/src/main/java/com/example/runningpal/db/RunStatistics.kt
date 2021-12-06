@@ -6,5 +6,4 @@ data class RunStatistics(
     var allDistance : Int = 0,
     var allCaloriesBurned : Int = 0,
     var allTime : Long = 0L
-
 )

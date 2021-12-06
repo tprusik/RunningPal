@@ -93,11 +93,12 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
 
     }
 
+    //update
     fun addRunnerToRoom(runner: Runner) =  viewModelScope.launch { repo.addRunnerToRoom(runner) }
+
     fun createRoom(room : Room) = viewModelScope.launch { repo.createRoom(room) }
 
     fun getRoom(idRoom : String) = repo.getRoom(idRoom)
-
     fun getRunners(idRoom: String) = repo.getRunners(idRoom)
 
 }

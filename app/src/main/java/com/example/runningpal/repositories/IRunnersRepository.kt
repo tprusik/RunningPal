@@ -6,6 +6,8 @@ import com.example.runningpal.db.User
 
 interface IRunnersRepository {
 
+    fun insertUser(user :User)
+
     fun getAllRunners() : LiveData<List<User>>
 
     fun getSelectedRunners( runners : List<String>) : LiveData<List<User>>

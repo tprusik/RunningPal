@@ -58,10 +58,7 @@ class MessageFragment : Fragment() {
 
         })
 
-
         userViewModel.user.observe(viewLifecycleOwner, Observer { user = it })
-
-
 
         fabMessageFragment.setOnClickListener{
 
@@ -69,7 +66,6 @@ class MessageFragment : Fragment() {
 
                 newMessageAdapter.submitList(it)
                 changeRecycleView()
-
 
             })
 
@@ -101,7 +97,6 @@ class MessageFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
 
         }
-
 
 
     }

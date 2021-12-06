@@ -23,12 +23,12 @@ class RunnersViewModel(val repo: IRunnersRepository) : ViewModel() {
 
     init {
         runners.addSource(user) { result ->
-
             result?.let { runners.value = it }
-
         }
     }
 
+
+    fun insertUser(user : User) = repo.insertUser(user)
     fun getSelectedRunners(id: List<String>) =  repo.getSelectedRunners(id)
 
     fun retRunner() : LiveData<User> { return runner}

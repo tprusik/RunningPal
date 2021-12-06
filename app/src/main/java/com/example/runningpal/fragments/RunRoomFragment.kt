@@ -20,15 +20,20 @@ import com.example.runningpal.others.Constants
 import com.example.runningpal.others.Constants.ACTION_START_OR_RESUME_SERVICE
 import com.example.runningpal.others.DatabaseUtility
 import com.example.runningpal.others.TrackingUtility
+import com.example.runningpal.services.Polyline
 import com.example.runningpal.services.TrackingService
 import com.example.runningpal.ui.adapters.RunnerCardAdapter
 import com.example.runningpal.ui.viewmodels.MainViewModel
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_run_room.*
+import kotlinx.coroutines.delay
 import org.koin.android.ext.android.get
 import timber.log.Timber
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -40,6 +45,8 @@ class RunRoomFragment : Fragment() {
     private lateinit var roomID : String
     private lateinit var user : User
     private lateinit var runnersAdapter  : RunnerCardAdapter
+    private var pathPoints = mutableListOf<Polyline>()
+    private lateinit var uid : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,26 +63,26 @@ class RunRoomFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        roomID =  UUID.randomUUID().toString()
         getFriends()
         mainViewModel = get()
         setupRecyclerView()
         val dialog = ChooseUserDialogFragment()
         subscribeObserver()
 
+        uid = FirebaseAuth.getInstance().currentUser!!.uid
 
         btnCreateRoomRunFragment.setOnClickListener {
-           roomID =  UUID.randomUUID().toString()
 
             val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
             val currentDate = sdf.format(Date())
 
             val room = Room(roomID,currentDate,false)
-            val runner = Runner("rVZAsWtKgpeAHaeIN8vTlxSdcpk1",roomID,user.nick,user.profilePic,0f,0)
+            val runner = Runner(uid,roomID,user.nick,user.profilePic,0f,0)
 
             mainViewModel.createRoom(room)
 
             mainViewModel.addRunnerToRoom(runner)
-
 
             observeRoom()
 
@@ -118,10 +125,17 @@ class RunRoomFragment : Fragment() {
 
     fun subscribeObserver(){
 
+        TrackingService.pathPoints.observe(viewLifecycleOwner, Observer {
+            pathPoints = it
+
+            calculateRunDataAndSaveToDb()
+
+        })
+
         ChooseUserDialogFragment.ids.observe(viewLifecycleOwner, Observer {
                 val user = users.get(it)
 
-                val invitation = Invitation(user.uid,"rVZAsWtKgpeAHaeIN8vTlxSdcpk1","1")
+                val invitation = Invitation(uid,user.uid,roomID)
 
                 runnersViewModel.sendInvitation(invitation)
                 Timber.d("Wysłano zaproszenie")
@@ -131,10 +145,11 @@ class RunRoomFragment : Fragment() {
         runnersViewModel.user.observe(viewLifecycleOwner, Observer {
 
             user = it
-
             Timber.d("add Runner ${user.nick}  ")
 
         })
+
+
 
     }
 
@@ -142,14 +157,14 @@ class RunRoomFragment : Fragment() {
 
     mainViewModel.getRoom(roomID).observe(viewLifecycleOwner, Observer {
 
-        Timber.d("strzelilem ")
+
     })
 
         mainViewModel.getRunners(roomID).observe(viewLifecycleOwner, Observer {
 
-            Timber.d("strzelilem ")
-
             runnersAdapter.submitList(it)
+           /// runnersAdapter.notifyDataSetChanged()
+           Timber.d("mam cię ${roomID}     !!!" + it.size.toString() +"  !!! "+   it.last().distanceMetres.toString())
         })
 
     }
@@ -168,14 +183,18 @@ class RunRoomFragment : Fragment() {
                 requireContext().startService(it)
             }
 
-    private fun calculateRunData(){
-        val distanceInMeters = 0
+    private fun calculateRunDataAndSaveToDb(){
+
+        var distanceInMeters = 0
+
         for(polyline in pathPoints) {
             distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
         }
 
-
-        val avgSpeed = Math.round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
+       // val avgSpeed = Math.round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
+        val runner = Runner(uid,roomID,user.nick,user.profilePic,0f,distanceInMeters)
+        Timber.d("calculate and save ")
+        mainViewModel.addRunnerToRoom(runner)
 
     }
 

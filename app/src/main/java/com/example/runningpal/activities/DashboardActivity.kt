@@ -1,4 +1,4 @@
-package com.example.runningpal
+package com.example.runningpal.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,18 +8,17 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import com.example.runningpal.R
 import com.example.runningpal.db.User
 import com.example.runningpal.fragments.*
 import com.example.runningpal.others.Constants
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_dashboard.*
-import timber.log.Timber
 
 class DashboardActivity : AppCompatActivity() {
 
     private  lateinit var mAuth : FirebaseAuth
     private  lateinit var toggle: ActionBarDrawerToggle
-
 
     companion object{
 
@@ -35,7 +34,7 @@ class DashboardActivity : AppCompatActivity() {
 
 
         // change striung resources
-        toggle = ActionBarDrawerToggle(this,drawerLayout,R.string.common_open_on_phone,R.string.appbar_scrolling_view_behavior)
+        toggle = ActionBarDrawerToggle(this,drawerLayout, R.string.common_open_on_phone, R.string.appbar_scrolling_view_behavior)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 

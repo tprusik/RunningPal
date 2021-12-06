@@ -1,8 +1,6 @@
 package com.example.runningpal.ui.adapters
 
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,18 +8,12 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.runningpal.ChatActivity
-import com.example.runningpal.FindContactActivity
+import com.example.runningpal.activities.FindContactActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.User
-import com.example.runningpal.fragments.FriendProfileFragment
 import com.example.runningpal.others.Constants
-import com.example.runningpal.others.Constants.ACTION_SHOW_FRIEND_PROFILE
 import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
-import com.example.runningpal.ui.viewmodels.RunnersViewModel
-import kotlinx.android.synthetic.main.item_run.view.*
 import kotlinx.android.synthetic.main.user_item.view.*
-import org.koin.java.KoinJavaComponent.get
 import timber.log.Timber
 
 class ContactsAdapter (
