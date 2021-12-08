@@ -14,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_register.*
 import org.koin.android.ext.android.get
+import timber.log.Timber
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -23,7 +24,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        viewModel = get()
+
 
         btnApplyRegister.setOnClickListener {
             when {
@@ -65,8 +66,10 @@ class RegisterActivity : AppCompatActivity() {
                                         Toast.LENGTH_SHORT
                                 ).show()
 
+                                Timber.d(   "rejestracja "+ firebaseUser.uid)
                                 val user = User(email,nick,null,null,firebaseUser.uid, mutableListOf())
 
+                                viewModel = get()
                                viewModel.insertUser(user)
                                 // przekierowanie do main activity oraz dodanie flag aby nie powrócić tutaj spowrotem
 

@@ -117,11 +117,7 @@ dependencies {
     // Testing
     testImplementation "io.insert-koin:koin-test:3.0.1"
     implementation "io.insert-koin:koin-android:3.0.1"
-    //ViewModel
-    //implementation "io.insert-koin:koin-android-viewmodel:2.2.3"
 
-
-   //
 
     // Easy Permissions
     implementation 'pub.devrel:easypermissions:3.0.0'

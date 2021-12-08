@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.runningpal.ui.adapters.CalendarAdapter
 import com.example.runningpal.R
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_calendar.*
 import java.time.LocalDate
 import java.time.YearMonth
@@ -30,6 +31,7 @@ class CalendarFragment :  Fragment(), CalendarAdapter.OnItemListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //FirebaseAuth.getInstance().signOut()
         selectedDate = LocalDate.now()
         setMonthView()
     }

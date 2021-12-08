@@ -68,7 +68,6 @@ class MessageAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
             if(holder.javaClass == ReceiveViewHolder::class.java)
                 tvChatCellReceive.text = currentMessage.message
-
             }
 
 

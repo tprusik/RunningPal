@@ -17,12 +17,12 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_register.*
+import timber.log.Timber
 
 class LoginActivity : AppCompatActivity() {
 
     companion object{
         private const val RC_SIGN_IN = 120
-
     }
 
     private  lateinit var mAuth : FirebaseAuth
@@ -40,7 +40,6 @@ class LoginActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         mAuth = FirebaseAuth.getInstance()
-
 
         btnGoogleSignIn.setOnClickListener {
             signIn()
@@ -82,20 +81,19 @@ class LoginActivity : AppCompatActivity() {
                     FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener()
                             {task ->
-
                                 if(task.isSuccessful)
                                 {
-
                                     val firebaseUser: FirebaseUser = task.result!!.user!!
 
+                                    Timber.d("logowania"+ firebaseUser.uid)
                                     Toast.makeText(
                                             this,
-                                            "Sukces logowanie emao;",
+                                            "Sukces logowanie",
                                             Toast.LENGTH_SHORT
                                     ).show()
 
                                     // przekierowanie do main activity oraz dodanie flag aby nie powrócić tutaj spowrotem
-
+                                    Timber.d("logowania"+ firebaseUser.uid)
                                     val intent =
                                             Intent(this@LoginActivity, DashboardActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -122,6 +120,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent
+
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 

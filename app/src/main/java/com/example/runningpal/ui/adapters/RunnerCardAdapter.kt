@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.runningpal.R
 import com.example.runningpal.db.Run
 import com.example.runningpal.db.Runner
-import com.example.runningpal.others.DatabaseUtility
+import com.example.runningpal.others.Utils
 import kotlinx.android.synthetic.main.runner_card_item.view.*
 import timber.log.Timber
 
@@ -62,7 +62,7 @@ class RunnerCardAdapter(
                 Glide.with(this).load(R.drawable.default_user_avatar).into(ivRunnerCardItem)
             else
             {
-                val pic = DatabaseUtility.convertStringToBitmap(user.pic!!)
+                val pic = Utils.convertStringToBitmap(user.pic!!)
 
                 Glide.with(this).load(pic).into(ivRunnerCardItem)
             }

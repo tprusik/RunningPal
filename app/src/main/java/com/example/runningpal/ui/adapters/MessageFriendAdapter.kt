@@ -1,9 +1,9 @@
 package com.example.runningpal.ui.adapters
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.runningpal.activities.ChatActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.MessageContact
-import com.example.runningpal.others.DatabaseUtility
+import com.example.runningpal.others.Utils
 import kotlinx.android.synthetic.main.contact_message_item.view.*
 import timber.log.Timber
 
@@ -59,23 +59,14 @@ class MessageFriendAdapter (
                 Glide.with(this).load(R.drawable.default_user_avatar).into(ivContactMessage)
             else
             {
-                val pic = DatabaseUtility.convertStringToBitmap(user.profilePic!!)
-
+                val pic = Utils.convertStringToBitmap(user.profilePic!!)
                 Glide.with(this).load(pic).into(ivContactMessage)
             }
 
-
             setOnClickListener{
 
-                val intent = Intent(context, ChatActivity::class.java)
-                        .also {
-                            Timber.d("MessageFriendAdapter  " +  user.uid)
-                            it.putExtra("id",user.uid)
-                            it.putExtra("name",user.name)
-                        }
-
-                context.startActivity(intent)
-
+                ChatActivity.contact.postValue(user)
+                Navigation.createNavigateOnClickListener(R.id.action_messageFragment_to_chatActivity).onClick(holder.itemView)
             }
 
         }

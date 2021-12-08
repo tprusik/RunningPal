@@ -6,5 +6,4 @@ package com.example.runningpal.db
          val lastMessage : String? = null,
          val timestamp: String? = null,
          val uid : String? = null,
-         val profilePic : String? = null
- )
+         val profilePic : String? = null )

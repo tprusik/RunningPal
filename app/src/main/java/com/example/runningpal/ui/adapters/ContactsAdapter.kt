@@ -1,23 +1,21 @@
 package com.example.runningpal.ui.adapters
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.runningpal.activities.FindContactActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.User
-import com.example.runningpal.others.Constants
-import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
+import com.example.runningpal.fragments.FriendProfileFragment
+import com.example.runningpal.others.Utils.convertStringToBitmap
 import kotlinx.android.synthetic.main.user_item.view.*
-import timber.log.Timber
+
 
 class ContactsAdapter (
-
 
 ) : RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder>(){
 
@@ -36,13 +34,12 @@ class ContactsAdapter (
     }
 
     val differ = AsyncListDiffer(this, diffCallback)
-
     fun submitList(list: List<User>) = differ.submitList(list)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactsViewHolder {
 
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.user_item,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.user_item, parent, false)
 
         return ContactsViewHolder(view)
     }
@@ -61,21 +58,12 @@ class ContactsAdapter (
             else
             {
                 val pic =convertStringToBitmap(user.profilePic!!)
-
                 Glide.with(this).load(pic).into(ivUserItem)
             }
 
             setOnClickListener{
-
-                val intent = Intent(context, FindContactActivity::class.java)
-                    .also {
-                        it.action = Constants.ACTION_SHOW_FRIEND_PROFILE
-                        Timber.d("ter" + user.uid)
-                        it.putExtra("id",user.uid)
-                    }
-
-                context.startActivity(intent)
-
+                FriendProfileFragment.user.postValue(user)
+                Navigation.createNavigateOnClickListener(R.id.action_findUserFragment_to_friendProfileFragment).onClick(holder.itemView)
             }
 
         }

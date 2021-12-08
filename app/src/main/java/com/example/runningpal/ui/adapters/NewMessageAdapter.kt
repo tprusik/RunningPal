@@ -4,14 +4,16 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.runningpal.activities.ChatActivity
 import com.example.runningpal.R
+import com.example.runningpal.db.MessageContact
 import com.example.runningpal.db.User
-import com.example.runningpal.others.DatabaseUtility
+import com.example.runningpal.others.Utils
 import kotlinx.android.synthetic.main.user_item.view.*
 import timber.log.Timber
 
@@ -56,24 +58,17 @@ class NewMessageAdapter: RecyclerView.Adapter<NewMessageAdapter.NewMessageViewHo
                 Glide.with(this).load(R.drawable.default_user_avatar).into(ivUserItem)
             else
             {
-                val pic = DatabaseUtility.convertStringToBitmap(user.profilePic!!)
+                val pic = Utils.convertStringToBitmap(user.profilePic!!)
 
                 Glide.with(this).load(pic).into(ivUserItem)
             }
 
             setOnClickListener{
-//
-                val intent = Intent(context, ChatActivity::class.java)
-                        .also {
 
-                            Timber.d("New message adapter"+ user.uid)
-                            it.putExtra("pic",user.profilePic)
-                            it.putExtra("id",user.uid)
-                            it.putExtra("name",user.nick)
-                        }
+                val messageContact = MessageContact(user.nick,null,null,user.uid,user.profilePic)
+               ChatActivity.contact.postValue(messageContact)
 
-                context.startActivity(intent)
-
+                Navigation.createNavigateOnClickListener(R.id.action_messageFragment_to_chatActivity).onClick(holder.itemView)
             }
 
         }

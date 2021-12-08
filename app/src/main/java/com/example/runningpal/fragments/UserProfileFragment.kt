@@ -13,33 +13,36 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.runningpal.activities.CameraActivity
-import com.example.runningpal.activities.FindContactActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.User
-import com.example.runningpal.others.DatabaseUtility.convertBitmapToString
-import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
+import com.example.runningpal.others.Utils.convertBitmapToString
+import com.example.runningpal.others.Utils.convertStringToBitmap
 import com.example.runningpal.ui.adapters.ContactsAdapter
+import com.example.runningpal.ui.viewmodels.MainViewModel
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
-import com.example.runningpal.ui.viewmodels.StatisticsViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import org.koin.android.ext.android.get
 import timber.log.Timber
 
+
 class UserProfileFragment : Fragment() {
 
-    private  lateinit var mAuth : FirebaseAuth
-    private lateinit var statisticsViewModel : StatisticsViewModel
+    private lateinit var mAuth : FirebaseAuth
+    private lateinit var viewModel : MainViewModel
     private lateinit var userViewModel : RunnersViewModel
     private lateinit var  currentUser : FirebaseUser
     private lateinit var user : User
     private lateinit var contactsAdapter : ContactsAdapter
-    private lateinit var userContacts : List<String>
+    private lateinit var userContacts : MutableLiveData<List<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,75 +50,72 @@ class UserProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mAuth = FirebaseAuth.getInstance()
-        val currentUser =  mAuth.currentUser
-        statisticsViewModel = get()
-        userViewModel = get()
 
+        initSetup()
         setupRecyclerView()
-        userContacts = mutableListOf<String>()
+        subscribeToObservers()
 
+        ivUserProfileAvatar.setOnClickListener{ cameraShot() }
 
-        userViewModel.user.observe(viewLifecycleOwner, Observer {
+        btnUserProfileFindUser.setOnClickListener{
 
+            navHostFragment.findNavController().navigate(R.id.action_userProfileFragment_to_findUserFragment2)
 
-            tvUserProfileName.setText(it.nick)
-            tvUserProfileEmail.setText(it.email)
-
-            if(it.profilePic==null){
-                Glide.with(this).load(R.drawable.default_user_avatar).into(ivUserProfileAvatar)
-            }
-            else
-            {
-                val pic = convertStringToBitmap(it.profilePic!!)
-                Glide.with(this).load(pic).into(ivUserProfileAvatar)
-
-            }
-
-            if(it.backgroundPic==null){
-                Glide.with(this).load(R.drawable.default_user_background).into(ivUserProfileBackground)
-
-            }
-
-            else
-            {
-                val pic = convertStringToBitmap(it.backgroundPic!!)
-                Glide.with(this).load(pic).into(ivUserProfileAvatar)
-            }
-
-        })
-
-        userViewModel.runners.observe(viewLifecycleOwner, Observer {
-
-            val cont = it.contacts!!.toSet()
-            userContacts = cont.toList()
-
-            Timber.d("a tu ? " + userContacts.size)
-
-            userViewModel.getSelectedRunners(userContacts.toList()).observe(viewLifecycleOwner, Observer {
-
-                val users = it
-                contactsAdapter.submitList(users)
-                contactsAdapter.notifyDataSetChanged()
-                Timber.d("hej ss " + userContacts.size.toString())
-
-            })
-
-
-        })
-
-            ivUserProfileAvatar.setOnClickListener{ cameraShot() }
-
-
-        btnUserProfileFriends.setOnClickListener{
-
-            val intent = Intent(context, FindContactActivity::class.java)
-            startActivity(intent)
         }
 
+        btnUserProfileLogout.setOnClickListener{
+
+            mAuth.signOut()
+            navHostFragment.findNavController().navigate(R.id.action_userProfileFragment_to_loginActivity)
+        }
+
+    }
+
+    private fun subscribeToObservers(){
+
+        userViewModel.user.observe(viewLifecycleOwner, Observer {
+            Timber.d("profil user "+ it.uid)
+
+            it.nick?.let{tvUserProfileName.setText(it)}
+            it.email?.let { tvUserProfileEmail.setText(it)}
+
+            it.profilePic?.let{
+                val pic = convertStringToBitmap(it)
+                Glide.with(this).load(pic).into(ivUserProfileAvatar) }
+                    ?:  Glide.with(this).load(R.drawable.default_user_avatar).into(ivUserProfileAvatar)
+
+            it.backgroundPic?.let{
+                val pic = convertStringToBitmap(it)
+                Glide.with(this).load(pic).into(ivUserProfileAvatar)}
+                    ?: Glide.with(this).load(R.drawable.default_user_background).into(ivUserProfileBackground)
+
+            userContacts.postValue(it.contacts)
+        })
+
+        userContacts.observe(viewLifecycleOwner, Observer {
+            userViewModel.getSelectedRunners(it).observe(viewLifecycleOwner, Observer {
+
+                it?.let {
+                    contactsAdapter.submitList(it)
+                    contactsAdapter.notifyDataSetChanged() }
+            })
+
+        })
+
+        viewModel.totalDistance.observe(viewLifecycleOwner , Observer {
+
+            it?.let{ tvUserProfileStatistics.setText(it.allRuns.toString()) }
+        })
+
+    }
 
 
-        tvUserProfileName.setText(currentUser?.displayName)
+    private fun initSetup(){
+        mAuth = FirebaseAuth.getInstance()
+        currentUser =  mAuth.currentUser!!
+        viewModel = get()
+        userViewModel = get()
+        userContacts = MutableLiveData()
     }
 
     private fun setupRecyclerView() = rvUserProvileFriends.apply {
@@ -127,9 +127,7 @@ class UserProfileFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-        return inflater.inflate(R.layout.fragment_user_profile, container, false)
-    }
+        return inflater.inflate(R.layout.fragment_user_profile, container, false) }
 
 
 
@@ -138,12 +136,10 @@ class UserProfileFragment : Fragment() {
 
         if(resultCode== Activity.RESULT_OK) {
             if (requestCode == CameraActivity.CAMERA_REQUEST_CODE) {
+
                 val snapshot: Bitmap = data!!.extras!!.get("data") as Bitmap
-
                 ivUserProfileAvatar.setImageBitmap(snapshot)
-
                 user.profilePic = convertBitmapToString(snapshot)
-
                 userViewModel.updateUser(user)
 
             }

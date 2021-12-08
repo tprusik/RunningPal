@@ -1,14 +1,13 @@
 package com.example.runningpal.fragments
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.text.style.TtsSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.runningpal.R
@@ -16,9 +15,7 @@ import com.example.runningpal.db.Invitation
 import com.example.runningpal.db.Room
 import com.example.runningpal.db.Runner
 import com.example.runningpal.db.User
-import com.example.runningpal.others.Constants
 import com.example.runningpal.others.Constants.ACTION_START_OR_RESUME_SERVICE
-import com.example.runningpal.others.DatabaseUtility
 import com.example.runningpal.others.TrackingUtility
 import com.example.runningpal.services.Polyline
 import com.example.runningpal.services.TrackingService
@@ -28,12 +25,9 @@ import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_run_room.*
-import kotlinx.coroutines.delay
 import org.koin.android.ext.android.get
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 
 
@@ -42,11 +36,17 @@ class RunRoomFragment : Fragment() {
     private lateinit var  users : List<User>
     private lateinit var runnersViewModel : RunnersViewModel
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var roomID : String
-    private lateinit var user : User
     private lateinit var runnersAdapter  : RunnerCardAdapter
     private var pathPoints = mutableListOf<Polyline>()
     private lateinit var uid : String
+
+    companion object{
+        var users  = mutableListOf<User>()
+        var user = User()
+        var room = Room()
+        var runner  = MutableLiveData<Runner>()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,42 +57,29 @@ class RunRoomFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_run_room, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        roomID =  UUID.randomUUID().toString()
-        getFriends()
-        mainViewModel = get()
+
+        initVal()
         setupRecyclerView()
         val dialog = ChooseUserDialogFragment()
         subscribeObserver()
 
-        uid = FirebaseAuth.getInstance().currentUser!!.uid
+        if(room.id!=null) {
+            observeRoom()
+            changeButtonVisibility()
+        }
 
         btnCreateRoomRunFragment.setOnClickListener {
-
-            val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
-            val currentDate = sdf.format(Date())
-
-            val room = Room(roomID,currentDate,false)
-            val runner = Runner(uid,roomID,user.nick,user.profilePic,0f,0)
-
-            mainViewModel.createRoom(room)
-
-            mainViewModel.addRunnerToRoom(runner)
-
-            observeRoom()
-
-            btnCreateRoomRunFragment.visibility = FloatingActionButton.GONE
-            btnStartRunRoomRunFragment.visibility = FloatingActionButton.VISIBLE
+            createNewRoom()
         }
 
         btnStartRunRoomRunFragment.setOnClickListener{
 
-
+            btnStartRunRoomRunFragment
             sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
 
         }
@@ -100,102 +87,97 @@ class RunRoomFragment : Fragment() {
         btnInviteRunRoomFragment.setOnClickListener {
             dialog.submitList(users)
             dialog.show(childFragmentManager, "NoticeDialogFragment")
+
         }
-
     }
 
-    fun getFriends(){
-        users = mutableListOf<User>()
+    private fun changeButtonVisibility(){
+
+            btnCreateRoomRunFragment.visibility = FloatingActionButton.GONE
+            btnInviteRunRoomFragment.visibility = Button.VISIBLE
+            btnStartRunRoomRunFragment.visibility = Button.VISIBLE }
+
+
+    fun createNewRoom(){
+
+        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+        val roomID = UUID.randomUUID().toString()
+        val currentDate = sdf.format(Date())
+        room = Room(uid,currentDate,false)
+        val runner = Runner(uid,uid,user.nick,user.profilePic,0f,0)
+
+        mainViewModel.createRoom(room)
+        mainViewModel.addRunnerToRoom(runner)
+
+        changeButtonVisibility()
+        observeRoom()
+    }
+
+    fun initVal(){
+        mainViewModel = get()
         runnersViewModel = get()
-
-        runnersViewModel.runners.observe(viewLifecycleOwner, Observer {
-            users = mutableListOf<User>()
-            val cont = it.contacts!!.toSet()
-
-            runnersViewModel.getSelectedRunners(cont.toList()).observe(viewLifecycleOwner, Observer {
-
-                users = it
-
-            })
-
-
-        })
-
-    }
+        uid = FirebaseAuth.getInstance().currentUser!!.uid }
 
     fun subscribeObserver(){
 
         TrackingService.pathPoints.observe(viewLifecycleOwner, Observer {
             pathPoints = it
-
             calculateRunDataAndSaveToDb()
-
         })
 
         ChooseUserDialogFragment.ids.observe(viewLifecycleOwner, Observer {
+
                 val user = users.get(it)
-
-                val invitation = Invitation(uid,user.uid,roomID)
-
+                val invitation = Invitation(uid,user.uid,room.id)
                 runnersViewModel.sendInvitation(invitation)
                 Timber.d("Wysłano zaproszenie")
-
         })
 
         runnersViewModel.user.observe(viewLifecycleOwner, Observer {
-
             user = it
-            Timber.d("add Runner ${user.nick}  ")
 
+            it.contacts?.also {runnersViewModel.getSelectedRunners(it).observe(viewLifecycleOwner,
+                Observer {
+
+                    users = it
+
+                })  }
+
+
+            Timber.d("add Runner ${user.nick} ")
         })
-
-
 
     }
 
     fun observeRoom(){
 
-    mainViewModel.getRoom(roomID).observe(viewLifecycleOwner, Observer {
-
-
-    })
-
-        mainViewModel.getRunners(roomID).observe(viewLifecycleOwner, Observer {
-
-            runnersAdapter.submitList(it)
-           /// runnersAdapter.notifyDataSetChanged()
-           Timber.d("mam cię ${roomID}     !!!" + it.size.toString() +"  !!! "+   it.last().distanceMetres.toString())
-        })
+            mainViewModel.getRunners(room.id!!).observe(viewLifecycleOwner, Observer {
+                runnersAdapter.submitList(it)
+                Timber.d("mam cię $    !!!" + it.size.toString() + "  !!! " + it.last().distanceMetres.toString())
+            })
 
     }
 
    private fun setupRecyclerView() = rvRunRoom.apply {
-
         runnersAdapter = RunnerCardAdapter()
         adapter = runnersAdapter
-        layoutManager = LinearLayoutManager(requireContext())
-
-    }
+        layoutManager = LinearLayoutManager(requireContext()) }
 
     private fun sendCommandToService(action: String) =
             Intent(requireContext(), TrackingService::class.java).also {
                 it.action = action
-                requireContext().startService(it)
-            }
+                requireContext().startService(it) }
 
     private fun calculateRunDataAndSaveToDb(){
-
         var distanceInMeters = 0
 
         for(polyline in pathPoints) {
-            distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
-        }
+            distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt() }
 
        // val avgSpeed = Math.round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
-        val runner = Runner(uid,roomID,user.nick,user.profilePic,0f,distanceInMeters)
+        val runner = Runner(uid,room.id,user.nick,user.profilePic,0f,distanceInMeters)
         Timber.d("calculate and save ")
         mainViewModel.addRunnerToRoom(runner)
-
     }
 
     }

@@ -29,25 +29,15 @@ class RunRepository : IRunRepository  {
     }
 
     override fun insertRun(run: Run) { database.getReference(DB_NODE_RUN).child(userID).push().setValue(run) }
-
     override fun deleteRun(run: Run) {}
-
     override fun getAllRunsSortedByDate() : LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_DATE) }
-
     override fun getAllRunsSortedByDistance(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_DISTANCE) }
-
     override fun getAllRunsSortedByTimeinMillis(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_TIME) }
-
     override fun getAllRunsSortedByAvgSpeed(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_DISTANCE) }
-
     override fun getAllRunsSortedByCaloriesBurned(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_CALORIES_BURNED)}
-
     override fun getTotalAvgSpeed() {}
-
     override fun getTotalCaloriesBurned() {}
-
     override fun getTotalTimeinMillis() {}
-
     override fun getTotalDistance()  {}
 
     override fun getTotalStatistics(): LiveData<RunStatistics> {
@@ -64,23 +54,17 @@ class RunRepository : IRunRepository  {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     for(snap in snapshot.children){
-
                         val run = snap.getValue(Run::class.java)!!
-
                         totRuns ++
                         totDistance += run.distanceMetres
                         totCaloriesBurned += run.caloriesBurned
                         totTime += run.timeInMilis
-
-
                     }
 
                     var totStats = RunStatistics(totRuns,totDistance,totCaloriesBurned,totTime)
-
                     totalStatistics.postValue(totStats)
 
                 }
-
                 override fun onCancelled(error: DatabaseError) {}
             })
 
@@ -130,9 +114,7 @@ class RunRepository : IRunRepository  {
                 .addValueEventListener(object : ValueEventListener {
 
                     override fun onDataChange(snapshot: DataSnapshot) {
-
                         val roomObject = snapshot.getValue(Room::class.java)
-
                         if(roomObject!=null) {
                             Timber.d("room z firebase ${roomObject.id} ")
                             room.postValue(roomObject!!)

@@ -22,10 +22,11 @@ class RunnersRepository : IRunnersRepository {
     init{
 
         userID = FirebaseAuth.getInstance().currentUser!!.uid
+        Timber.d("Timber repo "+ userID)
         database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
     }
 
-    override fun insertUser(user :User){database.getReference(DB_NODE_USER).setValue(user)}
+    override fun insertUser(user :User){database.getReference(DB_NODE_USER).child(user.uid!!).setValue(user)}
     override fun updateUser(user: User) { database.getReference(DB_NODE_USER).child(userID).setValue(user) }
     override fun sendInvitation(invitation: Invitation) { database.getReference(DB_NODE_RUN_INVITATION).child(invitation.receiverID!!).push().setValue(invitation) }
 
@@ -126,7 +127,10 @@ class RunnersRepository : IRunnersRepository {
 
                         for(snap in snapshot.children){
 
+
                             val currentUser = snap.getValue(User::class.java)
+
+                            if(currentUser!!.uid==userID)
                             user.postValue(currentUser!!)
 
                         }

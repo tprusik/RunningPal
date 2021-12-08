@@ -13,7 +13,7 @@ class BaseApplication : Application() {
         override fun onCreate() {
             super.onCreate()
 
-            Intent(baseContext, ListenerService::class.java).also { baseContext.startService(it) }
+           // Intent(baseContext, ListenerService::class.java).also { baseContext.startService(it) }
 
             if(BuildConfig.DEBUG) { Timber.plant(Timber.DebugTree()) }
 

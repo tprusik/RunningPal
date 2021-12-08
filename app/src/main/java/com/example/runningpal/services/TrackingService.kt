@@ -17,8 +17,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.runningpal.activities.DashboardActivity
 import com.example.runningpal.R
+import com.example.runningpal.db.Room
+import com.example.runningpal.db.Run
+import com.example.runningpal.db.Runner
+import com.example.runningpal.fragments.RunRoomFragment
 import com.example.runningpal.others.Constants.ACTION_PAUSE_SERVICE
 import com.example.runningpal.others.Constants.ACTION_SHOW_TRACKING_FRAGMENT
+import com.example.runningpal.others.Constants.ACTION_START_GROUP_RUN
 import com.example.runningpal.others.Constants.ACTION_START_OR_RESUME_SERVICE
 import com.example.runningpal.others.Constants.ACTION_STOP_SERVICE
 import com.example.runningpal.others.Constants.FASTEST_LOCATION_INTERVAL
@@ -28,6 +33,7 @@ import com.example.runningpal.others.Constants.NOTIFICATION_CHANNEL_NAME
 import com.example.runningpal.others.Constants.NOTIFICATION_ID
 import com.example.runningpal.others.Constants.TIMER_UPDATE_INTERVAL
 import com.example.runningpal.others.TrackingUtility
+import com.example.runningpal.others.Utils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -39,6 +45,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
+import kotlin.collections.ArrayList
 
 typealias Polyline = MutableList<LatLng>
 typealias Polylines = MutableList<Polyline>
@@ -49,7 +57,6 @@ class TrackingService : LifecycleService() {
     var serviceKilled = false
 
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
     lateinit var baseNotificationBuilder : NotificationCompat.Builder
     lateinit var curNotificationBuilder : NotificationCompat.Builder
 
@@ -127,6 +134,16 @@ class TrackingService : LifecycleService() {
                 ACTION_START_OR_RESUME_SERVICE -> {
                     if (isFirstRun) {
                         startForegroundService()
+                        isFirstRun = false
+                    } else {
+                        Timber.d("Resuming service...")
+                        startTimer()
+                    }
+                }
+                ACTION_START_GROUP_RUN -> {
+                    if (isFirstRun) {
+                        startForegroundService()
+
                         isFirstRun = false
                     } else {
                         Timber.d("Resuming service...")
@@ -269,6 +286,7 @@ class TrackingService : LifecycleService() {
             },
             FLAG_UPDATE_CURRENT
     )
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(notificationManager: NotificationManager) {

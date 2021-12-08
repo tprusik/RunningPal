@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import java.io.ByteArrayOutputStream
 
-object DatabaseUtility {
+object Utils {
 
     fun convertStringToBitmap(pic : String) : Bitmap{
 

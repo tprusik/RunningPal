@@ -24,11 +24,17 @@
 
 
     <com.google.android.material.button.MaterialButton
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
         android:id="@+id/btnNewRun"
-        android:text="Rozpocznij nowy bieg"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Rozpocznij Nowy Bieg"
+        app:icon="@drawable/ic_fab_add"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

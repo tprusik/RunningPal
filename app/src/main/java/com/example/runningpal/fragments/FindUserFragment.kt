@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.runningpal.R
 import com.example.runningpal.ui.adapters.ContactsAdapter
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
-import kotlinx.android.synthetic.main.fragment_new_contact.*
+import kotlinx.android.synthetic.main.fragment_find_user.*
 import org.koin.android.ext.android.get
 
 
-class NewContactFragment : Fragment() {
+class FindUserFragment : Fragment() {
 
     private lateinit var viewModel : RunnersViewModel
     private  lateinit var userAdapter : ContactsAdapter
@@ -28,8 +28,7 @@ class NewContactFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_contact, container, false)
+        return inflater.inflate(R.layout.fragment_find_user, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +41,6 @@ class NewContactFragment : Fragment() {
         viewModel.allRunners.observe(viewLifecycleOwner, Observer {
             userAdapter.submitList(it)
         })
-
 
     }
 

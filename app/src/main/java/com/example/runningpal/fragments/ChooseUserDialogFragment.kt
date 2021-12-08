@@ -27,9 +27,7 @@ class ChooseUserDialogFragment :  DialogFragment() {
     private  var usersAray : Array<String>
 
     companion object{
-
         val ids = MutableLiveData<Int>()
-
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

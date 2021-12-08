@@ -12,7 +12,6 @@ import com.example.runningpal.repositories.IRunnersRepository
 class RunnersViewModel(val repo: IRunnersRepository) : ViewModel() {
 
     val runner = MutableLiveData<User>()
-    val runners = MediatorLiveData<User>()
     val selectedItem: LiveData<User> get() = runner
     val user  =  repo.getCurrentUser()
     val invitation = repo.getInvitation()
@@ -21,24 +20,12 @@ class RunnersViewModel(val repo: IRunnersRepository) : ViewModel() {
         runner.value = item
     }
 
-    init {
-        runners.addSource(user) { result ->
-            result?.let { runners.value = it }
-        }
-    }
-
 
     fun insertUser(user : User) = repo.insertUser(user)
     fun getSelectedRunners(id: List<String>) =  repo.getSelectedRunners(id)
-
-    fun retRunner() : LiveData<User> { return runner}
-
     fun getRunner(id: String) = repo.getRunner(id)
-
     val allRunners = repo.getAllRunners()
-
     fun sendInvitation(invitation: Invitation) = repo.sendInvitation(invitation)
-
     fun updateUser(user: User) = repo.updateUser(user)
 
 }

@@ -19,7 +19,6 @@ import java.io.ByteArrayOutputStream
 
 class MainViewModel(val repo: IRunRepository) : ViewModel() {
 
-
     private val runSortedByDate = repo.getAllRunsSortedByDate()
     private  val runSortedByDistance = repo.getAllRunsSortedByDistance()
     private  val runSortedByCaloriesBurned = repo.getAllRunsSortedByCaloriesBurned()
@@ -85,7 +84,6 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
         val byteArray = bao.toByteArray()
        // val imageB64: String = Base64.encodeToString(byteArray, Base64.URL_SAFE)
 
-
             sRef.putBytes(byteArray).addOnSuccessListener {
 
                 Timber.d("Udalo sie wgrac ")
@@ -95,9 +93,7 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
 
     //update
     fun addRunnerToRoom(runner: Runner) =  viewModelScope.launch { repo.addRunnerToRoom(runner) }
-
     fun createRoom(room : Room) = viewModelScope.launch { repo.createRoom(room) }
-
     fun getRoom(idRoom : String) = repo.getRoom(idRoom)
     fun getRunners(idRoom: String) = repo.getRunners(idRoom)
 

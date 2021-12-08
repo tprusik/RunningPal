@@ -1,10 +1,6 @@
 package com.example.runningpal.fragments
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Base64
-import android.util.Base64.decode
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -16,7 +12,7 @@ import com.example.runningpal.others.Constants.ACTION_STOP_SERVICE
 import com.example.runningpal.others.Constants.MAP_ZOOM
 import com.example.runningpal.others.Constants.POLYLINE_COLOR
 import com.example.runningpal.others.Constants.POLYLINE_WIDTH
-import com.example.runningpal.others.DatabaseUtility.convertBitmapToString
+import com.example.runningpal.others.Utils.convertBitmapToString
 import com.example.runningpal.others.TrackingUtility
 import com.example.runningpal.services.Polyline
 import com.example.runningpal.services.TrackingService
@@ -28,7 +24,6 @@ import com.google.android.gms.maps.model.PolylineOptions
 import kotlinx.android.synthetic.main.fragment_maps.*
 import org.koin.android.ext.android.get
 import timber.log.Timber
-import java.io.ByteArrayOutputStream
 
 import java.lang.Math.round
 import java.util.*

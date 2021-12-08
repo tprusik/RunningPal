@@ -14,7 +14,6 @@ class StatisticsViewModel(val repo : IRunStatisticsRepository)  : ViewModel() {
 
     val runs = MutableLiveData<List<RunStatistics>>()
 
-
     fun saveRunStatistics(runStatistics: RunStatistics) = viewModelScope.launch { repo.insertRunStatistics(runStatistics) }
 
 }

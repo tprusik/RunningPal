@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/calendarFragment">
+
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.example.runningpal.fragments.CalendarFragment"
+        android:label="fragment_calendar"
+        tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.example.runningpal.fragments.MessageFragment"
+        android:label="fragment_message"
+        tools:layout="@layout/fragment_message" >
+        <action
+            android:id="@+id/action_messageFragment_to_chatActivity"
+            app:destination="@id/chatActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/runRoomFragment"
+        android:name="com.example.runningpal.fragments.RunRoomFragment"
+        android:label="fragment_run_room"
+        tools:layout="@layout/fragment_run_room" />
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.runningpal.fragments.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" >
+        <action
+            android:id="@+id/action_userProfileFragment_to_findUserFragment2"
+            app:destination="@id/findUserFragment" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_loginActivity"
+            app:destination="@id/loginActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/findUserFragment"
+        android:name="com.example.runningpal.fragments.FindUserFragment"
+        android:label="fragment_find_user"
+        tools:layout="@layout/fragment_find_user" >
+        <action
+            android:id="@+id/action_findUserFragment_to_userProfileFragment2"
+            app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_findUserFragment_to_friendProfileFragment"
+            app:destination="@id/friendProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/friendProfileFragment"
+        android:name="com.example.runningpal.fragments.FriendProfileFragment"
+        android:label="fragment_friend_profile"
+        tools:layout="@layout/fragment_friend_profile" />
+    <fragment
+        android:id="@+id/runFragment"
+        android:name="com.example.runningpal.fragments.RunFragment"
+        android:label="fragment_run"
+        tools:layout="@layout/fragment_run" >
+        <action
+            android:id="@+id/action_runFragment_to_trackingFragment"
+            app:destination="@id/trackingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/trackingFragment"
+        android:name="com.example.runningpal.fragments.TrackingFragment"
+        android:label="TrackingFragment" >
+        <action
+            android:id="@+id/action_trackingFragment_to_runFragment"
+            app:destination="@id/runFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.runningpal.activities.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
+    <activity
+        android:id="@+id/chatActivity"
+        android:name="com.example.runningpal.activities.ChatActivity"
+        android:label="activity_chat"
+        tools:layout="@layout/activity_chat" />
+</navigation>

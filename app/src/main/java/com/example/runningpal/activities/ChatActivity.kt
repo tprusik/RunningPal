@@ -2,13 +2,14 @@ package com.example.runningpal.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.runningpal.R
 import com.example.runningpal.db.Message
 import com.example.runningpal.db.MessageContact
-import com.example.runningpal.others.DatabaseUtility.convertStringToBitmap
+import com.example.runningpal.others.Utils.convertStringToBitmap
 import com.example.runningpal.ui.adapters.MessageAdapter
 import com.example.runningpal.ui.viewmodels.MessageViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +23,14 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageViewModel : MessageViewModel
     private lateinit var messageAdapter : MessageAdapter
     private lateinit var receiverID : String
+    private lateinit var nameReceiver : String
+    private lateinit var pic : String
+
+
+    companion object{
+
+        val contact = MutableLiveData<MessageContact>()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,35 +40,38 @@ class ChatActivity : AppCompatActivity() {
         setupRecyclerView()
 
 
-        val pic = intent.getStringExtra("pic")
-        receiverID = intent.getStringExtra("id")!!
-        val nameReceiver = intent.getStringExtra("name")
+        contact.observe(this, Observer {
 
-        tvChatAactivity.setText(nameReceiver)
+            tvChatAactivity.setText(it.name)
 
-        if(pic==null){
+            if(it.profilePic==null){
+                Glide.with(this).load(R.drawable.default_user_avatar).into(ivChatActivity)
 
-            Glide.with(this).load(R.drawable.default_user_avatar).into(ivChatActivity)
 
-        }
-        else{
+            }
+            else{
+                pic = it.profilePic
+                val image =  convertStringToBitmap(it.profilePic)
+                Glide.with(this).load(image).into(ivChatActivity)
+            }
 
-            val image =  convertStringToBitmap(pic)
-            Glide.with(this).load(image).into(ivChatActivity)
-        }
+
+            it.uid?.let { receiverID = it }
+            nameReceiver = it.name!!
+
+            getMessages()
+
+        })
 
         val uidSender = FirebaseAuth.getInstance().currentUser?.uid
 
 
-         getMessages()
-
-
         ibChatPostMessage.setOnClickListener{
-            val timestamp = System.currentTimeMillis().toString()
 
+            val timestamp = System.currentTimeMillis().toString()
             val message = etChatPostMessage.text.toString()
             val messageObject = Message(uidSender!!,message,UUID.randomUUID().toString())
-            val messageContact = MessageContact(nameReceiver,message,timestamp,receiverID,pic)
+            val messageContact = MessageContact(nameReceiver,message,timestamp,receiverID,null)
 
             messageViewModel.sendMessage(receiverID,messageObject)
             messageViewModel.updateMessageContact(messageContact)
