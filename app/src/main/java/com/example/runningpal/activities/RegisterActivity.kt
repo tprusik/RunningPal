@@ -25,7 +25,6 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
 
 
-
         btnApplyRegister.setOnClickListener {
             when {
                 TextUtils.isEmpty(etRegisterEmail.text.toString()) -> {

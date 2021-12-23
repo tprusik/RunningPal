@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/calendarFragment">
+    app:startDestination="@id/runFragment">
 
     <fragment
         android:id="@+id/calendarFragment"
@@ -29,12 +29,13 @@
         android:name="com.example.runningpal.fragments.UserProfileFragment"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile" >
-        <action
-            android:id="@+id/action_userProfileFragment_to_findUserFragment2"
-            app:destination="@id/findUserFragment" />
+
         <action
             android:id="@+id/action_userProfileFragment_to_loginActivity"
             app:destination="@id/loginActivity" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_friendProfileFragment"
+            app:destination="@id/friendProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/findUserFragment"
@@ -46,6 +47,9 @@
             app:destination="@id/userProfileFragment" />
         <action
             android:id="@+id/action_findUserFragment_to_friendProfileFragment"
+            app:destination="@id/friendProfileFragment" />
+        <action
+            android:id="@+id/action_findUserFragment_to_friendProfileFragment2"
             app:destination="@id/friendProfileFragment" />
     </fragment>
     <fragment
@@ -61,6 +65,9 @@
         <action
             android:id="@+id/action_runFragment_to_trackingFragment"
             app:destination="@id/trackingFragment" />
+        <action
+            android:id="@+id/action_runFragment_to_runRoomFragment"
+            app:destination="@id/runRoomFragment" />
     </fragment>
     <fragment
         android:id="@+id/trackingFragment"
@@ -80,4 +87,13 @@
         android:name="com.example.runningpal.activities.ChatActivity"
         android:label="activity_chat"
         tools:layout="@layout/activity_chat" />
+    <fragment
+        android:id="@+id/setupFragment"
+        android:name="com.example.runningpal.fragments.SetupFragment"
+        android:label="fragment_setup"
+        tools:layout="@layout/fragment_setup" >
+        <action
+            android:id="@+id/action_setupFragment_to_runRoomFragment"
+            app:destination="@id/runRoomFragment" />
+    </fragment>
 </navigation>

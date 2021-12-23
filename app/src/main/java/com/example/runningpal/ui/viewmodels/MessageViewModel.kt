@@ -15,7 +15,7 @@ class MessageViewModel(val repository : IMessageRepository) : ViewModel() {
 
     fun sendMessage(idReceiver : String,message: Message) = repository.sendMessage(idReceiver,message)
 
-    fun updateMessageContact(messageContact: MessageContact) = repository.updateMessageContact(messageContact)
+    fun updateMessageContact(senderContact: MessageContact,receiverContact : MessageContact) = repository.updateMessageContact(senderContact,receiverContact)
 
 
 }

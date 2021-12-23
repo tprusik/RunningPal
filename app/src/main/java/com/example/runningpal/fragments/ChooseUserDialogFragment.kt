@@ -47,12 +47,9 @@ class ChooseUserDialogFragment :  DialogFragment() {
     }
 
 
-    init{
-
-        nicks = mutableListOf<String>()
-        usersAray = arrayOf<String>()
-
-    }
+    init {
+        nicks = mutableListOf()
+        usersAray = arrayOf() }
 
     fun submitList(user : List<User>){
         users = user
@@ -61,8 +58,7 @@ class ChooseUserDialogFragment :  DialogFragment() {
             Timber.d("dodano")
             nicks.add(u.nick!!)
         }
-        usersAray = nicks.toTypedArray() as Array<String>
-
+        usersAray = nicks.toTypedArray()
     }
 
 }

@@ -66,6 +66,8 @@ class NewMessageAdapter: RecyclerView.Adapter<NewMessageAdapter.NewMessageViewHo
             setOnClickListener{
 
                 val messageContact = MessageContact(user.nick,null,null,user.uid,user.profilePic)
+
+                Timber.d(" new message ad " + messageContact.name + "  " +  messageContact.uid)
                ChatActivity.contact.postValue(messageContact)
 
                 Navigation.createNavigateOnClickListener(R.id.action_messageFragment_to_chatActivity).onClick(holder.itemView)

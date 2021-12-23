@@ -10,8 +10,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.runningpal.R
+import com.example.runningpal.db.FriendInvitation
 import com.example.runningpal.db.User
 import com.example.runningpal.others.Utils
+import com.example.runningpal.others.Utils.getUserSharedPrevs
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.example.runningpal.ui.viewmodels.StatisticsViewModel
 import kotlinx.android.synthetic.main.fragment_friend_profile.*
@@ -24,18 +26,13 @@ class FriendProfileFragment : Fragment() {
 
     private lateinit var viewModel : StatisticsViewModel
     private lateinit var userViewModel : RunnersViewModel
-    private lateinit var runner : User
+    private lateinit var user : User
+    private lateinit var friendObject : User
 
-    companion object{
-
-       val user = MutableLiveData<User>()
-
-    }
+    companion object{ val friend = MutableLiveData<User>() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+        super.onCreate(savedInstanceState) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -48,6 +45,7 @@ class FriendProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = get()
         userViewModel = get()
+        user = getUserSharedPrevs(requireContext())
 
 
         val friendViewModel by sharedViewModel<RunnersViewModel>()
@@ -55,12 +53,11 @@ class FriendProfileFragment : Fragment() {
 
         Timber.d("onViewCreated fragment" + friendViewModel.hashCode())
 
-      user.observe(viewLifecycleOwner, Observer {
+      friend.observe(viewLifecycleOwner, Observer {
 
-            runner = it
+          friendObject = it
 
             tvFriendProfileName.setText(it.nick)
-
 
             if (it.profilePic == null) {
                 Glide.with(this).load(R.drawable.default_user_avatar).into(ivFriendProfileAvatar)
@@ -84,24 +81,22 @@ class FriendProfileFragment : Fragment() {
 
         fabFriendProfileAdd.setOnClickListener {
 
-            val user = friendViewModel.user.value!!
+            //val user = friendViewModel.user.value!!
 
-                user.contacts!!.add(runner.uid!!)
+               // user.contacts!!.add(runner.uid!!)
 
-                Timber.d("nick" + runner.nick)
+                Timber.d("nick" + friendObject.nick)
 
                 friendViewModel.updateUser(user)
 
+
+                var friendInvitation = FriendInvitation(user.uid, friendObject.uid)
+                userViewModel.sendFriendInvitation(friendInvitation)
+
                 Toast.makeText(context,"dodano kolegę do bazy",Toast.LENGTH_SHORT).show()
-
         }
 
-        btnFriendProfile.setOnClickListener {
-
-
-
-
-        }
+        btnFriendProfile.setOnClickListener {}
     }
 
 

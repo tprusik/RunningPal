@@ -4,5 +4,5 @@ data class Room (
 
         val id : String? = null,
         val timestamp: String? = null,
-        val isStarted: Boolean = false
+        var isStarted: Boolean = false
 )

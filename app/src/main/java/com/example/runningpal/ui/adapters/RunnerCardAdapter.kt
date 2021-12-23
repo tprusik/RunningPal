@@ -51,7 +51,7 @@ class RunnerCardAdapter(
         holder.itemView.apply {
 
             Timber.d("timp" + user.avgSpeedKmh)
-            tvRunnerCardName.setText(user.distanceMetres.toString())
+            tvRunnerCardName.setText(user.name)
             val temp = user.avgSpeedKmh
             tvRunnerCardTemp.setText(temp.toString())
             val distance =  user.distanceMetres

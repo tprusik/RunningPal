@@ -48,8 +48,6 @@ class MessageRepository : IMessageRepository {
 
                         })
 
-
-
             return messageContactsLiveData
 
         }
@@ -57,13 +55,8 @@ class MessageRepository : IMessageRepository {
     override fun getMessages(idReceiver: String): LiveData<List<Message>> {
 
         val messageLiveData = MutableLiveData<List<Message>>()
-
-
-
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
-
         val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
-
 
         database.getReference(DbConstants.DB_NODE_MESSAGE_FRIENDS).child(uid).child(idReceiver)
                 .addValueEventListener(object : ValueEventListener {
@@ -82,9 +75,7 @@ class MessageRepository : IMessageRepository {
                             }
                         }
 
-
                         messageLiveData.postValue(messages)
-
                     }
 
                     override fun onCancelled(error: DatabaseError) {}
@@ -111,20 +102,24 @@ class MessageRepository : IMessageRepository {
 
     }
 
-    override fun updateMessageContact(messageContact : MessageContact) {
+    override fun updateMessageContact(messageContact : MessageContact,receiverContact : MessageContact) {
 
+        val  userID = FirebaseAuth.getInstance().currentUser!!.uid
         val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
         val myRef = database.getReference()
 
+        var receiverContact = MessageContact()
+        receiverContact.uid = userID
+        receiverContact.name = "imie s sharedprevs"
+        receiverContact.lastMessage = messageContact.lastMessage
+        receiverContact
 
-        myRef.child("TestUserChats").child(FirebaseAuth.getInstance().currentUser!!.uid).child("MESSAGE_CONTACTS").child(messageContact.uid!!)
+        myRef.child("TestUserChats").child(userID).child("MESSAGE_CONTACTS").child(messageContact.uid!!)
                 .setValue(messageContact).addOnSuccessListener {
 
                     myRef.child("TestUserChats").child(messageContact.uid!!).child("MESSAGE_CONTACTS").child(FirebaseAuth.getInstance().currentUser!!.uid)
-                            .setValue(messageContact)
-                }
+                            .setValue(messageContact) }
 
     }
-
 
 }

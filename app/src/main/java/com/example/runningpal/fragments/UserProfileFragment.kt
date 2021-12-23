@@ -2,6 +2,7 @@ package com.example.runningpal.fragments
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -23,6 +24,8 @@ import com.example.runningpal.R
 import com.example.runningpal.db.User
 import com.example.runningpal.others.Utils.convertBitmapToString
 import com.example.runningpal.others.Utils.convertStringToBitmap
+import com.example.runningpal.others.Utils.getUserSharedPrevs
+import com.example.runningpal.others.Utils.removeSharedPrefs
 import com.example.runningpal.ui.adapters.ContactsAdapter
 import com.example.runningpal.ui.viewmodels.MainViewModel
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
@@ -50,47 +53,39 @@ class UserProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        user = getUserSharedPrevs(requireContext())
         initSetup()
         setupRecyclerView()
         subscribeToObservers()
+        setupUserProfile(user)
 
         ivUserProfileAvatar.setOnClickListener{ cameraShot() }
 
-        btnUserProfileFindUser.setOnClickListener{
-
-            navHostFragment.findNavController().navigate(R.id.action_userProfileFragment_to_findUserFragment2)
-
-        }
+        btnUserProfileFindUser.setOnClickListener{ navHostFragment.findNavController().navigate(R.id.action_userProfileFragment_to_friendProfileFragment) }
 
         btnUserProfileLogout.setOnClickListener{
-
+            removeSharedPrefs(requireContext())
             mAuth.signOut()
             navHostFragment.findNavController().navigate(R.id.action_userProfileFragment_to_loginActivity)
         }
 
     }
 
+  fun  setupUserProfile(user: User){
+
+      user.nick?.let{tvUserProfileName.setText(it)}
+
+      Glide.with(this).load(R.drawable.default_user_avatar).into(ivUserProfileAvatar)
+
+      Glide.with(this).load(R.drawable.default_user_background).into(ivUserProfileBackground)
+
+      userContacts.postValue(user.contacts)
+
+    }
+
     private fun subscribeToObservers(){
 
-        userViewModel.user.observe(viewLifecycleOwner, Observer {
-            Timber.d("profil user "+ it.uid)
-
-            it.nick?.let{tvUserProfileName.setText(it)}
-            it.email?.let { tvUserProfileEmail.setText(it)}
-
-            it.profilePic?.let{
-                val pic = convertStringToBitmap(it)
-                Glide.with(this).load(pic).into(ivUserProfileAvatar) }
-                    ?:  Glide.with(this).load(R.drawable.default_user_avatar).into(ivUserProfileAvatar)
-
-            it.backgroundPic?.let{
-                val pic = convertStringToBitmap(it)
-                Glide.with(this).load(pic).into(ivUserProfileAvatar)}
-                    ?: Glide.with(this).load(R.drawable.default_user_background).into(ivUserProfileBackground)
-
-            userContacts.postValue(it.contacts)
-        })
+        userViewModel.user.observe(viewLifecycleOwner, Observer { userContacts.postValue(it.contacts) })
 
         userContacts.observe(viewLifecycleOwner, Observer {
             userViewModel.getSelectedRunners(it).observe(viewLifecycleOwner, Observer {
@@ -104,8 +99,9 @@ class UserProfileFragment : Fragment() {
 
         viewModel.totalDistance.observe(viewLifecycleOwner , Observer {
 
-            it?.let{ tvUserProfileStatistics.setText(it.allRuns.toString()) }
+            it?.let{ tvUserProfileRunAmountInput.setText(it.allRuns.toString()) }
         })
+
 
     }
 

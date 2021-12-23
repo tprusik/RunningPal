@@ -2,10 +2,12 @@ package com.example.runningpal.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -22,6 +24,7 @@ import com.example.runningpal.services.TrackingService
 import com.example.runningpal.ui.adapters.RunnerCardAdapter
 import com.example.runningpal.ui.viewmodels.MainViewModel
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_run_room.*
@@ -40,12 +43,11 @@ class RunRoomFragment : Fragment() {
     private var pathPoints = mutableListOf<Polyline>()
     private lateinit var uid : String
 
-    companion object{
+    companion object   {
         var users  = mutableListOf<User>()
         var user = User()
         var room = Room()
-        var runner  = MutableLiveData<Runner>()
-    }
+        var runner  = MutableLiveData<Runner>() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,8 +56,8 @@ class RunRoomFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_run_room, container, false)
     }
@@ -69,18 +71,23 @@ class RunRoomFragment : Fragment() {
         subscribeObserver()
 
         if(room.id!=null) {
+            Timber.d("nie kurde jet null")
             observeRoom()
             changeButtonVisibility()
         }
 
         btnCreateRoomRunFragment.setOnClickListener {
             createNewRoom()
+            readyToRunRunDialogBuilder()
         }
 
         btnStartRunRoomRunFragment.setOnClickListener{
 
-            btnStartRunRoomRunFragment
-            sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
+
+
+
+            startRunCountDown()
+           // sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
 
         }
 
@@ -95,7 +102,9 @@ class RunRoomFragment : Fragment() {
 
             btnCreateRoomRunFragment.visibility = FloatingActionButton.GONE
             btnInviteRunRoomFragment.visibility = Button.VISIBLE
-            btnStartRunRoomRunFragment.visibility = Button.VISIBLE }
+            btnStartRunRoomRunFragment.visibility = Button.VISIBLE 
+            tvRunRoomCountDown.visibility = TextView.VISIBLE
+            tvRunRoomCountDownInput.visibility = TextView.VISIBLE }
 
 
     fun createNewRoom(){
@@ -103,8 +112,9 @@ class RunRoomFragment : Fragment() {
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val roomID = UUID.randomUUID().toString()
         val currentDate = sdf.format(Date())
-        room = Room(uid,currentDate,false)
-        val runner = Runner(uid,uid,user.nick,user.profilePic,0f,0)
+        room = Room(uid, currentDate, false)
+
+        val runner = Runner(uid, uid, user.nick, user.profilePic, 0f, 0)
 
         mainViewModel.createRoom(room)
         mainViewModel.addRunnerToRoom(runner)
@@ -126,23 +136,23 @@ class RunRoomFragment : Fragment() {
         })
 
         ChooseUserDialogFragment.ids.observe(viewLifecycleOwner, Observer {
+            val user = users.get(it)
 
-                val user = users.get(it)
-                val invitation = Invitation(uid,user.uid,room.id)
-                runnersViewModel.sendInvitation(invitation)
-                Timber.d("Wysłano zaproszenie")
+            val invitation = Invitation(uid, user.uid, room.id)
+            runnersViewModel.sendRunInvitation(invitation)
+            Timber.d("Wysłano zaproszenie")
         })
 
         runnersViewModel.user.observe(viewLifecycleOwner, Observer {
             user = it
 
-            it.contacts?.also {runnersViewModel.getSelectedRunners(it).observe(viewLifecycleOwner,
-                Observer {
+            it.contacts?.also {
+                runnersViewModel.getSelectedRunners(it).observe(viewLifecycleOwner,
+                        Observer {
+                            users = it
 
-                    users = it
-
-                })  }
-
+                        })
+            }
 
             Timber.d("add Runner ${user.nick} ")
         })
@@ -155,7 +165,6 @@ class RunRoomFragment : Fragment() {
                 runnersAdapter.submitList(it)
                 Timber.d("mam cię $    !!!" + it.size.toString() + "  !!! " + it.last().distanceMetres.toString())
             })
-
     }
 
    private fun setupRecyclerView() = rvRunRoom.apply {
@@ -175,9 +184,46 @@ class RunRoomFragment : Fragment() {
             distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt() }
 
        // val avgSpeed = Math.round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
-        val runner = Runner(uid,room.id,user.nick,user.profilePic,0f,distanceInMeters)
+        val runner = Runner(uid, room.id, user.nick, user.profilePic, 0f, distanceInMeters)
         Timber.d("calculate and save ")
         mainViewModel.addRunnerToRoom(runner)
     }
+
+    fun readyToRunRunDialogBuilder(){
+        MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Start Biegu !")
+                .setMessage("Oczekiwanie na wszystkich zawodników...")
+                .setPositiveButton("Jestem gotowy !") { dialog, which ->
+                    // Respond to positive button press
+                }
+                .show()
+    }
+
+    fun startRunCountDown(){
+
+        var tick = 10
+
+
+        object : CountDownTimer(10000, 1000) {
+
+            override fun onTick(millisUntilFinished: Long) {
+
+                tvRunRoomCountDownInput.setText(tick.toString())
+                tick--
+
+            }
+
+            override fun onFinish() {
+                room.isStarted = true
+                mainViewModel.updateRoomStateStarted(room)
+                sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
+            }
+
+        }.start()
+
+
+    }
+
+
 
     }

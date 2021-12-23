@@ -13,6 +13,7 @@ interface IRunRepository {
     fun deleteRun(run : Run)
 
     fun createRoom(room: Room)
+    fun updateRoomState(room : Room)
     fun addRunnerToRoom(runner : Runner)
     fun getRoom(roomID : String) : LiveData<Room>
     fun getRunners(roomID: String): LiveData<List<Runner>>

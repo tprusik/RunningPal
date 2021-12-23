@@ -62,12 +62,10 @@ class ContactsAdapter (
             }
 
             setOnClickListener{
-                FriendProfileFragment.user.postValue(user)
-                Navigation.createNavigateOnClickListener(R.id.action_findUserFragment_to_friendProfileFragment).onClick(holder.itemView)
+                FriendProfileFragment.friend.postValue(user)
+                Navigation.createNavigateOnClickListener(R.id.action_userProfileFragment_to_friendProfileFragment).onClick(holder.itemView)
             }
-
         }
-
     }
 
     override fun getItemCount(): Int {

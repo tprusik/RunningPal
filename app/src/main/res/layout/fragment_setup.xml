@@ -7,14 +7,12 @@
     tools:context=".fragments.SetupFragment">
 
 
-
-
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Welcome!\nPlease enter your name and weight."
+        android:text="Witaj!\nProszę podaj nam własne imię i wagę"
         android:textAlignment="center"
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/tilName"

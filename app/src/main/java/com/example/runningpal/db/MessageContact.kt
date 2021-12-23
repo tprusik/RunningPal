@@ -2,8 +2,8 @@ package com.example.runningpal.db
 
  data class MessageContact (
 
-         val name : String? = null,
-         val lastMessage : String? = null,
+         var name : String? = null,
+         var lastMessage : String? = null,
          val timestamp: String? = null,
-         val uid : String? = null,
+         var uid : String? = null,
          val profilePic : String? = null )

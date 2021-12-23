@@ -54,6 +54,7 @@ class MessageFriendAdapter (
 
             tvContactMessageUser.text = user.name
             tvContactMessage.text = user.lastMessage
+
             Timber.d("MessageFriendAdapter  " +  user.uid)
             if(user.profilePic == null)
                 Glide.with(this).load(R.drawable.default_user_avatar).into(ivContactMessage)
@@ -64,7 +65,7 @@ class MessageFriendAdapter (
             }
 
             setOnClickListener{
-
+                Timber.d(" new message ad " + user.name + "  " +  user.uid)
                 ChatActivity.contact.postValue(user)
                 Navigation.createNavigateOnClickListener(R.id.action_messageFragment_to_chatActivity).onClick(holder.itemView)
             }

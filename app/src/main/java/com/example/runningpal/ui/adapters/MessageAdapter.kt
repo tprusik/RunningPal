@@ -12,6 +12,7 @@ import com.example.runningpal.db.MessageContact
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.chat_message_receive.view.*
 import kotlinx.android.synthetic.main.chat_message_send.view.*
+import timber.log.Timber
 
 
 class MessageAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
@@ -50,7 +51,6 @@ class MessageAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
             return ReceiveViewHolder(view)
         }
         else{
-
             val view =
                 LayoutInflater.from(parent.context).inflate(R.layout.chat_message_send, parent, false)
             return SentViewHolder(view)
@@ -60,7 +60,7 @@ class MessageAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         val currentMessage = differ.currentList[position]
-
+        Timber.d("wiadomosc")
         holder.itemView.apply {
 
             if(holder.javaClass == SentViewHolder::class.java)

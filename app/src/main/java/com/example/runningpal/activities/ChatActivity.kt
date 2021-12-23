@@ -10,6 +10,7 @@ import com.example.runningpal.R
 import com.example.runningpal.db.Message
 import com.example.runningpal.db.MessageContact
 import com.example.runningpal.others.Utils.convertStringToBitmap
+import com.example.runningpal.others.Utils.getUserSharedPrevs
 import com.example.runningpal.ui.adapters.MessageAdapter
 import com.example.runningpal.ui.viewmodels.MessageViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -26,11 +27,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var nameReceiver : String
     private lateinit var pic : String
 
-
-    companion object{
-
-        val contact = MutableLiveData<MessageContact>()
-    }
+    companion object{ val contact = MutableLiveData<MessageContact>() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,73 +36,50 @@ class ChatActivity : AppCompatActivity() {
         messageViewModel = get()
         setupRecyclerView()
 
+        val user = getUserSharedPrevs(applicationContext)
+        Timber.d("Shared " + user.nick)
 
         contact.observe(this, Observer {
-
             tvChatAactivity.setText(it.name)
 
             if(it.profilePic==null){
-                Glide.with(this).load(R.drawable.default_user_avatar).into(ivChatActivity)
-
-
-            }
-            else{
+                Glide.with(this).load(R.drawable.default_user_avatar).into(ivChatActivity) }
+            else {
                 pic = it.profilePic
                 val image =  convertStringToBitmap(it.profilePic)
-                Glide.with(this).load(image).into(ivChatActivity)
-            }
-
+                Glide.with(this).load(image).into(ivChatActivity) }
 
             it.uid?.let { receiverID = it }
             nameReceiver = it.name!!
 
             getMessages()
-
         })
-
-        val uidSender = FirebaseAuth.getInstance().currentUser?.uid
 
 
         ibChatPostMessage.setOnClickListener{
-
             val timestamp = System.currentTimeMillis().toString()
             val message = etChatPostMessage.text.toString()
-            val messageObject = Message(uidSender!!,message,UUID.randomUUID().toString())
-            val messageContact = MessageContact(nameReceiver,message,timestamp,receiverID,null)
+            val messageObject = Message(user.uid,message,UUID.randomUUID().toString())
+            val senderContact = MessageContact(nameReceiver,message,timestamp,receiverID,null)
+            val receiverContact = MessageContact(user.nick,message,timestamp,user.uid,user.profilePic)
 
             messageViewModel.sendMessage(receiverID,messageObject)
-            messageViewModel.updateMessageContact(messageContact)
+            messageViewModel.updateMessageContact(senderContact,receiverContact)
 
            getMessages()
 
         }
-
 
     }
 
     fun getMessages(){
 
         messageViewModel.getMessages(receiverID).observe(this, Observer {
-
-            Timber.d("jestem tutaj ? ")
             messageAdapter.submitList(it)
-
-        })
-
-
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-        messageViewModel.getMessages(receiverID).observe(this, Observer {
-
-            Timber.d("jestem tutaj ? ")
-            messageAdapter.submitList(it)
-
         })
 
     }
+
 
 
     fun setupRecyclerView() = rvChat.apply {

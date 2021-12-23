@@ -18,8 +18,6 @@ import kotlinx.android.synthetic.main.fragment_message.*
 import org.koin.android.ext.android.get
 import timber.log.Timber
 
-
-
 class MessageFragment : Fragment() {
 
     private lateinit var newMessageAdapter:  NewMessageAdapter
@@ -43,7 +41,6 @@ class MessageFragment : Fragment() {
 
             Timber.d("Message Fragment")
             messageFriendAdapter.submitList(it)
-
         })
 
         userViewModel.user.observe(viewLifecycleOwner, Observer { user = it })
@@ -57,7 +54,6 @@ class MessageFragment : Fragment() {
         }
 
     }
-
 
     private fun setupRecycleView() = rvMessageFragment.apply{
 

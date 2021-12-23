@@ -96,5 +96,5 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
     fun createRoom(room : Room) = viewModelScope.launch { repo.createRoom(room) }
     fun getRoom(idRoom : String) = repo.getRoom(idRoom)
     fun getRunners(idRoom: String) = repo.getRunners(idRoom)
-
+    fun updateRoomStateStarted(room: Room) = viewModelScope.launch { repo.updateRoomState(room) }
 }

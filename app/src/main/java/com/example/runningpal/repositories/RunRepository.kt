@@ -170,4 +170,9 @@ class RunRepository : IRunRepository  {
         Timber.d("add Room ${room.id} ")
     }
 
+
+    override fun updateRoomState(room : Room){ database.getReference(DB_NODE_RUN_ROOM).child(room.id!!).child("started").setValue(true)
+        Timber.d("add Room ${room.id} ")
+    }
+
 }

@@ -17,17 +17,7 @@ class SettingsFragment : Fragment() {
     lateinit var sharedPref : SharedPreferences
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-    }
-
-    private fun loadPersonalDataFromSharedPref(){
-
-
-
-        // and set it to the proper views
-    }
-
+        super.onViewCreated(view, savedInstanceState) }
 
 
     private fun changePersonalDataToSharedPref(): Boolean {

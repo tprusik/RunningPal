@@ -13,6 +13,7 @@ import com.example.runningpal.activities.DashboardActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.Invitation
 import com.example.runningpal.others.Constants
+import com.example.runningpal.others.Constants.ACTION_SHOW_FRIEND_PROFILE
 import com.example.runningpal.others.Constants.ACTION_SHOW_ROOM
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import org.koin.android.ext.android.get
@@ -21,18 +22,12 @@ import timber.log.Timber
 class ListenerService : LifecycleService() {
 
     companion object{
+        val runInvite =   MutableLiveData<Invitation>() }
 
-     val runInvite =   MutableLiveData<Invitation>()
-
-    }
     private lateinit var notificationBuilder : NotificationCompat.Builder
     private lateinit var viewModel : RunnersViewModel
 
-init{
-
-    viewModel = get()
-
-}
+init{ viewModel = get()}
 
 
     override fun onCreate() {
@@ -40,11 +35,16 @@ init{
 
         Timber.d("to ja service")
 
-        viewModel.invitation.observe(this, Observer {
-
+        viewModel.runInvitation.observe(this, Observer {
             val roomID = it.idRoom
             Timber.d("serwis")
             createNotification(roomID!!)
+        })
+
+        viewModel.friendInvitation.observe(this, Observer {
+
+            createFriendInvitationNotification(it.senderID!!,it.senderID!!)
+
         })
 
     }
@@ -59,6 +59,37 @@ init{
         Timber.d("service wystartowalem")
 
     }
+
+    fun createFriendInvitationNotification(name : String,id : String){
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE)
+                as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel(notificationManager)
+        }
+
+        notificationBuilder = NotificationCompat.Builder(this,
+                Constants.NOTIFICATION_CHANNEL_ID)
+                .setAutoCancel(false)
+                .setOngoing(true)
+                .setSmallIcon(R.drawable.ic_bottom_nav_bar_message)
+                .setContentTitle("Odebrano zaproszenie do znajomych")
+                .setContentText("Zaproszenie od ${name}")
+                .setContentIntent(getFriendInvitationPendingIntent(id))
+        notificationManager.notify(1,notificationBuilder.build())
+
+    }
+
+    fun getFriendInvitationPendingIntent(id : String) = PendingIntent.getActivity(
+            this,
+            0,
+            Intent(this, DashboardActivity::class.java).also {
+                it.action = ACTION_SHOW_FRIEND_PROFILE
+                it.putExtra("IDFRIEND",id)
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT
+    )
 
 
      fun createNotification(idRoom : String){
@@ -81,7 +112,6 @@ init{
 
         notificationManager.notify(1,notificationBuilder.build())
 
-
     }
 
      fun getRunRoomPendingIntent(idRoom : String) = PendingIntent.getActivity(
@@ -89,7 +119,8 @@ init{
         0,
         Intent(this, DashboardActivity::class.java).also {
             it.action = ACTION_SHOW_ROOM
-            it.putExtra("id",idRoom)
+            Timber.d("pending + "+ idRoom)
+            it.putExtra("IDROOM",idRoom)
         },
         PendingIntent.FLAG_UPDATE_CURRENT
     )

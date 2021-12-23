@@ -36,7 +36,31 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
+        <TextView
+            android:id="@+id/tvRunRoomCountDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start biegu za : "
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_margin="20dp" />
+
+        <TextView
+            android:id="@+id/tvRunRoomCountDownInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tvRunRoomCountDown"
+            android:layout_margin="20dp" />
+
+
         <com.google.android.material.button.MaterialButton
+
             android:id="@+id/btnStartRunRoomRunFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

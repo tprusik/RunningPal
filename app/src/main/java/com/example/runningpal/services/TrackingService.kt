@@ -80,9 +80,7 @@ class TrackingService : LifecycleService() {
         postInitialValues()
         fusedLocationProviderClient = FusedLocationProviderClient(this)
 
-
         isTracking.observe(this, Observer {
-
             updateLocationTracking(it)
             updateNotificationTrackingState(it)
         })

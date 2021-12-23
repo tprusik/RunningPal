@@ -13,6 +13,6 @@ interface IMessageRepository {
 
     fun sendMessage(idReceiver : String,message: Message)
 
-    fun updateMessageContact(messageContact : MessageContact)
+    fun updateMessageContact(messageContact : MessageContact, receiverContact: MessageContact)
 
 }

@@ -1,5 +1,9 @@
 package com.example.runningpal.di
 
+import android.content.Context
+import android.content.SharedPreferences
+import com.example.runningpal.db.User
+import com.example.runningpal.others.Constants
 import com.example.runningpal.repositories.*
 import com.example.runningpal.ui.viewmodels.MainViewModel
 import com.example.runningpal.ui.viewmodels.MessageViewModel
@@ -12,6 +16,7 @@ import org.koin.dsl.module
 
 object ServiceModule : KoinComponent {
 
+
     val appModule = module {
 
         single { FirebaseAuth.getInstance() }
@@ -19,6 +24,9 @@ object ServiceModule : KoinComponent {
         single<IRunStatisticsRepository> { RunStatisticsRepository() }
         single<IRunnersRepository> { RunnersRepository() }
         single<IMessageRepository> { MessageRepository() }
+
+        single {RunnersRepository()}
+
 
         viewModel { MainViewModel(get()) }
 
@@ -29,5 +37,10 @@ object ServiceModule : KoinComponent {
         viewModel { MessageViewModel(get())
 
         }
+
+
     }
+
+
+
 }
