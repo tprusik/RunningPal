@@ -63,7 +63,7 @@ class ContactsAdapter (
 
             setOnClickListener{
                 FriendProfileFragment.friend.postValue(user)
-                Navigation.createNavigateOnClickListener(R.id.action_userProfileFragment_to_friendProfileFragment).onClick(holder.itemView)
+                Navigation.createNavigateOnClickListener(R.id.action_findUserFragment_to_friendProfileFragment).onClick(holder.itemView)
             }
         }
     }

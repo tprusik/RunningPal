@@ -7,57 +7,39 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.runningpal.R
+import com.example.runningpal.db.User
 import com.example.runningpal.others.Constants.KEY_FIRST_TIME_IN_APP
 import com.example.runningpal.others.Constants.KEY_USER_NAME
 import com.example.runningpal.others.Constants.KEY_USER_WEIGHT
+import com.example.runningpal.others.Utils.getUserSharedPrevs
+import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_setup.*
+import org.koin.android.ext.android.get
 
 
 class SetupFragment : Fragment() {
 
 
-    lateinit var sharedPref: SharedPreferences
+    lateinit var user : User
+    lateinit var viewModel : RunnersViewModel
 
     // tutaj injection
     var isFirstAppOpen = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-/**
-        if(!isFirstAppOpen) {
-            val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.setupFragment, true)
-                .build()
-            findNavController().navigate(
-                R.id.action_setupFragment_to_runFragment,
-                savedInstanceState,
-                navOptions
-            )
-        }
-        **/
 
-        tvContinue.setOnClickListener {
-            val success = writePersonalDataToSharedPref()
-            if(success) {
-               // findNavController().navigate(R.id.action_setupFragment_to_runFragment)
-            } else {
-                Snackbar.make(requireView(), "Please enter all the fields", Snackbar.LENGTH_SHORT).show()
-            }
+        user = getUserSharedPrevs(requireContext())
+        viewModel = get()
+
+        tvSetupContinue.setOnClickListener {
+           val userWeight =  etSetupWeight.text
+
+            user.weight = userWeight.toString()
+
+            viewModel.updateUser(user)
         }
     }
 
-    private fun writePersonalDataToSharedPref(): Boolean {
-        val name = etName.text.toString()
-        val weight = etWeight.text.toString()
-        if(name.isEmpty() || weight.isEmpty()) {
-            return false
-        }
-        sharedPref.edit()
-            .putString(KEY_USER_NAME, name)
-            .putFloat(KEY_USER_WEIGHT, weight.toFloat())
-            .putBoolean(KEY_FIRST_TIME_IN_APP, false)
-            .apply()
-        return true
-    }
 }

@@ -10,6 +10,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.runningpal.R
 import com.example.runningpal.db.User
 import com.example.runningpal.others.Constants
@@ -17,6 +18,7 @@ import com.example.runningpal.others.Constants.KEY_USER_AVATAR
 import com.example.runningpal.others.Constants.KEY_USER_BCK
 import com.example.runningpal.others.Constants.KEY_USER_ID
 import com.example.runningpal.others.Constants.KEY_USER_NAME
+import com.example.runningpal.others.Constants.KEY_USER_WEIGHT
 import com.example.runningpal.others.Constants.SHARED_PREFERENCES_NAME
 import com.example.runningpal.others.DbConstants
 import com.example.runningpal.repositories.RunnersRepository
@@ -32,6 +34,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.coroutines.runBlocking
@@ -40,9 +43,7 @@ import timber.log.Timber
 
 class LoginActivity : AppCompatActivity() {
 
-    companion object{
-        private const val RC_SIGN_IN = 120
-    }
+    companion object{ private const val RC_SIGN_IN = 120 }
 
     private  lateinit var mAuth : FirebaseAuth
     private  lateinit var googleSignInClient :GoogleSignInClient
@@ -114,18 +115,14 @@ class LoginActivity : AppCompatActivity() {
                                     getCurrentUserObject()
                                     Timber.d("logowania"+ firebaseUser.uid)
 
+
                                     // przekierowanie do main activity oraz dodanie flag aby nie powrócić tutaj spowrotem
 
                                     Timber.d("logowania"+ firebaseUser.uid)
+
                                     val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                    intent.putExtra("user_id",firebaseUser.uid)
-                                    intent.putExtra("email_id",email)
-
-
-                                         startActivity(intent)
-                                         finish()
-
+                                    startActivity(intent)
+                                    finish()
 
                                 } else{
                                     Toast.makeText(
@@ -133,7 +130,6 @@ class LoginActivity : AppCompatActivity() {
                                             task.exception!!.message.toString(),
                                             Toast.LENGTH_SHORT
                                     ).show()
-
                                 }
                             }
                 }
@@ -213,16 +209,15 @@ class LoginActivity : AppCompatActivity() {
         Timber.d("hejZapisuje "+  user.nick)
         user.nick?.let { saveUserSharedPrevs(KEY_USER_NAME,it) }
         user.uid?.let {saveUserSharedPrevs(KEY_USER_ID,it) }
+         user.weight?.let {saveUserSharedPrevs(KEY_USER_WEIGHT,it) }
         user.profilePic?.let { saveUserSharedPrevs(KEY_USER_AVATAR,it) }
         user.backgroundPic?.let { saveUserSharedPrevs(KEY_USER_BCK,it) }
-
 
     }
 
 
     fun saveUserSharedPrevs(key: String,value: String){
         val sharedPreferences: SharedPreferences.Editor = applicationContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit()
-
         Timber.d("prefsLog "+ value + " sss")
         sharedPreferences.putString(key,value)
 

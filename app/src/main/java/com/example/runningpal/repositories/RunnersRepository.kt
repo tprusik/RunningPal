@@ -10,6 +10,7 @@ import com.example.runningpal.db.Invitation
 import com.example.runningpal.db.User
 import com.example.runningpal.others.DbConstants.DB_NODE_FRIEND_INVITATION
 import com.example.runningpal.others.DbConstants.DB_NODE_INVITATION
+import com.example.runningpal.others.DbConstants.DB_NODE_USER_CONTACTS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -30,19 +31,42 @@ class RunnersRepository : IRunnersRepository {
 
     override fun insertUser(user :User){database.getReference(DB_NODE_USER).child(user.uid!!).setValue(user)}
     override fun updateUser(user: User) { database.getReference(DB_NODE_USER).child(userID).setValue(user) }
+    override fun updateUserContacts(user: User) { database.getReference(DB_NODE_USER).child(userID).child(DB_NODE_USER_CONTACTS).setValue(user.contacts) }
     override fun sendRunInvitation(invitation: Invitation) {database.getReference(DB_NODE_INVITATION).child(DB_NODE_RUN_INVITATION).child(invitation.receiverID!!).push().setValue(invitation) }
+
     override fun sendFriendInvitation(friendInvitation: FriendInvitation) {
-        database.getReference(DB_NODE_INVITATION).child(DB_NODE_FRIEND_INVITATION).child(friendInvitation.receiverID!!).child(friendInvitation.senderID!!).setValue(friendInvitation)
-                .addOnSuccessListener {
-                    database.getReference(DB_NODE_INVITATION).child(DB_NODE_FRIEND_INVITATION).child(friendInvitation.senderID).child(friendInvitation.receiverID).setValue(friendInvitation)
-                }
+        database.getReference(DB_NODE_INVITATION).child(DB_NODE_FRIEND_INVITATION).child(friendInvitation.receiverID!!).child(friendInvitation.senderID!!).setValue(friendInvitation) }
+
+    override fun deleteAcceptedInvitation(friendID : String){ database.getReference(DB_NODE_INVITATION).child(DB_NODE_FRIEND_INVITATION).child(userID).child(friendID).removeValue() }
+
+    override fun deleteReceivedInvitation(friendID : String){ database.getReference(DB_NODE_INVITATION).child(DB_NODE_FRIEND_INVITATION).child(userID).child("ACCEPTED").child(friendID).removeValue() }
+
+    override fun getFriendAcceptedInvitation(): LiveData<String> {
+
+        var invitation = MutableLiveData<String>()
+
+        database.getReference(DB_NODE_INVITATION).child(DB_NODE_FRIEND_INVITATION).child(userID).child("ACCEPTED")
+                .addValueEventListener(object : ValueEventListener {
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+
+                        for(snap in snapshot.children){
+
+                            Timber.d("invitatiom")
+                            val currInvitation = snap.getValue().toString()
+                            invitation.postValue(currInvitation!!)
+
+                        }
+                    }
+                    override fun onCancelled(error: DatabaseError) {}
+
+                })
+
+        return invitation
     }
 
-    override fun updateFriendInvitationAccept(friendInvitation: FriendInvitation) {
-        database.getReference(DB_NODE_INVITATION).child(DB_NODE_FRIEND_INVITATION).child(friendInvitation.receiverID!!).child(friendInvitation.senderID!!).child("isAccepted").setValue(true)
-                .addOnSuccessListener {
-                    database.getReference(DB_NODE_INVITATION).child(DB_NODE_FRIEND_INVITATION).child(friendInvitation.senderID).child(friendInvitation.receiverID).child("isAccepted").setValue(true)
-                }
+    override fun acceptFriendInvitation(friendInvitation: FriendInvitation) {
+        database.getReference(DB_NODE_INVITATION).child(DB_NODE_FRIEND_INVITATION).child(friendInvitation.senderID!!).child("ACCEPTED").child(friendInvitation.receiverID!!).setValue(friendInvitation.receiverID)
     }
 
     override fun deleteFriendInvitation(friendInvitation: FriendInvitation) {
@@ -92,12 +116,15 @@ class RunnersRepository : IRunnersRepository {
 
                         override fun onDataChange(snapshot: DataSnapshot) {
 
-                            val us = snapshot.getValue(User::class.java)!!
-                            Timber.d("ss"+ us.email)
+                            val us = snapshot.getValue(User::class.java)
+                            if(us!=null){
 
-                            runners.add(us)
+                                Timber.d("ss"+ us.email)
 
-                            selectedRunners.postValue(runners)
+                                runners.add(us)
+
+                                selectedRunners.postValue(runners)
+                            }
 
                         }
 

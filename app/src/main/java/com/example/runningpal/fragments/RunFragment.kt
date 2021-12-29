@@ -4,9 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -41,12 +39,18 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
 
     }
 
+
+
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = get()
         requestPermissions()
         setupRecyclerView()
+
+        if(RunRoomFragment.room.id!= null){navHostFragment.findNavController().navigate(R.id.action_runFragment_to_runRoomFragment)}
 
 
         when(viewModel.sortType) {

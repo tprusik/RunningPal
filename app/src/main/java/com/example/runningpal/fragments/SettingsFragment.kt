@@ -19,20 +19,4 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState) }
 
-
-    private fun changePersonalDataToSharedPref(): Boolean {
-        val name = etName.text.toString()
-        val weight = etWeight.text.toString()
-        if(name.isEmpty() || weight.isEmpty()) {
-            return false
-        }
-        sharedPref.edit()
-            .putString(Constants.KEY_USER_NAME, name)
-            .putFloat(Constants.KEY_USER_WEIGHT, weight.toFloat())
-            .apply()
-        return true
-    }
-
-
-
 }

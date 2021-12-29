@@ -7,6 +7,7 @@ object DbConstants {
     const val DB_NODE_RUN = "Runs"
     const val DB_NODE_RUN_STATISTICS = "RunStatistics"
     const val DB_NODE_USER = "UserData"
+    const val DB_NODE_USER_CONTACTS = "contacts"
     const val DB_NODE_MESSAGE_FRIENDS = "TestUserChats"
     const val DB_NODE_INVITATION = "INVITATION"
     const val DB_NODE_RUN_INVITATION = "RUN_INVITATION"

@@ -5,12 +5,16 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.runningpal.R
 import com.example.runningpal.db.User
+import com.example.runningpal.others.Constants.ACTION_FROM_REGISTER
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_register.*
 import org.koin.android.ext.android.get
@@ -23,7 +27,6 @@ class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-
 
         btnApplyRegister.setOnClickListener {
             when {
@@ -66,20 +69,15 @@ class RegisterActivity : AppCompatActivity() {
                                 ).show()
 
                                 Timber.d(   "rejestracja "+ firebaseUser.uid)
-                                val user = User(email,nick,null,null,firebaseUser.uid, mutableListOf())
+                                val user = User(email,nick,null,null,firebaseUser.uid,null, mutableListOf())
 
                                 viewModel = get()
-                               viewModel.insertUser(user)
-                                // przekierowanie do main activity oraz dodanie flag aby nie powrócić tutaj spowrotem
+                                viewModel.insertUser(user)
 
+                                 Intent(this, DashboardActivity::class.java).also {
+                                    it.action = ACTION_FROM_REGISTER
+                                    startActivity(it) }
 
-                                ////
-                                val intent =
-                                        Intent(this@RegisterActivity, DashboardActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                intent.putExtra("user_id", firebaseUser.uid)
-                                intent.putExtra("email_id", email)
-                                startActivity(intent)
                                 finish()
 
                             } else{

@@ -48,8 +48,7 @@ class UserProfileFragment : Fragment() {
     private lateinit var userContacts : MutableLiveData<List<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+        super.onCreate(savedInstanceState) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,14 +60,12 @@ class UserProfileFragment : Fragment() {
 
         ivUserProfileAvatar.setOnClickListener{ cameraShot() }
 
-        btnUserProfileFindUser.setOnClickListener{ navHostFragment.findNavController().navigate(R.id.action_userProfileFragment_to_friendProfileFragment) }
+        btnUserProfileFindUser.setOnClickListener{ navHostFragment.findNavController().navigate(R.id.action_userProfileFragment_to_findUserFragment) }
 
         btnUserProfileLogout.setOnClickListener{
             removeSharedPrefs(requireContext())
             mAuth.signOut()
-            navHostFragment.findNavController().navigate(R.id.action_userProfileFragment_to_loginActivity)
-        }
-
+            navHostFragment.findNavController().navigate(R.id.action_userProfileFragment_to_loginActivity) }
     }
 
   fun  setupUserProfile(user: User){
@@ -97,14 +94,14 @@ class UserProfileFragment : Fragment() {
 
         })
 
-        viewModel.totalDistance.observe(viewLifecycleOwner , Observer {
+        viewModel.runStatistics.observe(viewLifecycleOwner , Observer {
 
-            it?.let{ tvUserProfileRunAmountInput.setText(it.allRuns.toString()) }
+            it.allDistance?.let{ tvUserProfileTotalDistanceInput.setText(it.toString())}
+            it.allCaloriesBurned?.let{ tvUserProfileTotalCaloriesBurnedInput.setText(it.toString())}
+            it.allTime?.let{ tvUserProfileTotalRunningTimeInput.setText(it.toString())}
+            it.allRuns?.let{ tvUserProfileRunAmountInput.setText(it.toString())}
         })
-
-
     }
-
 
     private fun initSetup(){
         mAuth = FirebaseAuth.getInstance()

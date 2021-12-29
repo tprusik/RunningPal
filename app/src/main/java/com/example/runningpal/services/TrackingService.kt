@@ -60,12 +60,13 @@ class TrackingService : LifecycleService() {
     lateinit var baseNotificationBuilder : NotificationCompat.Builder
     lateinit var curNotificationBuilder : NotificationCompat.Builder
 
-    private val timeRunInSeconds = MutableLiveData<Long>()
+
 
     companion object {
         val timeRunInMillis = MutableLiveData<Long>()
         val isTracking = MutableLiveData<Boolean>()
         val pathPoints = MutableLiveData<Polylines>()
+        val timeRunInSeconds = MutableLiveData<Long>()
     }
 
     private fun postInitialValues() {

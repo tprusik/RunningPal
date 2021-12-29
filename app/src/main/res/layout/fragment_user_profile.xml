@@ -42,14 +42,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivUserProfileBackground" />
 
-
-
-
     <TextView
         android:id="@+id/tvUserProfileRunAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
         android:text="Ilość biegów: "
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -60,7 +58,8 @@
         android:id="@+id/tvUserProfileRunAmountInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
         android:text="0"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -71,7 +70,8 @@
         android:id="@+id/tvUserProfileTotalDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
         android:text="Przebyty dystans: "
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -82,12 +82,61 @@
         android:id="@+id/tvUserProfileTotalDistanceInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
         android:text="100"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintLeft_toRightOf="@id/tvUserProfileTotalDistance"
         app:layout_constraintTop_toBottomOf="@id/tvUserProfileRunAmount" />
+
+    <TextView
+        android:id="@+id/tvUserProfileTotalCaloriesBurned"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="Spalone Kalorie: "
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvUserProfileTotalDistance" />
+
+    <TextView
+        android:id="@+id/tvUserProfileTotalCaloriesBurnedInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="100"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toRightOf="@id/tvUserProfileTotalCaloriesBurned"
+        app:layout_constraintTop_toBottomOf="@id/tvUserProfileTotalDistance" />
+
+    <TextView
+        android:id="@+id/tvUserProfileTotalRunningTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="łączny czas treningu: "
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvUserProfileTotalCaloriesBurned" />
+
+    <TextView
+        android:id="@+id/tvUserProfileTotalRunningTimeInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="100"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toRightOf="@id/tvUserProfileTotalRunningTime"
+        app:layout_constraintTop_toBottomOf="@id/tvUserProfileTotalCaloriesBurned" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvUserProvileFriends"
@@ -98,7 +147,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvUserProfileTotalDistance" />
+        app:layout_constraintTop_toBottomOf="@id/tvUserProfileTotalRunningTime" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnUserProfileFindUser"

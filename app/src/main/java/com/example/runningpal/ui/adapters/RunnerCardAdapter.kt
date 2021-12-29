@@ -51,19 +51,19 @@ class RunnerCardAdapter(
         holder.itemView.apply {
 
             Timber.d("timp" + user.avgSpeedKmh)
-            tvRunnerCardName.setText(user.name)
+            tvRunnerCardName.setText("Imię : " + user.name)
             val temp = user.avgSpeedKmh
-            tvRunnerCardTemp.setText(temp.toString())
+            val place = position + 1
+            tvRunnerCardPosition.setText("Miejsce:  " + place)
+            tvRunnerCardTemp.setText("Tempo: " + temp.toString())
             val distance =  user.distanceMetres
-            tvRunnerCardDistance.setText(distance.toString())
-
+            tvRunnerCardDistance.setText("Dystans: " + distance.toString())
 
             if(user.pic == null)
                 Glide.with(this).load(R.drawable.default_user_avatar).into(ivRunnerCardItem)
             else
             {
                 val pic = Utils.convertStringToBitmap(user.pic!!)
-
                 Glide.with(this).load(pic).into(ivRunnerCardItem)
             }
 

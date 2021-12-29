@@ -14,9 +14,12 @@ interface IRunRepository {
 
     fun createRoom(room: Room)
     fun updateRoomState(room : Room)
+    fun deleteRoom(room : Room)
     fun addRunnerToRoom(runner : Runner)
     fun getRoom(roomID : String) : LiveData<Room>
     fun getRunners(roomID: String): LiveData<List<Runner>>
+    fun getRoomState(roomID: String): LiveData<Room>
+
 
     fun getAllRunsSortedByDate() : LiveData<List<Run>>
     fun getAllRunsSortedByDistance(): LiveData<List<Run>>
@@ -26,12 +29,13 @@ interface IRunRepository {
 
     fun getTotalStatistics() : LiveData<RunStatistics>
 
+    fun updateRoomTime(time : Int,id : String)
+
     // czy one są konieczne ?
 
     fun getTotalAvgSpeed()
     fun getTotalCaloriesBurned()
     fun getTotalTimeinMillis()
     fun getTotalDistance()
-
 
 }

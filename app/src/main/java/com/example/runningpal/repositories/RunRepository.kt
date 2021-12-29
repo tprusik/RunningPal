@@ -133,7 +133,7 @@ class RunRepository : IRunRepository  {
 
         var  room = MutableLiveData<List<Runner>>()
 
-        database.getReference(DB_NODE_RUN_ROOM).child(roomID).child("RUNNER")
+        database.getReference(DB_NODE_RUN_ROOM).child(roomID).child("RUNNER").orderByChild("distanceMetres")
                 .addValueEventListener(object : ValueEventListener {
 
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -165,14 +165,42 @@ class RunRepository : IRunRepository  {
 
     }
 
+    override fun getRoomState(roomID: String): LiveData<Room> {
+
+        var  room = MutableLiveData<Room>()
+
+        database.getReference(DB_NODE_RUN_ROOM).child(roomID)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+
+                        val roomObj = snapshot.getValue(Room::class.java)
+
+                        if(roomObj!=null) {
+                            room.postValue(roomObj!!)
+                           // Timber.d("RoomState z firebase ${isStarted} ")
+                        }
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+
+        return room
+
+    }
+
 
     override fun createRoom(room : Room){ database.getReference(DB_NODE_RUN_ROOM).child(room.id!!).setValue(room)
-        Timber.d("add Room ${room.id} ")
-    }
+        Timber.d("add Room ${room.id} ") }
 
 
     override fun updateRoomState(room : Room){ database.getReference(DB_NODE_RUN_ROOM).child(room.id!!).child("started").setValue(true)
-        Timber.d("add Room ${room.id} ")
-    }
+        Timber.d("add Room ${room.id} ") }
+
+    override fun deleteRoom(room: Room) { database.getReference(DB_NODE_RUN_ROOM).child(room.id!!).removeValue() }
+
+    override fun updateRoomTime(time : Int,roomID : String){ database.getReference(DB_NODE_RUN_ROOM).child(roomID).child("timeToEnd").setValue(time) }
+
 
 }

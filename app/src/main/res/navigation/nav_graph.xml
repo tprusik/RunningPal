@@ -23,7 +23,11 @@
         android:id="@+id/runRoomFragment"
         android:name="com.example.runningpal.fragments.RunRoomFragment"
         android:label="fragment_run_room"
-        tools:layout="@layout/fragment_run_room" />
+        tools:layout="@layout/fragment_run_room" >
+        <action
+            android:id="@+id/action_runRoomFragment_self"
+            app:destination="@id/runRoomFragment" />
+    </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.example.runningpal.fragments.UserProfileFragment"
@@ -36,6 +40,9 @@
         <action
             android:id="@+id/action_userProfileFragment_to_friendProfileFragment"
             app:destination="@id/friendProfileFragment" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_findUserFragment"
+            app:destination="@id/findUserFragment" />
     </fragment>
     <fragment
         android:id="@+id/findUserFragment"
@@ -96,4 +103,9 @@
             android:id="@+id/action_setupFragment_to_runRoomFragment"
             app:destination="@id/runRoomFragment" />
     </fragment>
+    <activity
+        android:id="@+id/registerActivity"
+        android:name="com.example.runningpal.activities.RegisterActivity"
+        android:label="activity_register"
+        tools:layout="@layout/activity_register" />
 </navigation>

@@ -2,9 +2,7 @@ package com.example.runningpal.ui.viewmodels
 import android.graphics.Bitmap
 import android.util.Base64
 import android.widget.Toast
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.runningpal.db.Room
 import com.example.runningpal.db.Run
 import com.example.runningpal.db.Runner
@@ -24,7 +22,7 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
     private  val runSortedByCaloriesBurned = repo.getAllRunsSortedByCaloriesBurned()
     private  val runSortedByTimeInMillis = repo.getAllRunsSortedByTimeinMillis()
     private  val runSortedByAvgSpeed = repo.getAllRunsSortedByAvgSpeed()
-    val totalDistance = repo.getTotalStatistics()
+    val runStatistics = repo.getTotalStatistics()
 
     val runs = MediatorLiveData<List<Run>>()
 
@@ -91,10 +89,14 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
 
     }
 
-    //update
+
     fun addRunnerToRoom(runner: Runner) =  viewModelScope.launch { repo.addRunnerToRoom(runner) }
     fun createRoom(room : Room) = viewModelScope.launch { repo.createRoom(room) }
     fun getRoom(idRoom : String) = repo.getRoom(idRoom)
     fun getRunners(idRoom: String) = repo.getRunners(idRoom)
     fun updateRoomStateStarted(room: Room) = viewModelScope.launch { repo.updateRoomState(room) }
+    fun removeRoom(room: Room)  = viewModelScope.launch { repo.deleteRoom(room)}
+    fun getRoomState(roomID : String) = repo.getRoomState(roomID)
+    fun insertRoomTimeToEnd(room : Room) =viewModelScope.launch { repo.updateRoomTime(room.timeToEnd!!,room.id!!)}
+
 }

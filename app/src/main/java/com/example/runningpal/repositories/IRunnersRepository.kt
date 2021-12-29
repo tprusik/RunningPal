@@ -11,9 +11,13 @@ interface IRunnersRepository {
 
     fun getAllRunners() : LiveData<List<User>>
 
+    fun updateUserContacts(user: User)
+
     fun getSelectedRunners( runners : List<String>) : LiveData<List<User>>
 
     fun getRunner(id: String) : LiveData<User>
+
+    fun deleteAcceptedInvitation(friendID : String)
 
     fun getAllRunnersSortedByLastRunDate() : LiveData<List<User>>
 
@@ -25,12 +29,15 @@ interface IRunnersRepository {
 
     fun getFriendInvitation() : LiveData<FriendInvitation>
 
+    fun getFriendAcceptedInvitation() : LiveData<String>
+
     fun sendRunInvitation(invitation : Invitation)
 
     fun sendFriendInvitation(friendInvitation: FriendInvitation)
 
-    fun updateFriendInvitationAccept(friendInvitation: FriendInvitation)
+    fun acceptFriendInvitation(friendInvitation: FriendInvitation)
 
+    fun deleteReceivedInvitation(friendID : String)
     fun deleteFriendInvitation(friendInvitation: FriendInvitation)
 
     suspend fun getCurrentUserObject(): User
