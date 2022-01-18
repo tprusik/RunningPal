@@ -1,5 +1,6 @@
 package com.example.runningpal.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -31,11 +32,14 @@ import timber.log.Timber
 class DashboardActivity : AppCompatActivity() {
 
 
-    companion object{ val runnersInRoom = MutableLiveData<User>() }
+    companion object{
+        val runnersInRoom = MutableLiveData<User>() }
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var runnerViewModel: RunnersViewModel
     private lateinit var user : User
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -52,10 +56,8 @@ class DashboardActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navHostFragment.findNavController())
 
         navigateToTrackingFragmentIfNeeded(intent)
+       setSupportActionBar(findViewById(R.id.toolbar))
 
-        setSupportActionBar(findViewById(R.id.toolbar))
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(false);
     }
 
 
@@ -86,8 +88,7 @@ class DashboardActivity : AppCompatActivity() {
             runnerViewModel.updateUserContacts(user)
             runnerViewModel.deleteAcceptedInvitation(friendID)
 
-            navHostFragment.findNavController().navigate(R.id.friendProfileFragment)
-        }
+            navHostFragment.findNavController().navigate(R.id.friendProfileFragment) }
 
         if(intent?.action == Constants.ACTION_SHOW_ROOM) {
 
@@ -98,7 +99,9 @@ class DashboardActivity : AppCompatActivity() {
             mainViewModel.addRunnerToRoom(runner)
 
             Timber.d("niee jet null")
-            RunRoomFragment.isIAmCreator = true
+            RunRoomFragment.joinedToRoom = true
+
+
             RunRoomFragment.room = Room(roomID,0,null,false)
             navHostFragment.findNavController().navigate(R.id.action_runFragment_to_runRoomFragment)
         }

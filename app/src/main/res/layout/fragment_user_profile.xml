@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.UserProfileFragment">
+    tools:context=".fragments.UserProfileFragment"
+    android:id="@+id/userProfileFragment">
 
     <ImageView
         android:id="@+id/ivUserProfileBackground"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="130dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -36,7 +37,7 @@
         android:layout_height="wrap_content"
         android:text="Imię"
         android:textColor="@color/black"
-        android:textSize="40sp"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_marginLeft="20dp"
-        android:text="Ilość biegów: "
+        android:text="@string/user_profile_total_runs"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -72,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_marginLeft="20dp"
-        android:text="Przebyty dystans: "
+        android:text="@string/user_profile_total_distance"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -96,7 +97,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_marginLeft="20dp"
-        android:text="Spalone Kalorie: "
+        android:text="@string/user_profile_total_calories"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -120,7 +121,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_marginLeft="20dp"
-        android:text="łączny czas treningu: "
+        android:text="@string/user_profile_total_time"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -149,26 +150,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvUserProfileTotalRunningTime" />
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/btnUserProfileFindUser"
         style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="Dodaj znajomych"
-        app:icon="@drawable/ic_fab_add"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnUserProfileLogout"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:text="Wyloguj się"
         app:icon="@drawable/ic_fab_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

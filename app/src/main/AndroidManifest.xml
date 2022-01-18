@@ -16,14 +16,18 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.RunningPal">
+
+        android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+
         <service
             android:name=".services.ListenerService"
             android:enabled="true"
             android:exported="true"></service>
 
 
-        <activity android:name=".activities.ChatActivity" />
+        <activity
+            android:name=".activities.ChatActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activities.CameraActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

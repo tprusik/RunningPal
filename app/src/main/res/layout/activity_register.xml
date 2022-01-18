@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.RegisterActivity">
+    tools:context=".activities.RegisterActivity"
+    android:id="@+id/register_activity">
 
 
     <EditText
@@ -53,7 +54,7 @@
         android:layout_width="295dp"
         android:layout_height="74dp"
         android:layout_marginTop="60dp"
-        android:text="Zarejestruj się"
+        android:text="@string/register_title"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

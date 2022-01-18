@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.runningpal.R
 import com.example.runningpal.db.Run
+import com.example.runningpal.db.User
 import com.example.runningpal.others.Constants.ACTION_PAUSE_SERVICE
 import com.example.runningpal.others.Constants.ACTION_START_OR_RESUME_SERVICE
 import com.example.runningpal.others.Constants.ACTION_STOP_SERVICE
@@ -14,6 +15,7 @@ import com.example.runningpal.others.Constants.POLYLINE_COLOR
 import com.example.runningpal.others.Constants.POLYLINE_WIDTH
 import com.example.runningpal.others.Utils.convertBitmapToString
 import com.example.runningpal.others.TrackingUtility
+import com.example.runningpal.others.Utils.getUserSharedPrevs
 import com.example.runningpal.services.Polyline
 import com.example.runningpal.services.TrackingService
 import com.example.runningpal.ui.viewmodels.MainViewModel
@@ -36,13 +38,13 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
 
     private var isTracking = false
     private var pathPoints = mutableListOf<Polyline>()
-
+    private lateinit var user : User
     private var curTimeInMillis = 0L
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
-
+        user = getUserSharedPrevs(requireContext())
         viewModel = get()
 
         btnToggleRun.setOnClickListener {
@@ -64,9 +66,8 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
     }
 
     private fun stopRun() {
-        sendCommandToService(ACTION_STOP_SERVICE)
-
-    }
+        sendCommandToService(ACTION_STOP_SERVICE
+        )}
 
 
     private fun subscribeToObservers() {
@@ -123,20 +124,22 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
 
     private fun zoomToSeeWholeTrack() {
         val bounds = LatLngBounds.Builder()
-        for(polyline in pathPoints) {
-            for(pos in polyline) {
-                bounds.include(pos)
-            }
-        }
+       if( pathPoints.size>1) {
+           for (polyline in pathPoints) {
+               for (pos in polyline) {
+                   bounds.include(pos)
+               }
+           }
 
-        map?.moveCamera(
-                CameraUpdateFactory.newLatLngBounds(
-                        bounds.build(),
-                        mapView.width,
-                        mapView.height,
-                        (mapView.height * 0.05f).toInt()
-                )
-        )
+           map?.moveCamera(
+                   CameraUpdateFactory.newLatLngBounds(
+                           bounds.build(),
+                           mapView.width,
+                           mapView.height,
+                           (mapView.height * 0.05f).toInt()
+                   )
+           )
+       }
     }
 
     private fun endRunAndSaveToDb() {

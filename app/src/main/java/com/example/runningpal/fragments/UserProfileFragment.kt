@@ -2,16 +2,13 @@ package com.example.runningpal.fragments
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
@@ -22,8 +19,8 @@ import com.bumptech.glide.Glide
 import com.example.runningpal.activities.CameraActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.User
+import com.example.runningpal.others.TrackingUtility
 import com.example.runningpal.others.Utils.convertBitmapToString
-import com.example.runningpal.others.Utils.convertStringToBitmap
 import com.example.runningpal.others.Utils.getUserSharedPrevs
 import com.example.runningpal.others.Utils.removeSharedPrefs
 import com.example.runningpal.ui.adapters.ContactsAdapter
@@ -42,17 +39,22 @@ class UserProfileFragment : Fragment() {
     private lateinit var mAuth : FirebaseAuth
     private lateinit var viewModel : MainViewModel
     private lateinit var userViewModel : RunnersViewModel
-    private lateinit var  currentUser : FirebaseUser
     private lateinit var user : User
     private lateinit var contactsAdapter : ContactsAdapter
     private lateinit var userContacts : MutableLiveData<List<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState) }
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)}
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.user_profile_menu, menu)}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         user = getUserSharedPrevs(requireContext())
+        Timber.d("nick"+ user.nick)
         initSetup()
         setupRecyclerView()
         subscribeToObservers()
@@ -61,11 +63,6 @@ class UserProfileFragment : Fragment() {
         ivUserProfileAvatar.setOnClickListener{ cameraShot() }
 
         btnUserProfileFindUser.setOnClickListener{ navHostFragment.findNavController().navigate(R.id.action_userProfileFragment_to_findUserFragment) }
-
-        btnUserProfileLogout.setOnClickListener{
-            removeSharedPrefs(requireContext())
-            mAuth.signOut()
-            navHostFragment.findNavController().navigate(R.id.action_userProfileFragment_to_loginActivity) }
     }
 
   fun  setupUserProfile(user: User){
@@ -77,14 +74,16 @@ class UserProfileFragment : Fragment() {
       Glide.with(this).load(R.drawable.default_user_background).into(ivUserProfileBackground)
 
       userContacts.postValue(user.contacts)
-
     }
 
     private fun subscribeToObservers(){
 
-        userViewModel.user.observe(viewLifecycleOwner, Observer { userContacts.postValue(it.contacts) })
+        userViewModel.getRunner(user.uid!!).observe(viewLifecycleOwner, Observer {
+            Timber.d(" up + user "+ it.nick + "  "+ it.uid)
+            userContacts.postValue(it.contacts) })
 
         userContacts.observe(viewLifecycleOwner, Observer {
+            Timber.d(" up + user  obs")
             userViewModel.getSelectedRunners(it).observe(viewLifecycleOwner, Observer {
 
                 it?.let {
@@ -94,18 +93,17 @@ class UserProfileFragment : Fragment() {
 
         })
 
-        viewModel.runStatistics.observe(viewLifecycleOwner , Observer {
+        viewModel.getUserStatistics(user.uid!!).observe(viewLifecycleOwner , Observer {
 
-            it.allDistance?.let{ tvUserProfileTotalDistanceInput.setText(it.toString())}
+            it.allDistance?.let{ tvUserProfileTotalDistanceInput.setText((it.toFloat() / 1000f).toString() + " km")}
             it.allCaloriesBurned?.let{ tvUserProfileTotalCaloriesBurnedInput.setText(it.toString())}
-            it.allTime?.let{ tvUserProfileTotalRunningTimeInput.setText(it.toString())}
+            it.allTime?.let{ tvUserProfileTotalRunningTimeInput.setText(TrackingUtility.getFormattedStopWatchTime(it,true))}
             it.allRuns?.let{ tvUserProfileRunAmountInput.setText(it.toString())}
         })
     }
 
     private fun initSetup(){
         mAuth = FirebaseAuth.getInstance()
-        currentUser =  mAuth.currentUser!!
         viewModel = get()
         userViewModel = get()
         userContacts = MutableLiveData()
@@ -136,6 +134,21 @@ class UserProfileFragment : Fragment() {
                 userViewModel.updateUser(user)
 
             }
+        }
+    }
+
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+
+            R.id.user_profile_menu_logout -> {
+                removeSharedPrefs(requireContext())
+                mAuth.signOut()
+                navHostFragment.findNavController().navigate(R.id.action_userProfileFragment_to_loginActivity)
+                true
+            }
+            else -> {true}
         }
     }
 

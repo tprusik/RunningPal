@@ -14,20 +14,28 @@ import com.example.runningpal.db.FriendInvitation
 import com.example.runningpal.db.User
 import com.example.runningpal.others.Utils
 import com.example.runningpal.others.Utils.getUserSharedPrevs
+import com.example.runningpal.ui.viewmodels.MainViewModel
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.example.runningpal.ui.viewmodels.StatisticsViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_friend_profile.*
+import kotlinx.android.synthetic.main.fragment_friend_profile.tvFriendProfileRunAmountInput
+
+import kotlinx.android.synthetic.main.fragment_user_profile.*
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
+import java.sql.Time
 
 
 class FriendProfileFragment : Fragment() {
 
-    private lateinit var viewModel : StatisticsViewModel
+    private lateinit var viewModel : MainViewModel
     private lateinit var userViewModel : RunnersViewModel
     private lateinit var user : User
     private lateinit var friendObject : User
+
+    private var isAlreadyFriend = false
 
     companion object{ val friend = MutableLiveData<User>() }
 
@@ -37,9 +45,7 @@ class FriendProfileFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friend_profile, container, false)
-
-    }
+        return inflater.inflate(R.layout.fragment_friend_profile, container, false) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,7 +53,7 @@ class FriendProfileFragment : Fragment() {
         userViewModel = get()
         user = getUserSharedPrevs(requireContext())
 
-
+        subscribeToObservers()
         val friendViewModel by sharedViewModel<RunnersViewModel>()
 
 
@@ -79,25 +85,47 @@ class FriendProfileFragment : Fragment() {
 
 
 
+        changeButtonVisibility()
+
         fabFriendProfileAdd.setOnClickListener {
 
-            //val user = friendViewModel.user.value!!
-
-               // user.contacts!!.add(runner.uid!!)
-
                 Timber.d("nick" + friendObject.nick)
-
                 friendViewModel.updateUser(user)
-
 
                 var friendInvitation = FriendInvitation(user.uid, friendObject.uid)
                 userViewModel.sendFriendInvitation(friendInvitation)
 
-                Toast.makeText(context,"dodano kolegę do bazy",Toast.LENGTH_SHORT).show()
         }
 
-        btnFriendProfile.setOnClickListener {}
+
     }
 
+    fun changeButtonVisibility(){
+
+        if(isAlreadyFriend)
+            fabFriendProfileAdd.visibility = FloatingActionButton.GONE
+    }
+
+    fun subscribeToObservers(){
+
+        viewModel.getUserStatistics(friend.value!!.uid!!).observe(viewLifecycleOwner , Observer {
+
+            Timber.d("id  "+ friend.value!!.uid!!)
+            it.allDistance?.let{ tvFriendProfileRunAmountInput.setText(it.toString())}
+            it.allCaloriesBurned?.let{ tvFriendProfileTotalCaloriesBurnedInput.setText(it.toString())}
+            it.allTime?.let{ tvFriendProfileTotalRunningTimeInput.setText(it.toString())}
+            it.allRuns?.let{ tvFriendProfileRunAmountInput.setText(it.toString())}
+        })
+
+        userViewModel.user.observe(viewLifecycleOwner, Observer {
+
+            it.contacts?.let{
+                for(friends in it)
+                { if(friend.value!!.uid == friends){
+                    isAlreadyFriend = true
+                    changeButtonVisibility() } } }
+        })
+
+    }
 
 }

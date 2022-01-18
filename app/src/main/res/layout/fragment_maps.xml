@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/mapsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clInnerLayout"
@@ -15,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mapView">
 
-        <com.google.android.material.textview.MaterialTextView
+        <TextView
             android:id="@+id/tvTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,18 +28,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btnToggleRun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start"
+            android:text="@string/start_run"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnFinishRun"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btnFinishRun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,7 +54,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.textview.MaterialTextView
+    <TextView
         android:id="@+id/tvLetsGo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

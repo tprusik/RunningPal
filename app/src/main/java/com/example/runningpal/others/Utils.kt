@@ -21,9 +21,7 @@ object Utils {
     fun convertStringToBitmap(pic : String) : Bitmap{
 
         val decodedString: ByteArray = Base64.decode(pic, Base64.URL_SAFE)
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-
-    }
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size) }
 
    fun convertBitmapToString(bmp : Bitmap) : String{
 

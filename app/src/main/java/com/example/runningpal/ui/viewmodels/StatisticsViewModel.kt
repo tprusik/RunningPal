@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class StatisticsViewModel(val repo : IRunStatisticsRepository)  : ViewModel() {
 
-    fun getRunStatistics(id : String) : LiveData<List<RunStatistics>> = repo.getRunStatistics(id)
+    //fun getRunStatistics(id : String) : LiveData<RunStatistics> = repo.getRunStatistics(id)
 
     val runs = MutableLiveData<List<RunStatistics>>()
 

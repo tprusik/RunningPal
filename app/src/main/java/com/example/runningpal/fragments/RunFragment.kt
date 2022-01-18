@@ -50,7 +50,15 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
         requestPermissions()
         setupRecyclerView()
 
-        if(RunRoomFragment.room.id!= null){navHostFragment.findNavController().navigate(R.id.action_runFragment_to_runRoomFragment)}
+        RunRoomFragment.isRoomCreated.value?.let{
+            if(RunRoomFragment.isRoomCreated.value == true){navHostFragment.findNavController().navigate(R.id.action_runFragment_to_runRoomFragment)}
+        }
+
+
+
+        TrackingService.isTracking.value?.let{
+            if(it) navHostFragment.findNavController().navigate(R.id.action_runFragment_to_trackingFragment)
+        }
 
 
         when(viewModel.sortType) {
@@ -120,9 +128,7 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
         }
     }
 
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-
-    }
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
         if(EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {

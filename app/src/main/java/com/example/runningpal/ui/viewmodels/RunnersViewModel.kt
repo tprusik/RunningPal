@@ -1,5 +1,6 @@
 package com.example.runningpal.ui.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,10 +9,12 @@ import com.example.runningpal.db.FriendInvitation
 import com.example.runningpal.db.Invitation
 import com.example.runningpal.db.User
 import com.example.runningpal.others.RunSortType
+import com.example.runningpal.others.Utils.getUserSharedPrevs
 import com.example.runningpal.repositories.IRunnersRepository
 import timber.log.Timber
 
 class RunnersViewModel(val repo: IRunnersRepository) : ViewModel() {
+
 
     val user  =  repo.getCurrentUser()
     val runInvitation = repo.getRunInvitation()
@@ -28,6 +31,9 @@ class RunnersViewModel(val repo: IRunnersRepository) : ViewModel() {
     fun deleteReceivedInvitation(friendID : String) = repo.deleteReceivedInvitation(friendID)
 
     fun getSelectedRunners(id: List<String>) =  repo.getSelectedRunners(id)
+
+    fun getSelectedRunnerByNick(nick: String) =  repo.getSelectedRunnersByNick(nick)
+
     val allRunners = repo.getAllRunners()
     fun sendRunInvitation(invitation: Invitation) = repo.sendRunInvitation(invitation)
     fun sendFriendInvitation(friendInvitation: FriendInvitation) = repo.sendFriendInvitation(friendInvitation)

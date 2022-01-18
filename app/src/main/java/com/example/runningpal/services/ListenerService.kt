@@ -33,7 +33,6 @@ class ListenerService : LifecycleService() {
 
 init{ viewModel = get()}
 
-
     override fun onCreate() {
         super.onCreate()
         user = getUserSharedPrevs(applicationContext)
@@ -73,7 +72,7 @@ init{ viewModel = get()}
 
     }
 
-    fun createFriendInvitationNotification(name : String,id : String){
+    fun createFriendInvitationNotification(name : String,id : String)  {
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE)
                 as NotificationManager
@@ -90,6 +89,7 @@ init{ viewModel = get()}
                 .addAction(R.drawable.ic_bottom_nav_bar_message,"Przyjmij",acceptFriendInvitationPendingIntent(id))
                 .setAutoCancel(true)
         notificationManager.notify(1,notificationBuilder.build())
+
     }
 
 

@@ -6,6 +6,7 @@ import android.location.Location
 import android.os.Build
 import com.example.runningpal.services.Polyline
 import pub.devrel.easypermissions.EasyPermissions
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 object TrackingUtility {
@@ -32,6 +33,7 @@ object TrackingUtility {
             val pos1 = polyline[i]
             val pos2 = polyline[i + 1]
 
+        //    Timber.d( "ss " + polyline.size.toString())
             val result = FloatArray(1)
             Location.distanceBetween(
                 pos1.latitude,
@@ -40,6 +42,8 @@ object TrackingUtility {
                 pos2.longitude,
                 result
             )
+
+            System.out.println(result[0]);
             distance += result[0]
         }
         return distance
@@ -53,6 +57,7 @@ object TrackingUtility {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds)
         milliseconds -= TimeUnit.MINUTES.toMillis(minutes)
         val seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds)
+
         if(!includeMillis) {
             return "${if(hours < 10) "0" else ""}$hours:" +
                     "${if(minutes < 10) "0" else ""}$minutes:" +
@@ -65,6 +70,5 @@ object TrackingUtility {
                 "${if(seconds < 10) "0" else ""}$seconds:" +
                 "${if(milliseconds < 10) "0" else ""}$milliseconds"
     }
-
 
 }

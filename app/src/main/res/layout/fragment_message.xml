@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    tools:context=".fragments.MessageFragment">
+    tools:context=".fragments.MessageFragment"
+    android:id="@+id/messageFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMessageFragment"
         android:layout_width="0dp"
-
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,14 +22,16 @@
         android:id="@+id/fabMessageFragment"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        app:fabCustomSize="50dp"
         android:layout_margin="16dp"
         android:backgroundTint="@color/purple_500"
         android:clickable="true"
         android:src="@drawable/ic_fab_message"
-        android:tint="@color/white"
+        app:tint="@color/white"
+        app:background="@color/white"
         app:fabSize="auto"
+        app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:rippleColor="@color/purple_500" />
+        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

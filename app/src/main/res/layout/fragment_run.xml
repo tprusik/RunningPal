@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.RunFragment">
+    tools:context=".fragments.RunFragment"
+    android:id="@+id/runFragment">
+
 
     <Spinner
         android:id="@+id/spFilter"
@@ -23,7 +25,7 @@
         app:layout_constraintBottom_toTopOf="@id/btnNewRun" />
 
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/btnNewRun"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

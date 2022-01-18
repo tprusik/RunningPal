@@ -13,12 +13,11 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            app:titleTextColor="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:layout_height="35dp"
+            android:background="#00a7b5"
             android:elevation="4dp"
-            app:navigationIcon="@drawable/ic_back"
-            app:menu="@menu/bottom_nav_menu"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_constraintTop_toTopOf="parent"/>
 

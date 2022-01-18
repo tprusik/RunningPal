@@ -5,14 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.runningpal.R
 import com.example.runningpal.ui.adapters.ContactsAdapter
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_find_user.*
 import org.koin.android.ext.android.get
-
 
 class FindUserFragment : Fragment() {
 
@@ -41,6 +42,22 @@ class FindUserFragment : Fragment() {
         viewModel.allRunners.observe(viewLifecycleOwner, Observer {
             userAdapter.submitList(it)
         })
+
+
+        btnFindUser.setOnClickListener{
+            val userNick = etFindUser.text.toString()
+
+            viewModel.getSelectedRunnerByNick(userNick).observe(viewLifecycleOwner, Observer {
+
+                if(it.isNullOrEmpty()) Toast.makeText(requireContext(),"Nie znaleziono takigo użytkownika",Toast.LENGTH_SHORT)
+                else
+                userAdapter.submitList(it)
+
+            })
+
+        }
+
+
 
     }
 

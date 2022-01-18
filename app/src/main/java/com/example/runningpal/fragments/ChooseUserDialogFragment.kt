@@ -36,9 +36,7 @@ class ChooseUserDialogFragment :  DialogFragment() {
 
             val builder = AlertDialog.Builder(it)
            builder.setItems(usersAray,DialogInterface.OnClickListener { dialog, which ->
-
             ids.postValue(which)
-
            })
 
             // Create the AlertDialog object and return it

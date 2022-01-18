@@ -25,6 +25,8 @@ interface IRunnersRepository {
 
     fun updateUser(user : User)
 
+    fun getSelectedRunnersByNick(nick: String): LiveData<List<User>>
+
     fun getRunInvitation() : LiveData<Invitation>
 
     fun getFriendInvitation() : LiveData<FriendInvitation>

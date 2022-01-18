@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.FriendProfileFragment">
+    tools:context=".fragments.FriendProfileFragment"
+    android:id="@+id/friendProfileFragment">
 
     <ImageView
         android:id="@+id/ivFriendProfileBackground"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="130dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -17,65 +18,143 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivFriendProfileAvatar"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginStart="164dp"
-        android:layout_marginBottom="28dp"
-        app:layout_constraintBottom_toBottomOf="@id/tvFriendProfileStats"
-        app:layout_constraintEnd_toStartOf="@+id/tvUserProfileFriends"
+        android:layout_marginTop="40dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+        app:strokeColor="@color/teal_700"
+        app:strokeWidth="1dp" />
 
     <TextView
         android:id="@+id/tvFriendProfileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="50dp"
+        android:text="Imię"
         android:textColor="@color/black"
-        android:textSize="15sp"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivFriendProfileBackground" />
 
     <TextView
-        android:id="@+id/tvFriendProfileStats"
+        android:id="@+id/tvFriendProfileRunAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16sp"
-        android:text="Statystyki"
-        android:textAlignment="center"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="@string/user_profile_total_runs"
         android:textColor="@color/black"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/tvUserProfileName"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvFriendProfileName" />
+
+    <TextView
+        android:id="@+id/tvFriendProfileRunAmountInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toRightOf="@id/tvFriendProfileRunAmount"
+        app:layout_constraintTop_toBottomOf="@id/tvFriendProfileName" />
+
+    <TextView
+        android:id="@+id/tvFriendProfileTotalDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="@string/user_profile_total_distance"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvFriendProfileRunAmount" />
+
+    <TextView
+        android:id="@+id/tvFriendProfileTotalDistanceInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toRightOf="@id/tvFriendProfileTotalDistance"
+        app:layout_constraintTop_toBottomOf="@id/tvFriendProfileRunAmount" />
+
+    <TextView
+        android:id="@+id/tvFriendProfileTotalCaloriesBurned"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="@string/user_profile_total_calories"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvFriendProfileTotalDistance" />
+
+    <TextView
+        android:id="@+id/tvFriendProfileTotalCaloriesBurnedInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toRightOf="@id/tvFriendProfileTotalCaloriesBurned"
+        app:layout_constraintTop_toBottomOf="@id/tvFriendProfileTotalDistance" />
+
+    <TextView
+        android:id="@+id/tvFriendProfileTotalRunningTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="@string/user_profile_total_time"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvFriendProfileTotalCaloriesBurned" />
+
+    <TextView
+        android:id="@+id/tvFriendProfileTotalRunningTimeInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toRightOf="@id/tvFriendProfileTotalRunningTime"
+        app:layout_constraintTop_toBottomOf="@id/tvFriendProfileTotalCaloriesBurned" />
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabFriendProfileAdd"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        app:fabCustomSize="70dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_margin="16dp"
         android:backgroundTint="@color/purple_500"
         android:clickable="true"
         android:src="@drawable/ic_fab_add"
         android:tint="@color/white"
-        app:fabSize="auto"
+        app:maxImageSize="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:rippleColor="@color/purple_500" />
-
-    <Button
-        android:id="@+id/btnFriendProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="12dp"
-        android:text="zaproś do biegu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:rippleColor="@color/black" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

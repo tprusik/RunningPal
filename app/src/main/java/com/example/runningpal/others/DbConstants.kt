@@ -13,6 +13,7 @@ object DbConstants {
     const val DB_NODE_RUN_INVITATION = "RUN_INVITATION"
     const val DB_NODE_FRIEND_INVITATION = "FRIEND_INVITATION"
     const val DB_NODE_RUN_ROOM = "ROOM"
+    const val DB_NODE_RUN_ROOM_HISTORY = "ROOM_HISTORY"
 
 
     const val ORDER_BY_DISTANCE = "distanceMetres"

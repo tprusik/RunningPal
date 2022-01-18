@@ -108,17 +108,12 @@ class MessageRepository : IMessageRepository {
         val database = FirebaseDatabase.getInstance(DbConstants.DB_INSTANCE_URL)
         val myRef = database.getReference()
 
-        var receiverContact = MessageContact()
-        receiverContact.uid = userID
-        receiverContact.name = "imie s sharedprevs"
-        receiverContact.lastMessage = messageContact.lastMessage
-        receiverContact
 
         myRef.child("TestUserChats").child(userID).child("MESSAGE_CONTACTS").child(messageContact.uid!!)
                 .setValue(messageContact).addOnSuccessListener {
 
                     myRef.child("TestUserChats").child(messageContact.uid!!).child("MESSAGE_CONTACTS").child(FirebaseAuth.getInstance().currentUser!!.uid)
-                            .setValue(messageContact) }
+                            .setValue(receiverContact) }
 
     }
 

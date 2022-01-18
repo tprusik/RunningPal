@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.runningpal.R
 import com.example.runningpal.db.Message
@@ -40,7 +41,7 @@ class ChatActivity : AppCompatActivity() {
         Timber.d("Shared " + user.nick)
 
         contact.observe(this, Observer {
-            tvChatAactivity.setText(it.name)
+            tvChatActivity.setText(it.name)
 
             if(it.profilePic==null){
                 Glide.with(this).load(R.drawable.default_user_avatar).into(ivChatActivity) }
@@ -56,10 +57,14 @@ class ChatActivity : AppCompatActivity() {
         })
 
 
+
         ibChatPostMessage.setOnClickListener{
+
+
             val timestamp = System.currentTimeMillis().toString()
             val message = etChatPostMessage.text.toString()
             val messageObject = Message(user.uid,message,UUID.randomUUID().toString())
+
             val senderContact = MessageContact(nameReceiver,message,timestamp,receiverID,null)
             val receiverContact = MessageContact(user.nick,message,timestamp,user.uid,user.profilePic)
 
@@ -68,15 +73,20 @@ class ChatActivity : AppCompatActivity() {
 
            getMessages()
 
+            etChatPostMessage.text.clear()
         }
-
     }
 
     fun getMessages(){
 
         messageViewModel.getMessages(receiverID).observe(this, Observer {
             messageAdapter.submitList(it)
+
+           rvChat.scrollToPosition(it.size - 1)
+
         })
+
+
 
     }
 

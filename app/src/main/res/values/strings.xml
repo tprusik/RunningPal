@@ -19,4 +19,13 @@
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="register_title">Rejestracja</string>
+
+    <string name="user_profile_total_calories">Kalorie: </string>
+    <string name="user_profile_total_distance">Dystans: </string>
+    <string name="user_profile_total_runs">Ilość biegów: </string>
+    <string name="user_profile_total_time">Czas treningu: </string>
+    <string name="start_run">Rozpocznij</string>
+
 </resources>

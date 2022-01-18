@@ -1,4 +1,4 @@
-package com.example.runningpal.services
+ package com.example.runningpal.services
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -61,19 +61,20 @@ class TrackingService : LifecycleService() {
     lateinit var curNotificationBuilder : NotificationCompat.Builder
 
 
-
     companion object {
         val timeRunInMillis = MutableLiveData<Long>()
         val isTracking = MutableLiveData<Boolean>()
+        val isTrackingEnd = MutableLiveData<Boolean>()
         val pathPoints = MutableLiveData<Polylines>()
         val timeRunInSeconds = MutableLiveData<Long>()
     }
 
-    private fun postInitialValues() {
+  private fun postInitialValues() {
         isTracking.postValue(false)
         pathPoints.postValue(mutableListOf())
         timeRunInSeconds.postValue(0L)
         timeRunInMillis.postValue(0L)
+        //curNotificationBuilder = NotificationCompat.Builder
     }
 
     override fun onCreate() {
@@ -132,6 +133,7 @@ class TrackingService : LifecycleService() {
             when (it.action) {
                 ACTION_START_OR_RESUME_SERVICE -> {
                     if (isFirstRun) {
+                        isTrackingEnd.postValue(false)
                         startForegroundService()
                         isFirstRun = false
                     } else {
@@ -142,7 +144,6 @@ class TrackingService : LifecycleService() {
                 ACTION_START_GROUP_RUN -> {
                     if (isFirstRun) {
                         startForegroundService()
-
                         isFirstRun = false
                     } else {
                         Timber.d("Resuming service...")
@@ -154,6 +155,7 @@ class TrackingService : LifecycleService() {
                     pauseService()
                 }
                 ACTION_STOP_SERVICE -> {
+                    isTrackingEnd.postValue(true)
                     Timber.d("Stopped service")
                     killService()
                 }

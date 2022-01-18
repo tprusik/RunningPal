@@ -1,9 +1,8 @@
 package com.example.runningpal.ui.viewmodels
 import android.graphics.Bitmap
-import android.util.Base64
-import android.widget.Toast
 import androidx.lifecycle.*
 import com.example.runningpal.db.Room
+import com.example.runningpal.db.RoomHistory
 import com.example.runningpal.db.Run
 import com.example.runningpal.db.Runner
 import com.example.runningpal.others.RunSortType
@@ -22,14 +21,13 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
     private  val runSortedByCaloriesBurned = repo.getAllRunsSortedByCaloriesBurned()
     private  val runSortedByTimeInMillis = repo.getAllRunsSortedByTimeinMillis()
     private  val runSortedByAvgSpeed = repo.getAllRunsSortedByAvgSpeed()
-    val runStatistics = repo.getTotalStatistics()
+    fun getUserStatistics(userID : String) = repo.getTotalStatistics(userID)
 
     val runs = MediatorLiveData<List<Run>>()
 
     var sortType = RunSortType.DATE
 
     init {
-
         runs.addSource(runSortedByDate) { result ->
             if(sortType == RunSortType.DATE) {
                 result?.let { runs.value = it }
@@ -98,5 +96,5 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
     fun removeRoom(room: Room)  = viewModelScope.launch { repo.deleteRoom(room)}
     fun getRoomState(roomID : String) = repo.getRoomState(roomID)
     fun insertRoomTimeToEnd(room : Room) =viewModelScope.launch { repo.updateRoomTime(room.timeToEnd!!,room.id!!)}
-
+    fun insertRoomHistory(room: RoomHistory)=viewModelScope.launch { repo.insertRoomHistory(room)}
 }

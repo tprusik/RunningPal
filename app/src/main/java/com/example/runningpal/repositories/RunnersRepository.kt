@@ -105,6 +105,39 @@ class RunnersRepository : IRunnersRepository {
 
     }
 
+
+    override fun getSelectedRunnersByNick(nick: String): LiveData<List<User>> {
+
+        val selectedRunners = MutableLiveData<List<User>>()
+        val runners = mutableListOf<User>()
+
+
+        database.getReference(DB_NODE_USER)
+                .addValueEventListener(object : ValueEventListener {
+                    val users =  mutableListOf<User>()
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+
+                        for(snap in snapshot.children){
+
+                            val user = snap.getValue(User::class.java)
+
+                            if(user!!.nick!=nick)
+                                users.add(user!!)
+                        }
+
+                        selectedRunners.postValue(users)
+
+                    }
+                    override fun onCancelled(error: DatabaseError) {}
+                })
+
+
+
+        return selectedRunners
+
+    }
+
     override fun getSelectedRunners(ids: List<String>): LiveData<List<User>> {
 
        val selectedRunners = MutableLiveData<List<User>>()

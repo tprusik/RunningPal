@@ -6,6 +6,7 @@ import com.example.runningpal.db.*
 import com.example.runningpal.others.DbConstants.DB_INSTANCE_URL
 import com.example.runningpal.others.DbConstants.DB_NODE_RUN
 import com.example.runningpal.others.DbConstants.DB_NODE_RUN_ROOM
+import com.example.runningpal.others.DbConstants.DB_NODE_RUN_ROOM_HISTORY
 import com.example.runningpal.others.DbConstants.ORDER_BY_CALORIES_BURNED
 import com.example.runningpal.others.DbConstants.ORDER_BY_DATE
 import com.example.runningpal.others.DbConstants.ORDER_BY_DISTANCE
@@ -35,12 +36,9 @@ class RunRepository : IRunRepository  {
     override fun getAllRunsSortedByTimeinMillis(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_TIME) }
     override fun getAllRunsSortedByAvgSpeed(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_DISTANCE) }
     override fun getAllRunsSortedByCaloriesBurned(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_CALORIES_BURNED)}
-    override fun getTotalAvgSpeed() {}
-    override fun getTotalCaloriesBurned() {}
-    override fun getTotalTimeinMillis() {}
-    override fun getTotalDistance()  {}
 
-    override fun getTotalStatistics(): LiveData<RunStatistics> {
+
+    override fun getTotalStatistics(userID : String): LiveData<RunStatistics> {
         var totalStatistics = MutableLiveData<RunStatistics>()
 
        database.getReference(DB_NODE_RUN).child(userID)
@@ -199,6 +197,9 @@ class RunRepository : IRunRepository  {
         Timber.d("add Room ${room.id} ") }
 
     override fun deleteRoom(room: Room) { database.getReference(DB_NODE_RUN_ROOM).child(room.id!!).removeValue() }
+
+    override fun insertRoomHistory(roomHistory: RoomHistory) {database.getReference(DB_NODE_RUN_ROOM_HISTORY).child(userID).push().setValue(roomHistory)}
+
 
     override fun updateRoomTime(time : Int,roomID : String){ database.getReference(DB_NODE_RUN_ROOM).child(roomID).child("timeToEnd").setValue(time) }
 

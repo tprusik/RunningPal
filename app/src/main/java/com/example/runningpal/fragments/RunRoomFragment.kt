@@ -5,19 +5,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.*
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.runningpal.R
-import com.example.runningpal.db.Invitation
-import com.example.runningpal.db.Room
-import com.example.runningpal.db.Runner
-import com.example.runningpal.db.User
+import com.example.runningpal.db.*
+import com.example.runningpal.others.Constants.ACTION_PAUSE_SERVICE
 import com.example.runningpal.others.Constants.ACTION_START_OR_RESUME_SERVICE
-import com.example.runningpal.others.Constants.ACTION_STOP_SERVICE
 import com.example.runningpal.others.TrackingUtility
 import com.example.runningpal.services.Polyline
 import com.example.runningpal.services.TrackingService
@@ -25,6 +25,7 @@ import com.example.runningpal.ui.adapters.RunnerCardAdapter
 import com.example.runningpal.ui.viewmodels.MainViewModel
 import com.example.runningpal.ui.viewmodels.RunnersViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_run_room.*
@@ -44,7 +45,6 @@ class RunRoomFragment : Fragment() {
     private lateinit var uid : String
     private lateinit var dialog : ChooseUserDialogFragment
     private  var runningTimeToEnd  = 10000
-    private  var isStarted = false
     private lateinit  var runners : List<Runner>
     private var  runnersData = arrayListOf<String>()
 
@@ -53,29 +53,48 @@ class RunRoomFragment : Fragment() {
         var user = User()
         var room = Room()
         var runner  = MutableLiveData<Runner>()
+
+        var isRoomCreated  = MutableLiveData<Boolean>()
         var isStarted  = MutableLiveData<Boolean>()
-        var isCountingDown  = MutableLiveData<Boolean>()
         var isIAmCreator = false
+        var joinedToRoom = false
+
+        var isCountingDown  = MutableLiveData<Boolean>()
+
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
+        if(joinedToRoom)  setHasOptionsMenu(false)
+        else setHasOptionsMenu(true)
+
+        initVal()
+        Timber.d("sprawdzamm ") }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.run_room_menu, menu)
-    }
+        inflater.inflate(R.menu.run_room_menu, menu) }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
 
+        return when (item.itemId) {
             R.id.room_menu_new_room -> {
-                createNewRoom()
-                item.setVisible(false)
-                runRoomNavBar.visibility = LinearLayout.VISIBLE
+
+                if(TrackingService.isTracking.value == true){
+                    view?.let {
+                        Snackbar.make(it, "Musisz zakończyć bieg aby stworzyć nowy pokój", Snackbar.LENGTH_LONG)
+                                .setAction("ROZUMIEM") {
+                                }
+                                .show()
+                    }}
+
+                else {
+                    createNewRoom()
+
+                    item.setVisible(false)
+                    runRoomNavBar.visibility = LinearLayout.VISIBLE
+                }
                 true
             }
             else -> {true}
@@ -91,47 +110,60 @@ class RunRoomFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_run_room, container, false)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initVal()
         setupRecyclerView()
         dialog = ChooseUserDialogFragment()
         subscribeObserver()
         users = userss
 
-        if(isIAmCreator) { buttonVisibilityJoinToRoom() }
 
         if(room.id!=null) {
-            Timber.d("nie kurde jet null")
+
             observeRoom() }
 
         run_room_add_runner.setOnClickListener{
-
             dialog.submitList(users)
             dialog.show(childFragmentManager, "NoticeDialogFragment")
         }
 
         runRoomNavBarRunningType.setOnClickListener {
-            chooseRunTypeDialogBuilder()
+            chooseRunTimeDialogBuilder()
         }
 
-        run_room_remove_room.setOnClickListener{ confirmRemoveRoomDialogBuilder() }
+        run_room_remove_room.setOnClickListener {
+            confirmRemoveRoomDialogBuilder()
+        }
 
         run_room_start.setOnClickListener{
+
             mainViewModel.updateRoomStateStarted(room)
         }
 
+      if(joinedToRoom)
+          buttonVisibilityJoinedToRoom()
+          R.id.room_menu_new_room
     }
 
 
 
     fun createNewRoom(){
 
+        isIAmCreator = true
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val roomID = UUID.randomUUID().toString()
         val currentDate = sdf.format(Date())
         room = Room(uid, 0, currentDate, false)
+
+
+        isRoomCreated.postValue(true)
+
+
+
+        Timber.d("sprawdzam "+ isRoomCreated.toString())
+
 
         val runner = Runner(uid, uid, user.nick, user.profilePic, 0f, 0)
 
@@ -144,24 +176,37 @@ class RunRoomFragment : Fragment() {
         mainViewModel = get()
         runnersViewModel = get()
         uid = FirebaseAuth.getInstance().currentUser!!.uid
-        runners = mutableListOf<Runner>() }
+        runners = mutableListOf<Runner>()
+         isStarted.postValue(false)
+        //isRoomCreated.postValue(false)
+        //isIAmCreator = false
+        }
 
     fun setPrimaryState(){
-        isStarted = false
+        isStarted.postValue(false)
+        isRoomCreated.postValue(false)
         runners = mutableListOf<Runner>()
         isIAmCreator = false }
 
     fun subscribeObserver(){
 
+        isRoomCreated.observe(viewLifecycleOwner, Observer {
+            if(!it) buttonVisibilityRoomRemoved()
+            if(it && isIAmCreator)  buttonVisibilityRoomCreated()
+            if(it && !isIAmCreator) buttonVisibilityJoinedToRoom()
+        })
+
+
         TrackingService.timeRunInSeconds.observe(viewLifecycleOwner, Observer {
+            if (runningTimeToEnd * 5 <= it && isRoomCreated.value==true && TrackingService.isTracking.value == true) {
 
-            if (runningTimeToEnd * 5 <= it) {
+                Timber.d("hej to ja ")
 
-                sendCommandToService(ACTION_STOP_SERVICE)
+                sendCommandToService(ACTION_PAUSE_SERVICE)
+
                 fillRunnersArray()
 
                 finishRunDialogBuilder()
-
                 Timber.d("KONIEC")
             }
         })
@@ -169,7 +214,10 @@ class RunRoomFragment : Fragment() {
 
 
         TrackingService.pathPoints.observe(viewLifecycleOwner, Observer {
+
             pathPoints = it
+
+            if(pathPoints.size>0 && isRoomCreated.value == true )
             calculateRunDataAndSaveToDb()
         })
 
@@ -201,22 +249,29 @@ class RunRoomFragment : Fragment() {
 
     fun observeRoom(){
 
-            mainViewModel.getRoomState(room.id!!).observe(viewLifecycleOwner, Observer {
 
+            mainViewModel.getRoomState(room.id!!).observe(viewLifecycleOwner, {
+
+                Timber.d("obs pokoj")
                 tvRunRoomTypeTimeInput.setText(it.timeToEnd.toString())
                 runningTimeToEnd = it.timeToEnd!!
 
-                if (it.isStarted == true && isStarted == false) {
-                    isStarted = true
-                    startRunCountDown()
-                }
+                if (it.isStarted == true && isStarted.value == false) {
+                    isStarted.postValue(true)
+                    startRunCountDown() }
+
             })
 
             mainViewModel.getRunners(room.id!!).observe(viewLifecycleOwner, Observer {
 
-                runnersAdapter.submitList(it)
-                runners = it
-                Timber.d("mam cię $    !!!" + it.size.toString() + "  !!! " + it.last().distanceMetres.toString())
+                it?.let{
+                    runnersAdapter.submitList(it)
+                    runners = it
+                }
+
+              //  runnersAdapter.submitList(it)
+               // runners = it
+               // Timber.d("mam cię $    !!!" + it.size.toString() + "  !!! " + it.last().distanceMetres.toString())
             })
     }
 
@@ -239,6 +294,7 @@ class RunRoomFragment : Fragment() {
        // val avgSpeed = Math.round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
         val runner = Runner(uid, room.id, user.nick, user.profilePic, 0f, distanceInMeters)
         Timber.d("calculate and save ")
+
         mainViewModel.addRunnerToRoom(runner)
     }
 
@@ -246,7 +302,7 @@ class RunRoomFragment : Fragment() {
     fun chooseRunTypeDialogBuilder(){
 
         MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Wybierz typ rywalizacji !")
+                .setTitle("Wybierz czas rywalizacji !")
 
                 .setItems(resources.getStringArray(R.array.run_type_options), DialogInterface.OnClickListener { dialog, which ->
                     when (which) {
@@ -262,21 +318,32 @@ class RunRoomFragment : Fragment() {
                 .show() }
 
 
+    fun setInitValueAfterRun(){
+
+        isStarted.postValue(false)
+        isRoomCreated.postValue(false)
+        isIAmCreator = false
+
+    }
 
     fun finishRunDialogBuilder(){
 
        // val view = requireView().findViewById(R.id.ivFinishRunDialog) as ImageView
         val inflater = layoutInflater
         val dialogLayout: View = inflater.inflate(R.layout.finish_run_dialog_image_view, null)
+        val drawable  = resources.getDrawable(R.drawable.finish_run)
 
         MaterialAlertDialogBuilder(requireContext())
                 .setTitle("GRATULACJE KONIEC")
-                .setView(dialogLayout)
-                .setItems(runnersData.toTypedArray(), DialogInterface.OnClickListener { dialog, which -> }
-                )
                 .setPositiveButton("ZAKONCZ") { dialog, which ->
-                    navHostFragment.findNavController().navigate(R.id.action_runRoomFragment_self)
-                }
+
+                    val runHistory = RoomHistory(room.timestamp,runners)
+                    mainViewModel.insertRoomHistory(runHistory)
+                    navHostFragment.findNavController().navigate(R.id.trackingFragment) }
+
+                //.setBackground(drawable)
+                .setMessage("to juz koniec")
+                .setItems(runnersData.toTypedArray(), DialogInterface.OnClickListener { dialog, which -> })
                 .show()
     }
 
@@ -296,12 +363,24 @@ class RunRoomFragment : Fragment() {
                 }
                 .show() }
 
+
     fun confirmRemoveRoomDialogBuilder(){
         MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Czy chcesz usunąć pokój ?!")
                 .setMessage("Wszelkie dane zostaną utracone...")
                 .setPositiveButton("Tak !") { dialog, which ->
+
                     mainViewModel.removeRoom(room)
+                    initVal()
+                    setInitValueAfterRun()
+                    buttonVisibilityInitial()
+
+                    //sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
+                    //navHostFragment.findNavController().navigate(R.id.trackingFragment)
+
+
+                    mainViewModel.removeRoom(room)
+                    isRoomCreated.postValue(false)
                 }
                 .setNegativeButton("Nie !") { dialog, which ->
 
@@ -318,9 +397,7 @@ class RunRoomFragment : Fragment() {
 
             override fun onTick(millisUntilFinished: Long) {
                 tvRunRoomCountDownInput.setText(tick.toString())
-                tick--
-
-            }
+                tick-- }
 
             override fun onFinish() {
                 tvRunRoomCountDown.visibility = TextView.GONE
@@ -328,10 +405,10 @@ class RunRoomFragment : Fragment() {
 
                 room.isStarted = true
                 mainViewModel.updateRoomStateStarted(room)
+
                 sendCommandToService(ACTION_START_OR_RESUME_SERVICE) }
 
         }.start()
-
     }
 
     fun fillRunnersArray(){
@@ -344,23 +421,52 @@ class RunRoomFragment : Fragment() {
 
     }
 
-    fun buttonVisibilityReadyToRunTimeType(){
 
+    fun buttonVisibilityRoomRemoved(){
+        runRoomNavBar.visibility = LinearLayout.GONE
+    }
+
+    fun buttonVisibilityInitial(){
+
+
+        runRoomNavBar.visibility = LinearLayout.GONE
+        run_room_start.visibility = Button.VISIBLE
+        run_room_remove_room.visibility = Button.VISIBLE
+        run_room_add_runner.visibility = Button.VISIBLE
+    }
+
+    fun buttonVisibilityRoomCreated(){
+        runRoomNavBar.visibility = LinearLayout.VISIBLE
+        runRoomNavBarRunningType.visibility = Button.VISIBLE
+        run_room_start.visibility = Button.GONE
+        run_room_remove_room.visibility = Button.VISIBLE
+
+       // tvRunRoomTypeTime.visibility = Button.GONE
+       // tvRunRoomTypeTimeInput.visibility = Button.VISIBLE
+    }
+
+    fun buttonVisibilityReadyToRunTimeType(){
+        runRoomNavBar.visibility = LinearLayout.VISIBLE
         runRoomNavBarRunningType.visibility = Button.GONE
         run_room_start.visibility = Button.VISIBLE
         tvRunRoomTypeTime.visibility = Button.VISIBLE
         tvRunRoomTypeTimeInput.visibility = Button.VISIBLE
-
+        run_room_remove_room.visibility = Button.VISIBLE
     }
 
-    fun buttonVisibilityJoinToRoom(){
+
+
+    fun buttonVisibilityJoinedToRoom(){
+        isRoomCreated.postValue(true)
+
+
         runRoomNavBar.visibility = LinearLayout.VISIBLE
         runRoomNavBarRunningType.visibility = Button.GONE
         run_room_start.visibility = Button.GONE
-
+        run_room_remove_room.visibility = Button.GONE
+        run_room_add_runner.visibility = Button.GONE
         tvRunRoomTypeTime.visibility = Button.VISIBLE
         tvRunRoomTypeTimeInput.visibility = Button.VISIBLE
-
     }
 
 
