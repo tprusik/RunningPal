@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.MessageFragment"
-    android:id="@+id/messageFragment">
+    android:id="@+id/messageFragmentLayout">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMessageFragment"

@@ -59,15 +59,6 @@ class ExampleInstrumentedTest {
      //   onView(withId(R.id.rvUserProvileFriends)).perform(RecyclerViewActions)
     }
 
-    @Test
-    fun isActivityInView() {
-
-        val scenario = ActivityScenario.launch(MainActivity::class.java)
-
-         onView(withId(R.id.activity_main)).check(matches(isDisplayed()))
-
-        //   onView(withId(R.id.rvUserProvileFriends)).perform(RecyclerViewActions)
-    }
 
     @Test
     fun shared_prefs_return_logged_user_should_have_proper_datas() {

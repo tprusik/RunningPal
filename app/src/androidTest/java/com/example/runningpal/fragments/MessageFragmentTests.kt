@@ -15,7 +15,7 @@ class MessageFragmentTests {
     fun isFragmentInView() {
         val fragmentArgs = bundleOf("0" to 0)
         launchFragmentInContainer<MessageFragment>(fragmentArgs)
-        Espresso.onView(ViewMatchers.withId(R.id.messageFragment)).check(ViewAssertions.matches(ViewMatchers.isDisplayed())) }
+        Espresso.onView(ViewMatchers.withId(R.id.messageFragmentLayout)).check(ViewAssertions.matches(ViewMatchers.isDisplayed())) }
 
 
     @Test

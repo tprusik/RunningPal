@@ -15,7 +15,7 @@ class FriendProfileFragmentTests {
         val fragmentArgs = bundleOf("0" to 0)
         launchFragmentInContainer<FriendProfileFragment>(fragmentArgs)
 
-        Espresso.onView(ViewMatchers.withId(R.id.friendProfileFragment)).check(ViewAssertions.matches(ViewMatchers.isDisplayed())) }
+        Espresso.onView(ViewMatchers.withId(R.id.friendProfileFragmentLayout)).check(ViewAssertions.matches(ViewMatchers.isDisplayed())) }
 
 
     @Test

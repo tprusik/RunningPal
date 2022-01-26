@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.DashboardActivity"
-    android:id="@+id/drawerLayout">
+    android:id="@+id/drawerLayout"
+    android:background="@color/bck">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -13,10 +14,10 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            app:titleTextColor="@color/white"
+            app:titleTextColor="#2962FF"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:background="#00a7b5"
+            android:background="#FFB74D"
             android:elevation="4dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -53,7 +54,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/bottom_nav_menu" />
+            app:menu="@menu/bottom_nav_menu"
+            android:background="#2962FF"
+            app:itemTextColor="#FFB74D"
+            app:itemIconTint="#FFB74D"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

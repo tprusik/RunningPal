@@ -29,6 +29,7 @@ interface IRunRepository {
     fun getTotalStatistics(userID : String) : LiveData<RunStatistics>
 
     fun updateRoomTime(time : Int,id : String)
+    fun getRoomHistory(): LiveData<List<RoomHistory>>
 
     // czy one są konieczne ?
 

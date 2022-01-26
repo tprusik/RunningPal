@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.ChatActivity"
-    android:id="@+id/chatActivity">
+    android:id="@+id/chatActivityLayout"
+    android:background="@color/bck">
 
     <LinearLayout
         android:id="@+id/topLayoutActivityChat"
@@ -60,7 +61,7 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_weight="10"
-            android:background="@color/white"
+            android:background="@color/bck"
             android:src="@drawable/ic_chat_send" />
 
 

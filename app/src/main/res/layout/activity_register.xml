@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.RegisterActivity"
-    android:id="@+id/register_activity">
+    android:id="@+id/register_activity"
+    android:background="@color/bck">
 
 
     <EditText
@@ -52,6 +53,8 @@
     <TextView
         android:id="@+id/tvRegister"
         android:layout_width="295dp"
+        android:gravity="center"
+        android:textColor="@color/black"
         android:layout_height="74dp"
         android:layout_marginTop="60dp"
         android:text="@string/register_title"
@@ -63,6 +66,7 @@
 
     <Button
         android:id="@+id/btnApplyRegister"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
         android:layout_width="332dp"
         android:layout_height="47dp"
         android:layout_marginTop="60dp"

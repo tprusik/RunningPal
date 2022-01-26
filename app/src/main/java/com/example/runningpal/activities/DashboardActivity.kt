@@ -57,6 +57,7 @@ class DashboardActivity : AppCompatActivity() {
 
         navigateToTrackingFragmentIfNeeded(intent)
        setSupportActionBar(findViewById(R.id.toolbar))
+        getSupportActionBar()?.setDisplayShowTitleEnabled(false);
 
     }
 

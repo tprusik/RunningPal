@@ -15,7 +15,7 @@ class RunFragmentTests {
         val fragmentArgs = bundleOf("0" to 0)
         launchFragmentInContainer<RunFragment>(fragmentArgs)
 
-        Espresso.onView(ViewMatchers.withId(R.id.runFragment)).check(ViewAssertions.matches(ViewMatchers.isDisplayed())) }
+        Espresso.onView(ViewMatchers.withId(R.id.runFragmentLayout)).check(ViewAssertions.matches(ViewMatchers.isDisplayed())) }
 
 
     @Test

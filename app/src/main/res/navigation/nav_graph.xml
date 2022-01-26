@@ -6,11 +6,6 @@
     app:startDestination="@id/runFragment">
 
     <fragment
-        android:id="@+id/calendarFragment"
-        android:name="com.example.runningpal.fragments.CalendarFragment"
-        android:label="fragment_calendar"
-        tools:layout="@layout/fragment_calendar" />
-    <fragment
         android:id="@+id/messageFragment"
         android:name="com.example.runningpal.fragments.MessageFragment"
         android:label="fragment_message"

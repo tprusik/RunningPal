@@ -91,4 +91,8 @@ class FakeRunRepository : IRunRepository {
         TODO("Not yet implemented")
     }
 
+    override fun getRoomHistory(): LiveData<List<RoomHistory>> {
+        TODO("Not yet implemented")
+    }
+
 }

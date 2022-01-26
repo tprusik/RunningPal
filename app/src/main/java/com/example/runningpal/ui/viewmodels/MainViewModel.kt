@@ -22,6 +22,7 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
     private  val runSortedByTimeInMillis = repo.getAllRunsSortedByTimeinMillis()
     private  val runSortedByAvgSpeed = repo.getAllRunsSortedByAvgSpeed()
     fun getUserStatistics(userID : String) = repo.getTotalStatistics(userID)
+    val roomHistory = repo.getRoomHistory()
 
     val runs = MediatorLiveData<List<Run>>()
 

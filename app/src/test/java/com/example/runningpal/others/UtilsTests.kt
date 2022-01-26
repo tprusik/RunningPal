@@ -8,7 +8,6 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 
@@ -25,6 +24,6 @@ class UtilsTests {
 
     @Test
     fun getProperFormattedTimeStringIfMillisNotInclude() {
-        Utils.getUserSharedPrevs(context)
+       // Utils.getUserSharedPrevs(context)
     }
 }

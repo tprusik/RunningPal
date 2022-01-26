@@ -20,6 +20,7 @@ import com.example.runningpal.activities.CameraActivity
 import com.example.runningpal.R
 import com.example.runningpal.db.User
 import com.example.runningpal.others.TrackingUtility
+import com.example.runningpal.others.Utils
 import com.example.runningpal.others.Utils.convertBitmapToString
 import com.example.runningpal.others.Utils.getUserSharedPrevs
 import com.example.runningpal.others.Utils.removeSharedPrefs
@@ -30,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
+import kotlinx.android.synthetic.main.runner_card_item.view.*
 import org.koin.android.ext.android.get
 import timber.log.Timber
 
@@ -69,7 +71,12 @@ class UserProfileFragment : Fragment() {
 
       user.nick?.let{tvUserProfileName.setText(it)}
 
-      Glide.with(this).load(R.drawable.default_user_avatar).into(ivUserProfileAvatar)
+      user.profilePic?.let{
+          val pic = Utils.convertStringToBitmap(it)
+          Glide.with(this).load(pic).into(ivUserProfileAvatar)
+      }?: run {
+          Glide.with(this).load(R.drawable.default_user_avatar).into(ivUserProfileAvatar)
+      }
 
       Glide.with(this).load(R.drawable.default_user_background).into(ivUserProfileBackground)
 
@@ -131,6 +138,7 @@ class UserProfileFragment : Fragment() {
                 val snapshot: Bitmap = data!!.extras!!.get("data") as Bitmap
                 ivUserProfileAvatar.setImageBitmap(snapshot)
                 user.profilePic = convertBitmapToString(snapshot)
+
                 userViewModel.updateUser(user)
 
             }

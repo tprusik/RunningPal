@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.FriendProfileFragment"
-    android:id="@+id/friendProfileFragment">
+    android:id="@+id/friendProfileFragmentLayout"
+    android:background="@color/bck">
 
     <ImageView
         android:id="@+id/ivFriendProfileBackground"

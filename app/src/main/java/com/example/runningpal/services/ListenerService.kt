@@ -123,7 +123,8 @@ init{ viewModel = get()}
             Constants.NOTIFICATION_ROOM_INVITE_CHANNEL_ID)
             .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_bottom_nav_bar_message)
-            .setContentTitle("Odebrano zaproszenie")
+            .setContentTitle("Odebrano zaproszenie do biegu")
+                .setContentText("Zaproszenie od")
             .addAction(R.drawable.ic_bottom_nav_bar_message,"Przyjmij",acceptRunRoomPendingIntent(idRoom))
                 .addAction(R.drawable.ic_bottom_nav_bar_message,"Odrzuć",rejectRunRoomPendingIntent())
 

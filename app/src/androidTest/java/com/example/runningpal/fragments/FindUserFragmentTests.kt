@@ -16,7 +16,7 @@ class FindUserFragmentTests
         val fragmentArgs = bundleOf("0" to 0)
         launchFragmentInContainer<FindUserFragment>(fragmentArgs)
 
-        Espresso.onView(ViewMatchers.withId(R.id.findUserFragment)).check(ViewAssertions.matches(ViewMatchers.isDisplayed())) }
+        Espresso.onView(ViewMatchers.withId(R.id.findUserFragmentLayout)).check(ViewAssertions.matches(ViewMatchers.isDisplayed())) }
 
 
     @Test

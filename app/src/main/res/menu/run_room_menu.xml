@@ -7,5 +7,4 @@
         android:id="@+id/room_menu_new_room"
         android:title="Nowy Pokój"
         app:showAsAction="ifRoom"/>
-
 </menu>

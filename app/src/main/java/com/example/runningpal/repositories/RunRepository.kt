@@ -203,5 +203,32 @@ class RunRepository : IRunRepository  {
 
     override fun updateRoomTime(time : Int,roomID : String){ database.getReference(DB_NODE_RUN_ROOM).child(roomID).child("timeToEnd").setValue(time) }
 
+    override fun getRoomHistory(): LiveData<List<RoomHistory>> {
+
+        var  roomHistory  = MutableLiveData<List<RoomHistory>>()
+
+        database.getReference(DB_NODE_RUN_ROOM_HISTORY).child(userID)
+
+                .addValueEventListener(object : ValueEventListener {
+
+                    val rooms =  mutableListOf<RoomHistory>()
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+
+                        for(snap in snapshot.children){
+
+                            rooms.add(snap.getValue(RoomHistory::class.java)!!)
+                        }
+
+                        roomHistory.postValue(rooms)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {}
+                })
+
+        return roomHistory
+
+    }
+
 
 }

@@ -161,7 +161,7 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
 
             val run = Run(UUID.randomUUID().toString(), trackPic, dateTimestamp, avgSpeed, distanceInMeters, curTimeInMillis, caloriesBurned)
              viewModel.saveRunToBase(run)
-             viewModel.saveTrackSnapshotToBase(bmp, run.id!!)
+            // viewModel.saveTrackSnapshotToBase(bmp, run.id!!)
 
             stopRun()
         }

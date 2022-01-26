@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.FindUserFragment"
-    android:id="@+id/findUserFragment">
+    android:id="@+id/findUserFragmentLayout"
+    android:background="@color/bck">
 
     <EditText
         android:id="@+id/etFindUser"

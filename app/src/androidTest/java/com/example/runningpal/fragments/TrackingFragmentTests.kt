@@ -17,7 +17,7 @@ class TrackingFragmentTests {
         val fragmentArgs = bundleOf("0" to 0)
         launchFragmentInContainer<TrackingFragment>(fragmentArgs)
 
-        Espresso.onView(ViewMatchers.withId(R.id.mapsFragment)).check(ViewAssertions.matches(ViewMatchers.isDisplayed())) }
+        Espresso.onView(ViewMatchers.withId(R.id.mapsFragmentLayout)).check(ViewAssertions.matches(ViewMatchers.isDisplayed())) }
 
     @Test
     fun testVisibilityMapViewIsVisible() {

@@ -2,31 +2,33 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-       android:id="@+id/mi_calendar"
-        android:title="kalendarz"
-        android:icon="@drawable/ic_bottom_nav_bar_calendar" />
 
-    <item
-        android:id="@+id/runRoomFragment"
-        android:title="znajomi"
-        android:icon="@drawable/ic_run_room" />
-
-    <item
-        android:id="@+id/runFragment"
-        android:title="aktywność"
-        android:icon="@drawable/ic_bottom_nav_bar_running"
-        app:showAsAction="withText" />
 
     <item
         android:id="@+id/messageFragment"
         android:title="wiadomości"
-        android:icon="@drawable/ic_bottom_nav_bar_message" />
+        android:icon="@drawable/ic_bottom_nav_bar_message"
+        android:iconTint="@color/white"/>
+
+    <item
+        android:id="@+id/runRoomFragment"
+        android:title="pokój"
+        android:icon="@drawable/ic_run_room"
+        android:tint="@android:color/white"/>
+
+    <item
+        android:id="@+id/runFragment"
+        android:title="aktywność"
+        android:icon="@drawable/outline_run_circle_20"
+        app:showAsAction="withText"
+        android:tint="@color/white" />
+
 
     <item
         android:id="@+id/userProfileFragment"
         android:title="profil"
-        android:icon="@drawable/ic_bottom_nav_bar_profile" />
+        android:icon="@drawable/ic_bottom_nav_bar_profile"
+        android:iconTint="@color/white"/>
 
 
 
