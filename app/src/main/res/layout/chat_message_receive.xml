@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -11,15 +12,10 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:background="#F6F1EB"
-        android:layout_alignParentLeft="true">
+        android:layout_alignParentLeft="true"
+        android:bottomLeftRadius="20dp"
+        android:bottomRightRadius="20dp">
 
-
-        <TextView
-            android:id="@+id/tvChatCellReceiveName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:text="imie"/>
 
         <TextView
             android:id="@+id/tvChatCellReceive"
@@ -28,6 +24,7 @@
             android:text="odebrana wiadomość"
             android:textSize="16sp"
             android:padding="12dp"
+
             android:textColor="@color/black"/>
 
     </RelativeLayout>

@@ -101,7 +101,7 @@ class DashboardActivity : AppCompatActivity() {
 
             Timber.d("niee jet null")
             RunRoomFragment.joinedToRoom = true
-
+            runnerViewModel.deleteRoomInvitation(receiverID!!)
 
             RunRoomFragment.room = Room(roomID,0,null,false)
             navHostFragment.findNavController().navigate(R.id.action_runFragment_to_runRoomFragment)

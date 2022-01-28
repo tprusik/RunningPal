@@ -41,6 +41,6 @@ interface IRunnersRepository {
 
     fun deleteReceivedInvitation(friendID : String)
     fun deleteFriendInvitation(friendInvitation: FriendInvitation)
-
+    fun deleteRoomInvitation(friendID : String)
     suspend fun getCurrentUserObject(): User
 }

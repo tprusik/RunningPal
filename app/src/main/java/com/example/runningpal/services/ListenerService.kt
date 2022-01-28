@@ -43,6 +43,7 @@ init{ viewModel = get()}
             val roomID = it.idRoom
             Timber.d("serwis")
             createRoomNotification(roomID!!)
+            viewModel.deleteRoomInvitation(it.senderID!!)
         })
 
         viewModel.friendInvitation.observe(this, Observer {
@@ -129,6 +130,8 @@ init{ viewModel = get()}
                 .addAction(R.drawable.ic_bottom_nav_bar_message,"Odrzuć",rejectRunRoomPendingIntent())
 
         notificationManager.notify(1,notificationBuilder.build())
+
+         viewModel.deleteRoomInvitation(idRoom)
      }
 
      fun acceptRunRoomPendingIntent(idRoom : String) = PendingIntent.getActivity(

@@ -3,11 +3,16 @@
     <!-- TODO: Remove or change this placeholder text -->
 
     <string-array name="run_filter_options">
-        <item>czas dodania</item>
-        <item>średnia prędkość</item>
+        <item>data</item>
+        <item>czas</item>
+        <item>dystans</item>
+        <item>prędkość</item>
         <item>spalone kalorie</item>
-        <item>jakis</item>
-        <item>srakis</item>
+    </string-array>
+
+    <string-array name="run_sort_options">
+        <item>rosnąco</item>
+        <item>malejąco</item>
     </string-array>
 
 

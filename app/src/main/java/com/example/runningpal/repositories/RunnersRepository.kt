@@ -32,12 +32,14 @@ class RunnersRepository : IRunnersRepository {
     override fun insertUser(user :User){database.getReference(DB_NODE_USER).child(user.uid!!).setValue(user)}
     override fun updateUser(user: User) { database.getReference(DB_NODE_USER).child(userID).setValue(user) }
     override fun updateUserContacts(user: User) { database.getReference(DB_NODE_USER).child(userID).child(DB_NODE_USER_CONTACTS).setValue(user.contacts) }
-    override fun sendRunInvitation(invitation: Invitation) {database.getReference(DB_NODE_INVITATION).child(DB_NODE_RUN_INVITATION).child(invitation.receiverID!!).push().setValue(invitation) }
+    override fun sendRunInvitation(invitation: Invitation) {database.getReference(DB_NODE_INVITATION).child(DB_NODE_RUN_INVITATION).child(invitation.receiverID!!).child(userID).setValue(invitation) }
 
     override fun sendFriendInvitation(friendInvitation: FriendInvitation) {
         database.getReference(DB_NODE_INVITATION).child(DB_NODE_FRIEND_INVITATION).child(friendInvitation.receiverID!!).child(friendInvitation.senderID!!).setValue(friendInvitation) }
 
     override fun deleteAcceptedInvitation(friendID : String){ database.getReference(DB_NODE_INVITATION).child(DB_NODE_FRIEND_INVITATION).child(userID).child(friendID).removeValue() }
+
+    override fun deleteRoomInvitation(friendID : String){ database.getReference(DB_NODE_INVITATION).child(DB_NODE_RUN_INVITATION).child(userID).child(friendID).removeValue() }
 
     override fun deleteReceivedInvitation(friendID : String){ database.getReference(DB_NODE_INVITATION).child(DB_NODE_FRIEND_INVITATION).child(userID).child("ACCEPTED").child(friendID).removeValue() }
 

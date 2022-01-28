@@ -13,6 +13,11 @@ import com.example.runningpal.others.Constants.KEY_USER_ID
 import com.example.runningpal.others.Constants.KEY_USER_NAME
 import com.example.runningpal.others.Constants.KEY_USER_WEIGHT
 import com.example.runningpal.others.Constants.SHARED_PREFERENCES_NAME
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.utils.ColorTemplate
+import kotlinx.android.synthetic.main.fragment_run.*
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 
@@ -63,6 +68,25 @@ object Utils {
         val sharedPreferences: SharedPreferences.Editor = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit()
         sharedPreferences.clear()
         sharedPreferences.commit()
+    }
+
+    fun barEntryTest(mutableList: MutableList<Any>){
+
+
+        val NoOfEmp = ArrayList<BarEntry>()
+
+        NoOfEmp.add(BarEntry(945f, 0f))
+        NoOfEmp.add(BarEntry(1040f, 1f))
+        NoOfEmp.add(BarEntry(1133f, 2f))
+        NoOfEmp.add(BarEntry(1240f, 3f))
+        NoOfEmp.add(BarEntry(1369f, 4f))
+        NoOfEmp.add(BarEntry(1487f, 5f))
+        NoOfEmp.add(BarEntry(1501f, 6f))
+        NoOfEmp.add(BarEntry(1645f, 7f))
+        NoOfEmp.add(BarEntry(1578f, 8f))
+        NoOfEmp.add(BarEntry(1695f, 9f))
+
+
     }
 
 }

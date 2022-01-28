@@ -25,8 +25,8 @@ class RunnersViewModel(val repo: IRunnersRepository) : ViewModel() {
     fun insertUser(user : User) = repo.insertUser(user)
     fun updateUserContacts(user: User) = repo.updateUserContacts(user)
     fun deleteAcceptedInvitation(friendID:String){
-        Timber.d("usuwamy" + friendID )
         repo.deleteAcceptedInvitation(friendID)}
+    fun deleteRoomInvitation(friendID:String){ repo.deleteRoomInvitation(friendID)}
 
     fun deleteReceivedInvitation(friendID : String) = repo.deleteReceivedInvitation(friendID)
 

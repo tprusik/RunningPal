@@ -94,7 +94,6 @@ class RunRepository : IRunRepository  {
                 })
 
         return sortedRuns
-
     }
 
     override  fun addRunnerToRoom(runner : Runner){

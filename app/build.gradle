@@ -102,7 +102,11 @@ dependencies {
 
     testImplementation "androidx.arch.core:core-testing:2.1.0"
 
+    //chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
+    //slidale menu
+    compile 'com.sothree.slidinguppanel:library:3.4.0'
     // Architectural Components
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
 

@@ -108,6 +108,7 @@ class FriendProfileFragment : Fragment() {
 
     fun subscribeToObservers(){
 
+
         viewModel.getUserStatistics(friend.value!!.uid!!).observe(viewLifecycleOwner , Observer {
 
             Timber.d("id  "+ friend.value!!.uid!!)
