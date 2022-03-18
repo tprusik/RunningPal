@@ -23,6 +23,12 @@
         app:showAsAction="withText"
         android:tint="@color/white" />
 
+    <item
+        android:id="@+id/statisticsFragment"
+        android:title="statystyki"
+        android:icon="@drawable/ic_statistics"
+        app:showAsAction="withText"
+        android:tint="@color/white" />
 
     <item
         android:id="@+id/userProfileFragment"

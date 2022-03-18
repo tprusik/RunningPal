@@ -51,6 +51,7 @@ class RegisterActivity : AppCompatActivity() {
                     val nick:String = etRegisterNick.text.toString()
                     val email:String = etRegisterEmail.text.toString()
                     val password :String = etRegisterPass.text.toString()
+                    val weight :String = etRegisterWeight.text.toString()
                     //Dodaj jeszcze Walidację
 
 
@@ -64,17 +65,17 @@ class RegisterActivity : AppCompatActivity() {
 
                                 Toast.makeText(
                                         this,
-                                        "Poprawnie dodano użyytkownika do bazy",
+                                        "Rejestracja poprawna",
                                         Toast.LENGTH_SHORT
                                 ).show()
 
                                 Timber.d(   "rejestracja "+ firebaseUser.uid)
-                                val user = User(email,nick,null,null,firebaseUser.uid,null, mutableListOf())
+                                val user = User(email,nick,null,null,firebaseUser.uid,weight, mutableListOf())
 
                                 viewModel = get()
                                 viewModel.insertUser(user)
 
-                                 Intent(this, DashboardActivity::class.java).also {
+                                 Intent(this, LoginActivity::class.java).also {
                                     it.action = ACTION_FROM_REGISTER
                                     startActivity(it) }
 

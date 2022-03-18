@@ -111,7 +111,5 @@ class DashboardActivity : AppCompatActivity() {
             navHostFragment.findNavController().navigate(R.id.setupFragment)
 
         }
-
     }
-
 }

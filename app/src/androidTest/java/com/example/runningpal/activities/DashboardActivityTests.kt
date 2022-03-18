@@ -1,19 +1,12 @@
 package com.example.runningpal.activities
 
-import androidx.core.os.bundleOf
-import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.navigation.Navigation
-import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.pressBack
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.example.runningpal.R
-import com.example.runningpal.fragments.UserProfileFragment
 import org.junit.Test
 
 class DashboardActivityTests {
@@ -72,8 +65,8 @@ class DashboardActivityTests {
         ActivityScenario.launch(DashboardActivity::class.java)
 
 
-        Espresso.onView(ViewMatchers.withId(R.id.runFragment)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.runFragment)).perform(click())
+        Espresso.onView(ViewMatchers.withId(R.id.statisticsFragment)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.statisticsFragment)).perform(click())
         Espresso.onView(ViewMatchers.withId(R.id.runFragmentLayout)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         pressBack()
         Espresso.onView(ViewMatchers.withId(R.id.drawerLayout)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -97,8 +90,8 @@ class DashboardActivityTests {
     fun navTestBottomNavigationViewToTrackingRoomFragment() {
         ActivityScenario.launch(DashboardActivity::class.java)
 
-        Espresso.onView(ViewMatchers.withId(R.id.runFragment)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.runFragment)).perform(click())
+        Espresso.onView(ViewMatchers.withId(R.id.statisticsFragment)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.statisticsFragment)).perform(click())
         Espresso.onView(ViewMatchers.withId(R.id.runFragmentLayout)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Espresso.onView(ViewMatchers.withId(R.id.btnNewRun)).perform(click())

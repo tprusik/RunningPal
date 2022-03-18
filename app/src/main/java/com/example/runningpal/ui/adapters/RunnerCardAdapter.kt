@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.runningpal.R
+import com.example.runningpal.db.RoomHistory
 import com.example.runningpal.db.Run
 import com.example.runningpal.db.Runner
 import com.example.runningpal.others.Utils
@@ -55,7 +56,7 @@ class RunnerCardAdapter(
             val temp = user.avgSpeedKmh
             val place = position + 1
             tvRunnerCardPosition.setText("Miejsce:  " + place)
-            tvRunnerCardTemp.setText("Tempo: " + temp.toString())
+            tvRunnerCardTemp.setText("Tempo: " + temp.toString() + " min/km")
             val distance =  user.distanceMetres
             tvRunnerCardDistance.setText("Dystans: " + distance.toString())
 

@@ -10,6 +10,7 @@ import com.example.runningpal.others.DbConstants.DB_NODE_RUN_ROOM_HISTORY
 import com.example.runningpal.others.DbConstants.ORDER_BY_CALORIES_BURNED
 import com.example.runningpal.others.DbConstants.ORDER_BY_DATE
 import com.example.runningpal.others.DbConstants.ORDER_BY_DISTANCE
+import com.example.runningpal.others.DbConstants.ORDER_BY_SPEED
 import com.example.runningpal.others.DbConstants.ORDER_BY_TIME
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -34,8 +35,8 @@ class RunRepository : IRunRepository  {
     override fun getAllRunsSortedByDate() : LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_DATE) }
     override fun getAllRunsSortedByDistance(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_DISTANCE) }
     override fun getAllRunsSortedByTimeinMillis(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_TIME) }
-    override fun getAllRunsSortedByAvgSpeed(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_DISTANCE) }
-    override fun getAllRunsSortedByCaloriesBurned(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_CALORIES_BURNED)}
+    override fun getAllRunsSortedByAvgSpeed(): LiveData<List<Run>> { return getDatabaseReference(ORDER_BY_SPEED) }
+    override fun getAllRunsSortedByCaloriesBurned(): LiveData<List<Run>> {return getDatabaseReference(ORDER_BY_CALORIES_BURNED)}
 
 
     override fun getTotalStatistics(userID : String): LiveData<RunStatistics> {
@@ -96,6 +97,8 @@ class RunRepository : IRunRepository  {
         return sortedRuns
     }
 
+
+
     override  fun addRunnerToRoom(runner : Runner){
         Timber.d("add Runner ${runner.name}  ${runner.idRoom}  ${runner.distanceMetres}")
         database.getReference(DB_NODE_RUN_ROOM).child(runner.idRoom!!).child("RUNNER").child(runner.id!!).setValue(runner)
@@ -104,7 +107,6 @@ class RunRepository : IRunRepository  {
 
     override fun getRoom(roomID: String): LiveData<Room> {
         var  room  = MutableLiveData<Room>()
-
 
 
         database.getReference(DB_NODE_RUN_ROOM).child(roomID)

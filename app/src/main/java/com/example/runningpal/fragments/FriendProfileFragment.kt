@@ -109,20 +109,22 @@ class FriendProfileFragment : Fragment() {
     fun subscribeToObservers(){
 
 
-        viewModel.getUserStatistics(friend.value!!.uid!!).observe(viewLifecycleOwner , Observer {
+        friend.value?.uid?.let {
+            viewModel.getUserStatistics(it).observe(viewLifecycleOwner , Observer {
 
-            Timber.d("id  "+ friend.value!!.uid!!)
-            it.allDistance?.let{ tvFriendProfileRunAmountInput.setText(it.toString())}
-            it.allCaloriesBurned?.let{ tvFriendProfileTotalCaloriesBurnedInput.setText(it.toString())}
-            it.allTime?.let{ tvFriendProfileTotalRunningTimeInput.setText(it.toString())}
-            it.allRuns?.let{ tvFriendProfileRunAmountInput.setText(it.toString())}
-        })
+                Timber.d("id  "+ friend.value!!.uid!!)
+                it.allDistance?.let{ tvFriendProfileRunAmountInput.setText(it.toString())}
+                it.allCaloriesBurned?.let{ tvFriendProfileTotalCaloriesBurnedInput.setText(it.toString())}
+                it.allTime?.let{ tvFriendProfileTotalRunningTimeInput.setText(it.toString())}
+                it.allRuns?.let{ tvFriendProfileRunAmountInput.setText(it.toString())}
+            })
+        }
 
         userViewModel.user.observe(viewLifecycleOwner, Observer {
 
             it.contacts?.let{
                 for(friends in it)
-                { if(friend.value!!.uid == friends){
+                { if(friend.value?.uid == friends){
                     isAlreadyFriend = true
                     changeButtonVisibility() } } }
         })

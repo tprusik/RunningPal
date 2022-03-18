@@ -8,27 +8,31 @@
         android:id="@+id/runner_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp">
+        android:layout_margin="8dp"
+        android:background="#4ccb9b">
 
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#4ccb9b">
+            android:orientation="horizontal"
+            android:background="#4ccb9b"
+            android:layout_gravity="center">
 
             <!-- Media -->
             <ImageView
                 android:id="@+id/ivRunnerCardItem"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop" />
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                android:layout_weight="1"
+                android:layout_gravity="center"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp"
+                android:padding="8dp"
                 android:background="#70e1b7">
 
                 <!-- Title, secondary and supporting text -->
@@ -37,7 +41,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Imię biegacza"
-                    android:textAppearance="?attr/textAppearanceHeadline6" />
+                    android:textSize="16sp"
+                    android:textColor="@color/black"/>
 
                 <TextView
                     android:id="@+id/tvRunnerCardPosition"
@@ -61,7 +66,7 @@
                     android:id="@+id/tvRunnerCardDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:text="Dystans : "
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?android:attr/textColorSecondary" />

@@ -98,7 +98,7 @@ init{ viewModel = get()}
                 this,
                 0,
                 Intent(this, DashboardActivity::class.java),
-                PendingIntent.FLAG_CANCEL_CURRENT)
+                PendingIntent.FLAG_ONE_SHOT)
 
 
     fun acceptFriendInvitationPendingIntent(id : String) = PendingIntent.getActivity(
@@ -108,7 +108,8 @@ init{ viewModel = get()}
                 it.action = ACTION_ACCEPT_FRIEND
                 it.putExtra("IDFRIEND",id)
             },
-            PendingIntent.FLAG_CANCEL_CURRENT
+            PendingIntent.FLAG_ONE_SHOT
+
     )
 
 
@@ -141,6 +142,8 @@ init{ viewModel = get()}
             it.action = ACTION_SHOW_ROOM
             Timber.d("pending + "+ idRoom)
             it.putExtra("IDROOM",idRoom)
+            it.putExtra("idReceiver",user.uid)
+
 
         }, PendingIntent.FLAG_CANCEL_CURRENT)
 

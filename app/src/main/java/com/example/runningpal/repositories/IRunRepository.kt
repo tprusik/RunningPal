@@ -7,6 +7,8 @@ import com.example.runningpal.db.*
 interface IRunRepository {
 
 
+
+
     fun insertRun(run : Run)
     fun deleteRun(run : Run)
 

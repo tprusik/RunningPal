@@ -67,6 +67,7 @@ class TrackingService : LifecycleService() {
         val isTrackingEnd = MutableLiveData<Boolean>()
         val pathPoints = MutableLiveData<Polylines>()
         val timeRunInSeconds = MutableLiveData<Long>()
+        val distanceProgress = mutableListOf<Int>()
     }
 
   private fun postInitialValues() {

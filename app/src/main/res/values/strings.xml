@@ -7,7 +7,7 @@
         <item>czas</item>
         <item>dystans</item>
         <item>prędkość</item>
-        <item>spalone kalorie</item>
+        <item>kalorie</item>
     </string-array>
 
     <string-array name="run_sort_options">
@@ -22,6 +22,12 @@
         <item>zakonczenie</item>
     </string-array>
 
+    <string-array name="run_date_options">
+        <item>wszystko</item>
+        <item>bieżący tydzień</item>
+        <item>bieżący miesiąć</item>
+        <item>ostatni miesiąć</item>
+    </string-array>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

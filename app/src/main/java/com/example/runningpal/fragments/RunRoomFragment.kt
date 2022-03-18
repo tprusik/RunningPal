@@ -34,6 +34,8 @@ import org.koin.android.ext.android.get
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.round
+import kotlin.math.roundToInt
 
 
 class RunRoomFragment : Fragment() {
@@ -42,13 +44,20 @@ class RunRoomFragment : Fragment() {
     private lateinit var runnersViewModel : RunnersViewModel
     private lateinit var mainViewModel: MainViewModel
     private lateinit var runnersAdapter  : RunnerCardAdapter
-    private lateinit var historyAdapter  : RunnerCardAdapter
+    private lateinit var historyAdapter  : RoomHistoryAdapter
     private var pathPoints = mutableListOf<Polyline>()
     private lateinit var uid : String
     private lateinit var dialog : ChooseUserDialogFragment
     private  var runningTimeToEnd  = 10000
     private lateinit  var runners : List<Runner>
+    private lateinit  var roomHistory : List<RoomHistory>
     private var  runnersData = arrayListOf<String>()
+
+    private var distanceProgress = mutableListOf<Int>()
+    private var timeProgress = mutableListOf<Long>()
+    private var placeProgress = mutableListOf<Int>()
+    private var avgSpeedProgress = mutableListOf<Float>()
+
 
     companion object {
         var userss  = mutableListOf<User>()
@@ -64,7 +73,6 @@ class RunRoomFragment : Fragment() {
         var isCountingDown  = MutableLiveData<Boolean>()
 
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +101,7 @@ class RunRoomFragment : Fragment() {
 
                 else {
                     createNewRoom()
-
+                    rvRunRoom.adapter = runnersAdapter
                     item.setVisible(false)
                     runRoomNavBar.visibility = LinearLayout.VISIBLE
                 }
@@ -102,7 +110,6 @@ class RunRoomFragment : Fragment() {
             else -> {true}
         }
     }
-
 
 
     override fun onCreateView(
@@ -120,7 +127,6 @@ class RunRoomFragment : Fragment() {
         dialog = ChooseUserDialogFragment()
         subscribeObserver()
         users = userss
-
 
         if(room.id!=null) {
 
@@ -146,8 +152,9 @@ class RunRoomFragment : Fragment() {
       if(joinedToRoom)
           buttonVisibilityJoinedToRoom()
           R.id.room_menu_new_room
-    }
+       // rvRunRoom.adapter = runnersAdapter
 
+    }
 
 
     fun createNewRoom(){
@@ -177,6 +184,7 @@ class RunRoomFragment : Fragment() {
         runnersViewModel = get()
         uid = FirebaseAuth.getInstance().currentUser!!.uid
         runners = mutableListOf<Runner>()
+        roomHistory = mutableListOf<RoomHistory>()
          isStarted.postValue(false)
         //isRoomCreated.postValue(false)
         //isIAmCreator = false
@@ -218,7 +226,7 @@ class RunRoomFragment : Fragment() {
 
        mainViewModel.roomHistory.observe(viewLifecycleOwner, Observer {
 
-          // historyAdapter.submitList(it)
+           historyAdapter.submitList(it)
        })
 
         TrackingService.pathPoints.observe(viewLifecycleOwner, Observer {
@@ -259,7 +267,6 @@ class RunRoomFragment : Fragment() {
 
     fun observeRoom(){
 
-
             mainViewModel.getRoomState(room.id!!).observe(viewLifecycleOwner, {
 
                 Timber.d("obs pokoj")
@@ -287,13 +294,13 @@ class RunRoomFragment : Fragment() {
 
    private fun setupRecyclerView() = rvRunRoom.apply {
         runnersAdapter = RunnerCardAdapter()
-        historyAdapter = RunnerCardAdapter()
-        adapter = runnersAdapter
+        historyAdapter = RoomHistoryAdapter()
+        adapter = historyAdapter
         layoutManager = LinearLayoutManager(requireContext()) }
 
     private fun changeRecyclerViewAdapter() = rvRunRoom.apply {
         Timber.d("nowy ja")
-        historyAdapter.submitList(runners)
+        historyAdapter.submitList(roomHistory)
         adapter = historyAdapter
         layoutManager = LinearLayoutManager(requireContext()) }
 
@@ -304,18 +311,24 @@ class RunRoomFragment : Fragment() {
 
     private fun calculateRunDataAndSaveToDb(){
         var distanceInMeters = 0
-
+        var timeInSeconds = 0L;
         for(polyline in pathPoints) {
             distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt() }
 
-       // val avgSpeed = Math.round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
-        val runner = Runner(uid, room.id, user.nick, user.profilePic, 0f, distanceInMeters)
+        TrackingService.timeRunInSeconds.value?.let {
+            timeProgress.add(it)
+            distanceProgress.add(distanceInMeters)
+            placeProgress.add(runners.indexOf(runner.value)+2)
+            timeInSeconds = it }
+
+        val avgSpeed = Math.round((distanceInMeters / 1000f) / (timeInSeconds / 1000f / 60 / 60) * 10) / 10f
+        avgSpeedProgress.add(avgSpeed)
+
+        val runner = Runner(uid, room.id, user.nick, user.profilePic, avgSpeed.roundToInt().toFloat(), distanceInMeters,distanceProgress,timeProgress,placeProgress,avgSpeedProgress)
         Timber.d("calculate and save ")
 
-        mainViewModel.addRunnerToRoom(runner)
-    }
-
-
+        mainViewModel.addRunnerToRoom(runner) }
+    
     fun chooseRunTypeDialogBuilder(){
 
         MaterialAlertDialogBuilder(requireContext())
@@ -349,6 +362,8 @@ class RunRoomFragment : Fragment() {
         val drawable  = resources.getDrawable(R.drawable.finish_run)
 
         changeRecyclerViewAdapter()
+
+        mainViewModel.insertRoomHistory(RoomHistory(room.timestamp,runners,(runners.indexOf(runner.value) + 2).toString()))
         mainViewModel.removeRoom(room)
 
         MaterialAlertDialogBuilder(requireContext())
@@ -358,8 +373,6 @@ class RunRoomFragment : Fragment() {
                     buttonVisibilityInitial()
 
                     setPrimaryState()
-                    val runHistory = RoomHistory(room.timestamp,runners)
-                    mainViewModel.insertRoomHistory(runHistory)
                     setupRecyclerView()
                     navHostFragment.findNavController().navigate(R.id.trackingFragment) }
 

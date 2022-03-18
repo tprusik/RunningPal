@@ -1,132 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sothree.slidinguppanel.SlidingUpPanelLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:sothree="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
-    sothree:umanoPanelHeight="68dp"
-    sothree:umanoShadowHeight="4dp"
-    sothree:umanoParallaxOffset="100dp"
-    sothree:umanoDragView="@+id/runFragmentLayout"
-    sothree:umanoOverlay="true"
-    sothree:umanoScrollableView="@+id/list">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.RunFragment"
+    android:id="@+id/statisticsFragment">
 
-    <!-- MAIN CONTENT -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/runFragmentLayout"
+<LinearLayout
+    android:id="@+id/allSpinners"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent">
+
+    <Spinner
+        android:id="@+id/spDate"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
+        android:entries="@array/run_date_options" />
+
+    <Spinner
+        android:id="@+id/spFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
+        android:entries="@array/run_filter_options" />
+
+    <Spinner
+        android:id="@+id/spSortType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
+        android:entries="@array/run_sort_options" />
+
+</LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRuns"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".fragments.RunFragment">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/btnNewRun"
+        app:layout_constraintTop_toBottomOf="@id/allSpinners" />
 
-        <Spinner
-            android:id="@+id/spFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawSelectorOnTop="true"
-            android:entries="@array/run_filter_options"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+    <Button
+        android:id="@+id/btnNewRun"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Rozpocznij Nowy Bieg"
+        app:icon="@drawable/ic_fab_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <Spinner
-            android:id="@+id/spSortType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawSelectorOnTop="true"
-            android:entries="@array/run_sort_options"
-            app:layout_constraintRight_toLeftOf="@id/spFilter"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barChart"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spFilter" />
-
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pieChart"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/barChart" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvRuns"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/btnNewRun"
-            app:layout_constraintTop_toBottomOf="@id/pieChart" />
-
-
-        <Button
-            android:id="@+id/btnNewRun"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="Rozpocznij Nowy Bieg"
-            app:icon="@drawable/ic_fab_add"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- SLIDING LAYOUT -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:orientation="vertical"
-        android:clickable="true"
-        android:focusable="false"
-        android:id="@+id/dragView">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="68dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textSize="14sp"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp"/>
-
-            <Button
-                android:id="@+id/follow"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textSize="14sp"
-                android:gravity="center_vertical|right"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"/>
-
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-        </ListView>
-
-    </LinearLayout>
-</com.sothree.slidinguppanel.SlidingUpPanelLayout>
-
-
-
-
+</androidx.constraintlayout.widget.ConstraintLayout>

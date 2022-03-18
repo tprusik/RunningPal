@@ -1,5 +1,6 @@
 package com.example.runningpal.ui.viewmodels
 import android.graphics.Bitmap
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.example.runningpal.db.Room
 import com.example.runningpal.db.RoomHistory
@@ -7,6 +8,9 @@ import com.example.runningpal.db.Run
 import com.example.runningpal.db.Runner
 import com.example.runningpal.others.FiltrRunType
 import com.example.runningpal.others.RunSortType
+import com.example.runningpal.others.Utils.getLastMonthInMillis
+import com.example.runningpal.others.Utils.getThisMonthInMillis
+import com.example.runningpal.others.Utils.getThisWeekInMillis
 import com.example.runningpal.repositories.IRunRepository
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -28,6 +32,7 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
     private  val runSortedByAvgSpeed = repo.getAllRunsSortedByAvgSpeed()
     
     fun getUserStatistics(userID: String) = repo.getTotalStatistics(userID)
+
     val roomHistory = repo.getRoomHistory()
 
     val runs = MediatorLiveData<List<Run>>()
@@ -79,7 +84,7 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
 
         FiltrRunType.INCREASE -> runs.value?.let { runs.value = it.reversed() }
 
-        FiltrRunType.DECREASE -> runs.value?.let { runs.value = it.filter { it.distanceMetres > 300 } }
+        FiltrRunType.DECREASE -> runs.value?.let { runs.value = it.reversed() }
 
     }.also {
         this.filtrType = filtrType
@@ -117,7 +122,9 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
     fun removeRoom(room: Room)  = viewModelScope.launch { repo.deleteRoom(room)}
     fun getRoomState(roomID: String) = repo.getRoomState(roomID)
     fun insertRoomTimeToEnd(room: Room) =viewModelScope.launch { repo.updateRoomTime(room.timeToEnd!!, room.id!!)}
+
     fun insertRoomHistory(room: RoomHistory)=viewModelScope.launch { repo.insertRoomHistory(room)}
+
 
     //Distance
     fun sortRunByDistanceGreaterThan(distance: Long){
@@ -126,17 +133,12 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
     fun sortRunByDistanceSmallerThan(distance: Long){
         runs.value?.let{runs.value = it.filter { it.distanceMetres <= distance } } }
 
-    fun sortRunByDistanceBetween(distance1: Long, distance2: Long){
-        runs.value?.let{runs.value = it.filter { (it.distanceMetres in distance1..distance2) } } }
     //Time
     fun sortRunByTimeGreaterThan(value: Long){
         runs.value?.let{runs.value = it.filter { it.timeInMilis >= value*60000 } } }
 
     fun sortRunByTimeSmallerThan(value: Long){
         runs.value?.let{runs.value = it.filter { it.timeInMilis <= value*60000 } } }
-
-    fun sortRunByDTimeBetween(value1: Long, value2: Long){
-        runs.value?.let{runs.value = it.filter { (it.timeInMilis in value1*60000 ..value2*60000) } } }
 
     // Calories
     fun sortRunByCaloriesGreaterThan(values: Int){
@@ -145,17 +147,12 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
     fun sortRunByCaloriesSmallerThan(values: Int){
         runs.value?.let{runs.value = it.filter { it.caloriesBurned <= values } } }
 
-    fun sortRunByCaloriesBetween(values1: Int, values2: Int){
-        runs.value?.let{runs.value = it.filter { (it.caloriesBurned in values1..values2) } } }
     // Speed
     fun sortRunBySpeedGreaterThan(values: Int){
         runs.value?.let{runs.value = it.filter { it.avgSpeedKmh >= values.toFloat() } } }
 
     fun sortRunBySpeedSmallerThan(values: Int){
         runs.value?.let{runs.value = it.filter { it.avgSpeedKmh <= values.toFloat() } } }
-
-    fun sortRunBySpeedBetween(values1: Int, values2: Int){
-        runs.value?.let{runs.value = it.filter { (it.avgSpeedKmh in values1.toFloat()..values2.toFloat()) } } }
     //Date
     fun sortRunByDateGreaterThan(value: String){
 
@@ -164,9 +161,9 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
             val date = dateFormat.parse(value)
             val milliseconds = date.time
 
+            Timber.d("test daty " + milliseconds.toString() + "obiekt ")
             runs.value?.let{
-                runs.value = it.filter { it.timeInMilis >= milliseconds } }
-
+                runs.value = it.filter { it.timestamp >= milliseconds } }
         } catch (e: ParseException ) {
             e.printStackTrace()
         } }
@@ -175,33 +172,65 @@ class MainViewModel(val repo: IRunRepository) : ViewModel() {
 
         val dateFormat = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
         try {
+            Timber.d("test")
+
             val date = dateFormat.parse(value)
+            Timber.d("test1")
+
             val milliseconds = date.time
+            Timber.d("test2")
 
             runs.value?.let{
-                runs.value = it.filter { it.timeInMilis <= milliseconds } }
+                runs.value = it.filter { it.timestamp <= milliseconds } }
+
 
         } catch (e: ParseException ) {
             e.printStackTrace()
+            Timber.d("tydzia")
+
         } }
 
+    fun showDateSmaller(value : Long){
+        runs.value?.let{
+        runs.value = it.filter { it.timestamp <= value } }
 
-    fun sortRunByDateGreaterThan(value1: String,value2: String){
 
-        val dateFormat = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
-        try {
-            val date1 = dateFormat.parse(value1)
-            val milliseconds1 = date1.time
+    }
 
-            val date2 = dateFormat.parse(value2)
-            val milliseconds2 = date2.time
+    fun showDateGreater(value : Long){
+        runs.value?.let{
+        runs.value = it.filter { it.timestamp >= value } }}
 
-            runs.value?.let{
-                runs.value = it.filter {  (it.timeInMilis in milliseconds1 ..milliseconds2) } }
+    fun sortDateByThisWeek(){
+        var weekInMillis = getThisWeekInMillis()
+        var startOfWeekInMillis = weekInMillis[0]
+        var endOfWeekInMillis = weekInMillis[1]
 
-        } catch (e: ParseException ) {
-            e.printStackTrace()
-        } }
+        Timber.d("test daty" + startOfWeekInMillis.toString())
+
+        showDateSmaller(endOfWeekInMillis)
+        showDateGreater(startOfWeekInMillis)
+    }
+
+    fun sortDateByThisMonth(){
+        var monthInMillis = getThisMonthInMillis()
+        var startOfMonthInMillis = monthInMillis[0]
+        var endOfMonthInMillis = monthInMillis[1]
+
+        showDateGreater(startOfMonthInMillis)
+        showDateSmaller(endOfMonthInMillis)
+
+    }
+
+    fun sortDateByLastMonth(){
+        var monthInMillis = getLastMonthInMillis()
+        var startOfMonthInMillis = monthInMillis[0]
+        var endOfMonthInMillis = monthInMillis[1]
+
+        showDateGreater(startOfMonthInMillis)
+        showDateSmaller(endOfMonthInMillis)
+
+    }
 
 
 }

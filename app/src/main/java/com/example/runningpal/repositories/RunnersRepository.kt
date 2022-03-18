@@ -181,10 +181,11 @@ class RunnersRepository : IRunnersRepository {
                 .addValueEventListener(object : ValueEventListener {
 
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        val us = snapshot.getValue(User::class.java)!!
 
-                        Timber.d("ss"+ us.email)
-                        user.postValue(us!!)
+                        val us = snapshot.getValue(User::class.java)
+
+                        us.let { user.postValue(it) }
+
 
                     }
 

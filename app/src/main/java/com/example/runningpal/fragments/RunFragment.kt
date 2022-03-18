@@ -1,52 +1,49 @@
 package com.example.runningpal.fragments
 
 import android.Manifest
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.view.*
-import android.widget.AdapterView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.runningpal.R
-import com.example.runningpal.others.Constants.REQUEST_CODE_LOCATION_PERMISSION
-import com.example.runningpal.others.CustomMarkerView
+import com.example.runningpal.others.Constants
 import com.example.runningpal.others.FiltrRunType
 import com.example.runningpal.others.RunSortType
 import com.example.runningpal.others.TrackingUtility
 import com.example.runningpal.services.TrackingService
 import com.example.runningpal.ui.adapters.RunAdapter
 import com.example.runningpal.ui.viewmodels.MainViewModel
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_run.*
+import kotlinx.android.synthetic.main.fragment_statistics.*
+import kotlinx.android.synthetic.main.fragment_statistics.spDate
+import kotlinx.android.synthetic.main.fragment_statistics.spFilter
+import kotlinx.android.synthetic.main.fragment_statistics.spSortType
 import org.koin.android.ext.android.get
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
-
-class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
+class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private  lateinit var runAdapter : RunAdapter
     private lateinit var viewModel : MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState) }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_run, container, false)
+        super.onCreate(savedInstanceState)
 
     }
 
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_run, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,34 +52,21 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
         requestPermissions()
         setupRecyclerView()
 
-       ////
-        setupBarChart()
 
-        ////
 
         viewModel.runs.observe(viewLifecycleOwner, Observer {
-            it?.let {
-
-                val allAvgSpeedsBar = it.indices.map { i -> BarEntry(i.toFloat(), it[i].avgSpeedKmh) }
-                val bardataSet = BarDataSet(allAvgSpeedsBar, "Avg Speed Over Time").apply {
-                    valueTextColor = Color.WHITE
-                    color = ContextCompat.getColor(requireContext(), R.color.colorAccent) }
-
-                val allAvgSpeedsPie = it.indices.map { i -> PieEntry(i.toFloat(), it[i].avgSpeedKmh) }
-                val pieDataSet = PieDataSet(allAvgSpeedsPie, "Avg Speed Over Time").apply {
-                    valueTextColor = Color.WHITE }
-
-
-                barChart.data = BarData(bardataSet)
-                barChart.marker = CustomMarkerView(it.reversed(), requireContext(), R.layout.marker_view)
-                barChart.invalidate()
-
-                pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS.toMutableList())
-                pieChart.data = PieData(pieDataSet)
-                pieChart.marker = CustomMarkerView(it.reversed(), requireContext(), R.layout.marker_view)
-                pieChart.invalidate()
-            }
+            runAdapter.submitList(it)
         })
+
+
+        btnNewRun.setOnClickListener{
+            navHostFragment.findNavController().navigate(R.id.action_runFragment_to_trackingFragment2)
+        }
+
+
+        TrackingService.isTracking.value?.let{
+            if(it) navHostFragment.findNavController().navigate(R.id.action_runFragment_to_trackingFragment2)
+        }
 
 
         RunRoomFragment.isRoomCreated.value?.let{
@@ -90,13 +74,6 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
                 R.id.action_runFragment_to_runRoomFragment
             )}
         }
-
-
-
-        TrackingService.isTracking.value?.let{
-            if(it) navHostFragment.findNavController().navigate(R.id.action_runFragment_to_trackingFragment)
-        }
-
 
         when(viewModel.sortType) {
             RunSortType.DATE -> spFilter.setSelection(0)
@@ -129,10 +106,10 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
 
             override fun onItemSelected(
-                    adapterView: AdapterView<*>?,
-                    view: View?,
-                    pos: Int,
-                    id: Long
+                adapterView: AdapterView<*>?,
+                view: View?,
+                pos: Int,
+                id: Long
             ) {
                 when(pos) {
                     0 -> viewModel.filtrRuns(FiltrRunType.INCREASE)
@@ -142,16 +119,26 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
             }
         }
 
+        spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
 
-        viewModel.runs.observe(viewLifecycleOwner, Observer {
-            runAdapter.submitList(it)
-        })
-
-
-
-        btnNewRun.setOnClickListener{
-            navHostFragment.findNavController().navigate(R.id.action_runFragment_to_trackingFragment)
+            override fun onItemSelected(
+                adapterView: AdapterView<*>?,
+                view: View?,
+                pos: Int,
+                id: Long
+            ) {
+                when(pos) {
+                    0 -> return
+                    1 -> viewModel.sortDateByThisWeek()
+                    2 -> viewModel.sortDateByThisMonth()
+                    3 -> viewModel.sortDateByLastMonth()
+                }
+            }
         }
+
+
+
 
     }
 
@@ -170,7 +157,7 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
             EasyPermissions.requestPermissions(
                 this,
                 "Papaapa",
-                REQUEST_CODE_LOCATION_PERMISSION,
+                Constants.REQUEST_CODE_LOCATION_PERMISSION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
@@ -179,7 +166,7 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
             EasyPermissions.requestPermissions(
                 this,
                 "Papapass",
-                REQUEST_CODE_LOCATION_PERMISSION,
+                Constants.REQUEST_CODE_LOCATION_PERMISSION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION
@@ -208,30 +195,5 @@ class RunFragment : Fragment() , EasyPermissions.PermissionCallbacks {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
     }
-
-    private fun setupBarChart() {
-        barChart.xAxis.apply {
-            position = XAxis.XAxisPosition.BOTTOM
-            setDrawLabels(false)
-            axisLineColor = Color.WHITE
-            textColor = Color.WHITE
-            setDrawGridLines(false)
-        }
-        barChart.axisLeft.apply {
-            axisLineColor = Color.WHITE
-            textColor = Color.WHITE
-            setDrawGridLines(false)
-        }
-        barChart.axisRight.apply {
-            axisLineColor = Color.WHITE
-            textColor = Color.WHITE
-            setDrawGridLines(false)
-        }
-        barChart.apply {
-            description.text = "Avg Speed Over Time"
-            legend.isEnabled = false
-        }
-    }
-
 
 }

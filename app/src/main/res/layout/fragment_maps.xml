@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/start_run"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnFinishRun"
             app:layout_constraintHorizontal_bias="0.5"
@@ -43,7 +44,8 @@
             android:id="@+id/btnFinishRun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Finish Run"
+            android:text="Zakończ"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -51,14 +53,13 @@
             app:layout_constraintStart_toEndOf="@+id/btnToggleRun"
             app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tvLetsGo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Let's go, USERNAME!"
+        android:text="Ciśnij, USERNAME!"
         android:textAlignment="center"
         android:textSize="50sp"
         android:visibility="gone"

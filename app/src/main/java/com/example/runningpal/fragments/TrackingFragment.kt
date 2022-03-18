@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.runningpal.R
 import com.example.runningpal.db.Run
 import com.example.runningpal.db.User
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
+import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_maps.*
 import org.koin.android.ext.android.get
 import timber.log.Timber
@@ -66,8 +68,10 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
     }
 
     private fun stopRun() {
-        sendCommandToService(ACTION_STOP_SERVICE
-        )}
+        sendCommandToService(ACTION_STOP_SERVICE)
+        isTracking = false
+        updateTracking(isTracking)
+        navHostFragment.findNavController().navigate(R.id.action_trackingFragment_to_runFragment2)}
 
 
     private fun subscribeToObservers() {
@@ -158,7 +162,7 @@ class TrackingFragment : Fragment(R.layout.fragment_maps) {
             val avgSpeed = round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
             val dateTimestamp = Calendar.getInstance().timeInMillis
             val caloriesBurned = ((distanceInMeters / 1000f) * 80).toInt()
-
+            isTracking = false
             val run = Run(UUID.randomUUID().toString(), trackPic, dateTimestamp, avgSpeed, distanceInMeters, curTimeInMillis, caloriesBurned)
              viewModel.saveRunToBase(run)
             // viewModel.saveTrackSnapshotToBase(bmp, run.id!!)

@@ -13,24 +13,22 @@ import com.example.runningpal.others.Constants.KEY_USER_ID
 import com.example.runningpal.others.Constants.KEY_USER_NAME
 import com.example.runningpal.others.Constants.KEY_USER_WEIGHT
 import com.example.runningpal.others.Constants.SHARED_PREFERENCES_NAME
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.utils.ColorTemplate
-import kotlinx.android.synthetic.main.fragment_run.*
-import timber.log.Timber
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 object Utils {
 
-    fun convertStringToBitmap(pic : String) : Bitmap{
+    fun convertStringToBitmap(pic: String) : Bitmap{
 
         val decodedString: ByteArray = Base64.decode(pic, Base64.URL_SAFE)
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size) }
 
-   fun convertBitmapToString(bmp : Bitmap) : String{
+   fun convertBitmapToString(bmp: Bitmap) : String{
 
-         val bitmap = bmp!!.copy(bmp.config,true)
+         val bitmap = bmp!!.copy(bmp.config, true)
 
             val bao = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, bao) // bmp is bitmap from user image file
@@ -46,19 +44,21 @@ object Utils {
 
         val sharedPreferences: SharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-        val name = sharedPreferences.getString(KEY_USER_NAME,"BLAD")
-        val email = sharedPreferences.getString(KEY_USER_EMAIL,null)
-        val weight = sharedPreferences.getString(KEY_USER_WEIGHT,null)
-        val id = sharedPreferences.getString(KEY_USER_ID,"0")
-        val avatar = sharedPreferences.getString(KEY_USER_AVATAR,null)
-        val background = sharedPreferences.getString(KEY_USER_BCK,null)
+        val name = sharedPreferences.getString(KEY_USER_NAME, "BLAD")
+        val email = sharedPreferences.getString(KEY_USER_EMAIL, null)
+        val weight = sharedPreferences.getString(KEY_USER_WEIGHT, null)
+        val id = sharedPreferences.getString(KEY_USER_ID, "0")
+        val avatar = sharedPreferences.getString(KEY_USER_AVATAR, null)
+        val background = sharedPreferences.getString(KEY_USER_BCK, null)
 
 
         val user = User().also {
             it.nick = name
             it.uid = id
             it.profilePic = avatar
-            it.backgroundPic = background }
+            it.backgroundPic = background
+            it.weight = weight
+            it.email = email}
 
         return user
     }
@@ -70,23 +70,104 @@ object Utils {
         sharedPreferences.commit()
     }
 
-    fun barEntryTest(mutableList: MutableList<Any>){
 
 
-        val NoOfEmp = ArrayList<BarEntry>()
+    fun getThisWeekInMillis() : List<Long>{
 
-        NoOfEmp.add(BarEntry(945f, 0f))
-        NoOfEmp.add(BarEntry(1040f, 1f))
-        NoOfEmp.add(BarEntry(1133f, 2f))
-        NoOfEmp.add(BarEntry(1240f, 3f))
-        NoOfEmp.add(BarEntry(1369f, 4f))
-        NoOfEmp.add(BarEntry(1487f, 5f))
-        NoOfEmp.add(BarEntry(1501f, 6f))
-        NoOfEmp.add(BarEntry(1645f, 7f))
-        NoOfEmp.add(BarEntry(1578f, 8f))
-        NoOfEmp.add(BarEntry(1695f, 9f))
+        var weekInMillis = mutableListOf<Long>()
+        val cal: Calendar = Calendar.getInstance()
+        cal.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day !
 
+        cal.clear(Calendar.MINUTE)
+        cal.clear(Calendar.SECOND)
+        cal.clear(Calendar.MILLISECOND)
 
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek())
+
+        System.out.println("Start of this week:       " + cal.getTime())
+        System.out.println("Start of this week: ... in milliseconds:      " + cal.getTimeInMillis())
+
+        weekInMillis.add(cal.timeInMillis)
+
+        // start of the next week
+
+        // start of the next week
+        cal.add(Calendar.WEEK_OF_YEAR, 1)
+        System.out.println("Start of the next week:   " + cal.getTime())
+        System.out.println("Start of the next week: ... in milliseconds:      " + cal.getTimeInMillis())
+
+        weekInMillis.add(cal.timeInMillis)
+
+        return weekInMillis
     }
+
+    fun getThisMonthInMillis() : List<Long>{
+
+        var monthInMillis = mutableListOf<Long>()
+
+        val cal = Calendar.getInstance()
+        cal[Calendar.HOUR_OF_DAY] = 0 // ! clear would not reset the hour of day !
+
+        cal.clear(Calendar.MINUTE)
+        cal.clear(Calendar.SECOND)
+        cal.clear(Calendar.MILLISECOND)
+
+
+        cal[Calendar.DAY_OF_MONTH] = 1
+        System.out.println("Start of the month:       " + cal.time)
+        System.out.println("Start ... in milliseconds:      " + cal.timeInMillis)
+
+        monthInMillis.add(cal.timeInMillis)
+// get start of the next month
+
+// get start of the next month
+        cal.add(Calendar.MONTH, 1)
+        System.out.println("Start of the next month:  " + cal.time)
+        System.out.println("Start... in milliseconds:      " + cal.timeInMillis)
+        monthInMillis.add(cal.timeInMillis)
+
+        return monthInMillis
+    }
+
+    fun getLastMonthInMillis() : List<Long>{
+
+        var monthInMillis = mutableListOf<Long>()
+
+        val cal = Calendar.getInstance()
+        cal[Calendar.HOUR_OF_DAY] = 0 // ! clear would not reset the hour of day !
+
+        cal.clear(Calendar.MINUTE)
+        cal.clear(Calendar.SECOND)
+        cal.clear(Calendar.MILLISECOND)
+
+        cal.add(Calendar.MONTH, -1)
+        cal[Calendar.DAY_OF_MONTH] = 1
+        System.out.println("Start of the month:       " + cal.time)
+        System.out.println("Start ... in milliseconds:      " + cal.timeInMillis)
+
+        monthInMillis.add(cal.timeInMillis)
+
+        var max = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        cal.add(Calendar.DAY_OF_MONTH, max)
+
+        System.out.println("Start of the next month:  " + cal.time)
+        System.out.println("Start... in milliseconds:      " + cal.timeInMillis)
+        monthInMillis.add(cal.timeInMillis)
+
+        return monthInMillis
+    }
+
+    fun getDate(milliSeconds: Long, dateFormat: String?): String? {
+        // Create a DateFormatter object for displaying date in specified format.
+        val formatter = SimpleDateFormat(dateFormat)
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = milliSeconds
+        return formatter.format(calendar.time)
+    }
+
+
+
 
 }

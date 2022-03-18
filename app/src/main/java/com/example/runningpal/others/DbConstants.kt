@@ -17,8 +17,9 @@ object DbConstants {
 
 
     const val ORDER_BY_DISTANCE = "distanceMetres"
-    const val ORDER_BY_CALORIES_BURNED = "caloriesBurnt"
+    const val ORDER_BY_CALORIES_BURNED = "caloriesBurned"
     const val ORDER_BY_TIME = "timeInMilis"
     const val ORDER_BY_DATE = "timestamp"
+    const val ORDER_BY_SPEED = "avgSpeedKmh"
 
 }

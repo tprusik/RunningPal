@@ -43,7 +43,7 @@ class UserProfileFragment : Fragment() {
     private lateinit var userViewModel : RunnersViewModel
     private lateinit var user : User
     private lateinit var contactsAdapter : ContactsAdapter
-    private lateinit var userContacts : MutableLiveData<List<String>>
+    private  var userContacts = MutableLiveData<List<String>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +56,6 @@ class UserProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         user = getUserSharedPrevs(requireContext())
-        Timber.d("nick"+ user.nick)
         initSetup()
         setupRecyclerView()
         subscribeToObservers()
@@ -70,24 +69,42 @@ class UserProfileFragment : Fragment() {
   fun  setupUserProfile(user: User){
 
       user.nick?.let{tvUserProfileName.setText(it)}
+        Timber.d("test" + user.nick)
 
       user.profilePic?.let{
           val pic = Utils.convertStringToBitmap(it)
           Glide.with(this).load(pic).into(ivUserProfileAvatar)
+          Timber.d("ttt1")
       }?: run {
           Glide.with(this).load(R.drawable.default_user_avatar).into(ivUserProfileAvatar)
+          Timber.d("ttt2")
+
       }
 
       Glide.with(this).load(R.drawable.default_user_background).into(ivUserProfileBackground)
 
-      userContacts.postValue(user.contacts)
+     // userContacts.postValue(user.contacts)
     }
 
     private fun subscribeToObservers(){
 
-        userViewModel.getRunner(user.uid!!).observe(viewLifecycleOwner, Observer {
-            Timber.d(" up + user "+ it.nick + "  "+ it.uid)
-            userContacts.postValue(it.contacts) })
+        userViewModel.user.observe(viewLifecycleOwner, Observer {
+
+            user.profilePic = it.profilePic
+            it.profilePic?.let{
+                val pic = Utils.convertStringToBitmap(it)
+                Glide.with(this).load(pic).into(ivUserProfileAvatar)
+                Timber.d("ttt1")
+            }
+
+        })
+
+        user.uid?.let { s ->
+            userViewModel.getRunner(s).observe(viewLifecycleOwner, Observer {
+           // Timber.d(" up + user "+ it.nick + "  "+ it.uid)
+                //it.contacts.let { userContacts.postValue(it) }
+            })
+        }
 
         userContacts.observe(viewLifecycleOwner, Observer {
             Timber.d(" up + user  obs")
@@ -97,7 +114,6 @@ class UserProfileFragment : Fragment() {
                     contactsAdapter.submitList(it)
                     contactsAdapter.notifyDataSetChanged() }
             })
-
         })
 
         viewModel.getUserStatistics(user.uid!!).observe(viewLifecycleOwner , Observer {
@@ -113,7 +129,6 @@ class UserProfileFragment : Fragment() {
         mAuth = FirebaseAuth.getInstance()
         viewModel = get()
         userViewModel = get()
-        userContacts = MutableLiveData()
     }
 
     private fun setupRecyclerView() = rvUserProvileFriends.apply {

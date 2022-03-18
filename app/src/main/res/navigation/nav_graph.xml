@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/runFragment">
+    app:startDestination="@id/statisticsFragment">
 
     <fragment
         android:id="@+id/messageFragment"
@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_runRoomFragment_self"
             app:destination="@id/runRoomFragment" />
+        <action
+            android:id="@+id/action_runRoomFragment_to_runRoomStatisticsFragment"
+            app:destination="@id/runRoomStatisticsFragment" />
     </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
@@ -60,10 +63,10 @@
         android:label="fragment_friend_profile"
         tools:layout="@layout/fragment_friend_profile" />
     <fragment
-        android:id="@+id/runFragment"
-        android:name="com.example.runningpal.fragments.RunFragment"
-        android:label="fragment_run"
-        tools:layout="@layout/fragment_run" >
+        android:id="@+id/statisticsFragment"
+        android:name="com.example.runningpal.fragments.StatisticsFragment"
+        android:label="fragment_statistics"
+        tools:layout="@layout/fragment_statistics">
         <action
             android:id="@+id/action_runFragment_to_trackingFragment"
             app:destination="@id/trackingFragment" />
@@ -77,6 +80,9 @@
         android:label="TrackingFragment" >
         <action
             android:id="@+id/action_trackingFragment_to_runFragment"
+            app:destination="@id/statisticsFragment" />
+        <action
+            android:id="@+id/action_trackingFragment_to_runFragment2"
             app:destination="@id/runFragment" />
     </fragment>
     <activity
@@ -103,4 +109,18 @@
         android:name="com.example.runningpal.activities.RegisterActivity"
         android:label="activity_register"
         tools:layout="@layout/activity_register" />
+    <fragment
+        android:id="@+id/runFragment"
+        android:name="com.example.runningpal.fragments.RunFragment"
+        android:label="fragment_run"
+        tools:layout="@layout/fragment_run" >
+        <action
+            android:id="@+id/action_runFragment_to_trackingFragment2"
+            app:destination="@id/trackingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/runRoomStatisticsFragment"
+        android:name="com.example.runningpal.fragments.RunRoomStatisticsFragment"
+        android:label="fragment_run_room_statistics"
+        tools:layout="@layout/fragment_run_room_statistics" />
 </navigation>
